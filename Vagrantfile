@@ -45,6 +45,7 @@ Vagrant.configure("2") do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
+  config.vm.synced_folder "~/.m2", "/home/vagrant/.m2", type: "rsync", rsync__exclude: ['.git', 'target'], create: true
   config.vm.synced_folder "~/git/trustification/trustify-operator/", "/home/vagrant/git/trustification/trustify-operator", type: "sshfs"
 
   # Provider-specific configuration so you can fine-tune various
@@ -62,6 +63,12 @@ Vagrant.configure("2") do |config|
   # View the documentation for the provider you are using for more
   # information on available options.
 
+  config.vm.provider "libvirt" do |libvirt|
+    libvirt.memory = 8192
+    libvirt.cpus = 4
+    libvirt.storage :file, size: "80G"
+  end
+
   # Enable provisioning with a shell script. Additional provisioners such as
   # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
   # documentation for more information about their specific syntax and use.
@@ -70,6 +77,10 @@ Vagrant.configure("2") do |config|
   #   apt-get install -y apache2
   # SHELL
 
-  # config.vm.provision "shell", path: "sdkman.sh"
-  config.vm.provision "shell", path: "docker.sh"
+  # config.vm.provision "shell", path: "provisioning/shell/docker.sh"
+
+  config.vm.provision "ansible_local" do |ansible|
+    ansible.playbook = "provisioning/ansible/playbook.yaml"
+    ansible.galaxy_role_file = "provisioning/ansible/requirements.yaml"
+  end
 end

@@ -1,0 +1,46 @@
+---
+- hosts: all
+  become: yes
+  pre_tasks:
+    - name: Install bsdtar as it is required by sdkman
+      ansible.builtin.dnf:
+        name:
+          - bsdtar
+          - curl
+          - findutils
+          - sed
+          - unzip
+          - zip
+        # state: latest
+  roles:
+    - role: gantsign.sdkman
+      sdkman_users:
+        - vagrant
+    - role: gantsign.sdkman_init
+      users:
+        - username: vagrant
+          sdkman_install:
+            - candidate: java
+              version: "21.0.5-tem"
+            - candidate: maven
+              version: "3.9.9"
+          sdkman_default:
+            java: "21.0.5-tem"
+            maven: "3.9.9"
+  tasks:
+    - name: Install dependencies
+      ansible.builtin.dnf:
+        name:
+          - git
+          - docker
+        state: latest
+    - name: Start docker
+      ansible.builtin.service:
+        name: docker
+        enabled: true
+        state: started
+    - name: Add user to the docker group
+      ansible.builtin.user:
+        name: vagrant
+        groups: docker
+        append: true

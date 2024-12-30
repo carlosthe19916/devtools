@@ -1,0 +1,5 @@
+---
+- src: gantsign.sdkman
+  version: 2.2.0
+- src: gantsign.sdkman_init
+  version: 1.2.2
