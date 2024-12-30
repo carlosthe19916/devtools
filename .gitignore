@@ -3,3 +3,4 @@
 
 # Intellij IDEA
 .idea/
+.vagrant/
