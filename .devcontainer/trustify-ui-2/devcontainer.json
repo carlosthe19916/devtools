@@ -1,0 +1,7 @@
+{
+  "name": "trustify-ui",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "trustify-ui",
+  "workspaceFolder": "/workspace",
+  "remoteUser" : "vscode"
+}
