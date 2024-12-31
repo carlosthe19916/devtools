@@ -1,0 +1,13 @@
+{
+  "name": "trustify",
+  "dockerComposeFile": "docker-compose.yml",
+  "overrideCommand": true,
+  "shutdownAction": "stopCompose",
+  "service": "backend",
+  "workspaceFolder": "/workspace",
+  "remoteUser" : "vscode",
+  "forwardPorts": [8080, 8090],
+  "onCreateCommand": "sudo dnf install -y cargo pkg-config openssl-devel",
+  "postCreateCommand": "cargo run --bin trustd db migrate",
+  "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc"
+}

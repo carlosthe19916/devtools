@@ -1,9 +1,0 @@
-services:
-  trustify-ui:
-    privileged: true
-    userns_mode: "keep-id"
-    build:
-      context: .
-      dockerfile: ../Dockerfile
-    volumes:
-      - /home/cferiavi/trustification/trustify-ui:/workspaces:cached

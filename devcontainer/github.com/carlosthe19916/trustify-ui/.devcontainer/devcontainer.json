@@ -1,0 +1,13 @@
+{
+  "name": "trustify-ui",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+  "containerUser" : "vscode",
+  "runArgs": [
+    "--privileged",
+    "--userns=keep-id"
+  ]
+}
