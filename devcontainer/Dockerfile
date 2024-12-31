@@ -1,7 +1,7 @@
 FROM quay.io/fedora/fedora:41
 
 RUN dnf -y update && \
-    yum install -y git && \
+    yum install -y git curl wget podman && \
     git config --global --add safe.directory /workspace && \
     rm -rf /var/cache /var/log/dnf* /var/log/yum.*
 COPY entrypoint.sh /entrypoint.sh

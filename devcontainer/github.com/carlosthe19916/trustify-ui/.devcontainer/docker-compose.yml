@@ -1,0 +1,15 @@
+networks:
+  trustification:
+
+services:
+  frontend:
+    image: quay.io/cferiavi/devcontainers-base-fedora:latest
+    privileged: true
+    userns_mode: "keep-id"
+    env_file:
+      - .env
+    command: tail -f /dev/null
+    volumes:
+      - /home/cferiavi/git/trustification/trustify-ui:/workspace:cached
+    networks:
+      - trustification

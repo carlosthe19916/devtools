@@ -1,13 +1,19 @@
 {
   "name": "trustify-ui",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "dockerComposeFile": "docker-compose.yml",
+  "overrideCommand": true,
+  "shutdownAction": "stopCompose",
+  "service": "frontend",
   "workspaceFolder": "/workspace",
-  "containerUser" : "vscode",
-  "runArgs": [
-    "--privileged",
-    "--userns=keep-id"
-  ]
+  "remoteUser" : "vscode",
+  "forwardPorts": [3000],
+  // Disable features until https://github.com/devcontainers/cli/issues/863
+  // "features": {
+  //   "ghcr.io/devcontainers/features/node:1": {
+  //     "version": "20"
+  //   }
+  // }
+  "onCreateCommand": "curl -s https://raw.githubusercontent.com/devcontainers/features/refs/heads/main/src/node/install.sh | sudo VERSION=20 bash",
+  // "postCreateCommand": "npm ci --ignore-scripts",
+  "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc"
 }
