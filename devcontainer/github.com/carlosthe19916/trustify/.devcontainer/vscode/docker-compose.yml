@@ -1,0 +1,46 @@
+networks:
+  trustification:
+
+volumes:
+  cargo:
+  postgres-data:
+
+services:
+  backend:
+    # https://github.com/microsoft/vscode-remote-release/issues/10215
+    image: localhost/trustify_devcontainer-backend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+#      args:
+#        USER_UID: 115091
+    privileged: true
+    userns_mode: "keep-id"
+    environment:
+      TRUSTD_DB_HOST: db
+      HTTP_SERVER_BIND_ADDR: "::"
+    command: tail -f /dev/null
+    volumes:
+#      - ..:/workspace:cached
+      - /home/cferiavi/git/trustification/trustify:/workspace:cached
+      - cargo:/home/vscode/.cargo
+    networks:
+      - trustification
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    networks:
+      - trustification
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
