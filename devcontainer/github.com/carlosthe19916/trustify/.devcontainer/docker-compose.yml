@@ -2,11 +2,18 @@ networks:
   trustification:
 
 volumes:
+  cargo:
   postgres-data:
 
 services:
   backend:
-    image: quay.io/cferiavi/devcontainers-base-fedora:latest
+    # https://github.com/microsoft/vscode-remote-release/issues/10215
+    image: localhost/trustify_devcontainer-backend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USER_UID: ${USER_UID}
     privileged: true
     userns_mode: "keep-id"
     environment:
@@ -14,7 +21,8 @@ services:
       HTTP_SERVER_BIND_ADDR: "::"
     command: tail -f /dev/null
     volumes:
-      - /home/cferiavi/git/trustification/trustify:/workspace:cached
+      - ${REPO_PATH}:/workspace:cached
+      - cargo:/home/vscode/.cargo
     networks:
       - trustification
     depends_on:
@@ -27,7 +35,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     env_file:
-      - .env
+      - .env_db
     networks:
       - trustification
     healthcheck:

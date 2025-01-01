@@ -7,7 +7,8 @@ ARG USER_GID=$USER_UID
 COPY entrypoint.sh /entrypoint.sh
 
 RUN dnf -y update && \
-    dnf install -y git curl wget podman
+    dnf install -y @development-tools && \
+    dnf install -y curl wget podman
 
 RUN groupadd --gid $USER_GID $USERNAME && \
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \

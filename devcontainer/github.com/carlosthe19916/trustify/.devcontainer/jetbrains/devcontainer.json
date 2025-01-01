@@ -1,6 +1,6 @@
 {
   "name": "trustify",
-  "dockerComposeFile": "docker-compose.yml",
+  "dockerComposeFile": "../docker-compose.yml",
   "overrideCommand": true,
   "shutdownAction": "stopCompose",
   "service": "backend",
@@ -10,23 +10,10 @@
     8080,
     8090
   ],
-  "onCreateCommand": "sudo dnf install -y cargo pkg-config openssl-devel",
-  "postCreateCommand": "cargo run --bin trustd db migrate",
+  "onCreateCommand": "sudo dnf install -y rustup openssl-devel && rustup-init -y && . \"$HOME/.cargo/env\" && rustup update",
+  "postCreateCommand": "cd /workspace && cargo run --bin trustd db migrate",
   "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
   "customizations": {
-    "vscode": {
-      "extensions": [
-        "k--kato.intellij-idea-keybindings",
-        "vadimcn.vscode-lldb",
-        "rust-lang.rust-analyzer",
-        "tamasfe.even-better-toml",
-        "github.vscode-pull-request-github",
-        "GitHub.github-vscode-theme",
-        "esbenp.prettier-vscode",
-        "oderwat.indent-rainbow",
-        "eamodio.gitlens"
-      ]
-    },
     "jetbrains": {
       "backend" : "RustRover"
     }
