@@ -10,8 +10,8 @@ services:
     # https://github.com/microsoft/vscode-remote-release/issues/10215
     image: localhost/trustify_devcontainer-backend:latest
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ${CONTEXT_PATH}
+      dockerfile: ${CONTEXT_PATH}/Dockerfile
       args:
         USER_UID: ${USER_UID}
     privileged: true

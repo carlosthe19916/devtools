@@ -1,15 +1,25 @@
 networks:
   trustification:
 
+volumes:
+  npm-cache:
+
 services:
   frontend:
-    image: quay.io/cferiavi/devcontainers-base-fedora:latest
+    image: localhost/trustify-ui_devcontainer-frontend:latest
+    build:
+      context: ${CONTEXT_PATH}
+      dockerfile: ${CONTEXT_PATH}/Dockerfile
+      args:
+        USER_UID: ${USER_UID}
     privileged: true
     userns_mode: "keep-id"
-    env_file:
-      - .env
+    environment:
+      TRUSTIFY_API_URL: http://backend:8080
+      OIDC_SERVER_URL: http://localhost:8090/realms/trustify
     command: tail -f /dev/null
     volumes:
-      - /home/cferiavi/git/trustification/trustify-ui:/workspace:cached
+      - ${REPO_PATH}:/workspace:cached
+      - npm-cache:/home/vscode/.npm
     networks:
       - trustification
