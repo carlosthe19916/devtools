@@ -1,5 +1,5 @@
 services:
-  app:
+  trustify-helm-charts:
     image: localhost/trustify-helm-charts_devcontainer-app:latest
     build:
       context: ${CONTEXT_PATH}

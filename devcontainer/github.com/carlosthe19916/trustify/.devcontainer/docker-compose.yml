@@ -6,7 +6,7 @@ volumes:
   postgres-data:
 
 services:
-  backend:
+  trustify:
     # https://github.com/microsoft/vscode-remote-release/issues/10215
     image: localhost/trustify_devcontainer-backend:latest
     build:

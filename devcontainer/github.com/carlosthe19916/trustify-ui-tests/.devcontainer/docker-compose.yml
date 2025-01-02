@@ -5,7 +5,7 @@ volumes:
   npm-cache:
 
 services:
-  app:
+  trustify-ui-tests:
     image: localhost/trustify-ui-tests_devcontainer-app:latest
     build:
       context: ${CONTEXT_PATH}

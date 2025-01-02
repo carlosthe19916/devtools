@@ -3,7 +3,7 @@
   "dockerComposeFile": "../docker-compose.yml",
   "overrideCommand": true,
   "shutdownAction": "stopCompose",
-  "service": "backend",
+  "service": "trustify",
   "workspaceFolder": "/workspace",
   "remoteUser": "vscode",
   "forwardPorts": [

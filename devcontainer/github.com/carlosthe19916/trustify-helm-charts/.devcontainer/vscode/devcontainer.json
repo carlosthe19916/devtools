@@ -3,12 +3,10 @@
   "dockerComposeFile": "../docker-compose.yml",
   "overrideCommand": true,
   "shutdownAction": "stopCompose",
-  "service": "app",
+  "service": "trustify-helm-charts",
   "workspaceFolder": "/workspace",
   "remoteUser": "vscode",
-  "forwardPorts": [
-    3000
-  ],
+  "forwardPorts": [],
   "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
   "customizations": {
     "vscode": {

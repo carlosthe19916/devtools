@@ -1,5 +1,5 @@
 services:
-  app:
+  release-tools:
     image: localhost/release-tools_devcontainer-app:latest
     build:
       context: ${CONTEXT_PATH}

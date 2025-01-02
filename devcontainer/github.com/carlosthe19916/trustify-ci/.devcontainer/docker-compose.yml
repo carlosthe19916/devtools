@@ -1,5 +1,5 @@
 services:
-  app:
+  trustify-ci:
     image: localhost/trustify-ci_devcontainer-app:latest
     build:
       context: ${CONTEXT_PATH}

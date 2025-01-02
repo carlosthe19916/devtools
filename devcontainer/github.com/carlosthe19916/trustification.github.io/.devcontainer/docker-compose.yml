@@ -2,7 +2,7 @@ volumes:
   npm-cache:
 
 services:
-  app:
+  trustification.github.io:
     image: localhost/trustification.github.io_devcontainer-app:latest
     build:
       context: ${CONTEXT_PATH}

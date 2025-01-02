@@ -2,7 +2,7 @@ volumes:
   cargo-cache:
 
 services:
-  app:
+  trustification:
     # https://github.com/microsoft/vscode-remote-release/issues/10215
     image: localhost/trustification_devcontainer-app:latest
     build:

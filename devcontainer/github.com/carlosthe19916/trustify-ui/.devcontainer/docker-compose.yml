@@ -5,7 +5,7 @@ volumes:
   npm-cache:
 
 services:
-  frontend:
+  trustify-ui:
     image: localhost/trustify-ui_devcontainer-frontend:latest
     build:
       context: ${CONTEXT_PATH}
@@ -15,7 +15,7 @@ services:
     privileged: true
     userns_mode: "keep-id"
     environment:
-      TRUSTIFY_API_URL: http://backend:8080
+      TRUSTIFY_API_URL: http://trustify:8080
       OIDC_SERVER_URL: http://localhost:8090/realms/trustify
     command: tail -f /dev/null
     volumes:
