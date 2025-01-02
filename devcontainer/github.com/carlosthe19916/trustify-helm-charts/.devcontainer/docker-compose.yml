@@ -1,0 +1,13 @@
+services:
+  app:
+    image: localhost/trustify-helm-charts_devcontainer-app:latest
+    build:
+      context: ${CONTEXT_PATH}
+      dockerfile: ${CONTEXT_PATH}/Dockerfile
+      args:
+        USER_UID: ${USER_UID}
+    privileged: true
+    userns_mode: "keep-id"
+    command: tail -f /dev/null
+    volumes:
+      - ${REPO_PATH}:/workspace:cached

@@ -1,0 +1,25 @@
+{
+  "name": "trustify-helm-charts",
+  "dockerComposeFile": "../docker-compose.yml",
+  "overrideCommand": true,
+  "shutdownAction": "stopCompose",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "remoteUser": "vscode",
+  "forwardPorts": [
+    3000
+  ],
+  "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "k--kato.intellij-idea-keybindings",
+        "github.vscode-pull-request-github",
+        "GitHub.github-vscode-theme",
+        "esbenp.prettier-vscode",
+        "oderwat.indent-rainbow",
+        "eamodio.gitlens"
+      ]
+    }
+  }
+}

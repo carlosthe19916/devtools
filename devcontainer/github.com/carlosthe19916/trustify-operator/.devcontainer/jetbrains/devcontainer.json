@@ -1,0 +1,29 @@
+{
+  "name": "trustify-operator",
+  "dockerComposeFile": "../docker-compose.yml",
+  "overrideCommand": true,
+  "shutdownAction": "stopCompose",
+  "service": "backend",
+  //  "workspaceFolder": "/workspace",
+  "remoteUser": "vscode",
+  "forwardPorts": [
+    8080
+  ],
+  // Disable features until https://github.com/devcontainers/cli/issues/863
+  "features": {
+//    "ghcr.io/devcontainers/features/java:1": {
+//      "version": 21
+//    },
+//    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+//      "version": 21
+//    }
+  },
+  "onCreateCommand": "curl -s https://raw.githubusercontent.com/devcontainers/features/refs/heads/main/src/java/install.sh | sudo VERSION=21 bash",
+  //  "postCreateCommand": "cd /workspace && cargo run --bin trustd db migrate",
+  "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
+  "customizations": {
+    "jetbrains": {
+      "backend": "IntelliJ"
+    }
+  }
+}
