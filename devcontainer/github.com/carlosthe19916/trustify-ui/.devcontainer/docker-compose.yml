@@ -1,5 +1,5 @@
 networks:
-  trustification:
+  trustify:
 
 volumes:
   npm-cache:
@@ -22,4 +22,4 @@ services:
       - ${REPO_PATH}:/workspace:cached
       - npm-cache:/home/vscode/.npm
     networks:
-      - trustification
+      - trustify

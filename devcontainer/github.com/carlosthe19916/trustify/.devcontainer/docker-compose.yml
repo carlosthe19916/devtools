@@ -1,8 +1,8 @@
 networks:
-  trustification:
+  trustify:
 
 volumes:
-  cargo:
+  cargo-cache:
   postgres-data:
 
 services:
@@ -22,9 +22,9 @@ services:
     command: tail -f /dev/null
     volumes:
       - ${REPO_PATH}:/workspace:cached
-      - cargo:/home/vscode/.cargo
+      - cargo-cache:/home/vscode/.cargo
     networks:
-      - trustification
+      - trustify
     depends_on:
       db:
         condition: service_healthy
@@ -37,7 +37,7 @@ services:
     env_file:
       - .env_db
     networks:
-      - trustification
+      - trustify
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB" ]
       interval: 10s
