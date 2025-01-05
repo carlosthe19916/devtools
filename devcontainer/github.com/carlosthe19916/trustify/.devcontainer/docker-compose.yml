@@ -3,7 +3,7 @@ networks:
 
 volumes:
   cargo-cache:
-  postgres-data:
+  trustify-postgres-data:
 
 services:
   trustify:
@@ -33,7 +33,7 @@ services:
     image: postgres:16
     restart: unless-stopped
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - trustify-postgres-data:/var/lib/postgresql/data
     env_file:
       - .env_db
     networks:
