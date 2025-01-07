@@ -17,8 +17,12 @@ services:
     privileged: true
     userns_mode: "keep-id"
     environment:
-      TRUSTD_DB_HOST: db
+      TRUSTD_DB_HOST: trustify-db
       HTTP_SERVER_BIND_ADDR: "::"
+      UI_ISSUER_URL: http://localhost:9090/realms/trustd
+      UI_CLIENT_ID: ui
+      AUTHENTICATOR_OIDC_ISSUER_URL: http://keycloak:8080/realms/trustd
+      AUTHENTICATOR_OIDC_CLIENT_IDS: ui
     command: tail -f /dev/null
     volumes:
       - ${REPO_PATH}:/workspace:cached
@@ -26,10 +30,10 @@ services:
     networks:
       - trustify
     depends_on:
-      db:
+      trustify-db:
         condition: service_healthy
 
-  db:
+  trustify-db:
     image: postgres:16
     restart: unless-stopped
     volumes:
@@ -43,3 +47,40 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: true
+      KC_HOSTNAME: http://localhost:9090
+    ports:
+      - "9090:8080"
+    command: ["start-dev"]
+    networks:
+      - trustify
+
+  keycloak-wait:
+    image: docker.io/alpine/curl:latest
+    volumes:
+      - ./kc-wait.sh:/tmp/kc-wait.sh:Z
+    entrypoint: ["/bin/sh"]
+    command: /tmp/kc-wait.sh
+    depends_on:
+      keycloak:
+        condition: service_started
+    networks:
+      - trustify
+
+  keycloak-init:
+    image: quay.io/keycloak/keycloak:latest
+    volumes:
+      - ./kc-init.sh:/tmp/kc-init.sh:Z
+    entrypoint: ["/bin/sh"]
+    command: /tmp/kc-init.sh
+    depends_on:
+      keycloak-wait:
+        condition: service_completed_successfully
+    networks:
+      - trustify
