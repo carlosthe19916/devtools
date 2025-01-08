@@ -21,7 +21,7 @@ services:
       HTTP_SERVER_BIND_ADDR: "::"
       UI_ISSUER_URL: http://localhost:9090/realms/trustd
       UI_CLIENT_ID: ui
-      AUTHENTICATOR_OIDC_ISSUER_URL: http://keycloak:8080/realms/trustd
+      AUTHENTICATOR_OIDC_ISSUER_URL: http://trustify-keycloak:8080/realms/trustd
       AUTHENTICATOR_OIDC_CLIENT_IDS: ui
     command: tail -f /dev/null
     volumes:
@@ -48,7 +48,7 @@ services:
       timeout: 5s
       retries: 5
   
-  keycloak:
+  trustify-keycloak:
     image: quay.io/keycloak/keycloak:latest
     environment:
       KEYCLOAK_ADMIN: admin
@@ -61,26 +61,26 @@ services:
     networks:
       - trustify
 
-  keycloak-wait:
+  trustify-keycloak-wait:
     image: docker.io/alpine/curl:latest
     volumes:
       - ./kc-wait.sh:/tmp/kc-wait.sh:Z
     entrypoint: ["/bin/sh"]
     command: /tmp/kc-wait.sh
     depends_on:
-      keycloak:
+      trustify-keycloak:
         condition: service_started
     networks:
       - trustify
 
-  keycloak-init:
+  trustify-keycloak-init:
     image: quay.io/keycloak/keycloak:latest
     volumes:
       - ./kc-init.sh:/tmp/kc-init.sh:Z
     entrypoint: ["/bin/sh"]
     command: /tmp/kc-init.sh
     depends_on:
-      keycloak-wait:
+      trustify-keycloak-wait:
         condition: service_completed_successfully
     networks:
       - trustify

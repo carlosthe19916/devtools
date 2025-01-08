@@ -1,4 +1,4 @@
-SERVER_URL="http://keycloak:8080"
+SERVER_URL="http://trustify-keycloak:8080"
 TIMEOUT=120
 
 attempt_counter=0

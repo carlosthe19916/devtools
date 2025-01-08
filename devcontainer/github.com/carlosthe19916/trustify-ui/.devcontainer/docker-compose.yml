@@ -16,7 +16,8 @@ services:
     userns_mode: "keep-id"
     environment:
       TRUSTIFY_API_URL: http://trustify:8080
-      OIDC_SERVER_URL: http://localhost:8090/realms/trustify
+      OIDC_SERVER_URL: http://localhost:9090/realms/trustd
+      OIDC_CLIENT_ID: ui
     command: tail -f /dev/null
     volumes:
       - ${REPO_PATH}:/workspace:cached
