@@ -8,7 +8,7 @@ COPY entrypoint.sh /entrypoint.sh
 
 RUN dnf -y update && \
     dnf install -y @development-tools && \
-    dnf install -y curl wget podman
+    dnf install -y curl wget podman tmux
 
 RUN groupadd --gid $USER_GID $USERNAME && \
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
