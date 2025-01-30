@@ -6,12 +6,7 @@
   "service": "trustification",
   "workspaceFolder": "/workspace",
   "remoteUser": "vscode",
-  "forwardPorts": [
-    8081,
-    8082,
-    8083,
-    6030
-  ],
+  "forwardPorts": [],
   "onCreateCommand": "sudo dnf install -y @c-development && sudo dnf install -y protobuf-compiler gcc openssl openssl-devel cmake gcc-c++ unzip cyrus-sasl-devel clang pkg-config nettle-devel && sudo dnf install -y rustup && rustup-init -y && . \"$HOME/.cargo/env\" && rustup update && rustup target add wasm32-unknown-unknown && curl -s https://raw.githubusercontent.com/devcontainers/features/refs/heads/main/src/node/install.sh | sudo VERSION=20 bash",
   "postCreateCommand": "curl -L https://github.com/ctron/trunk/releases/download/v0.21.0-alpha.5/trunk-x86_64-unknown-linux-gnu.tar.gz > trunk-ng.tar.gz && tar -xvzf trunk-ng.tar.gz && rm trunk-ng.tar.gz && mkdir -p ~/bin && mv trunk ~/bin/trunk-ng && cd /workspace",
   "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
