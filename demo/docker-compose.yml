@@ -1,0 +1,155 @@
+networks:
+  trustify:
+
+volumes:
+  trustify-importer-data:
+  trustify-storage-data:
+  trustify-postgres-data:
+
+services:
+  trustify-keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: true
+      KC_HOSTNAME: http://localhost:9090
+    ports:
+      - "9090:8080"
+    command: [ "start-dev" ]
+    networks:
+      - trustify
+
+  trustify-keycloak-wait:
+    image: docker.io/alpine/curl:latest
+    volumes:
+      - ./kc-wait.sh:/tmp/kc-wait.sh:Z
+    entrypoint: [ "/bin/sh" ]
+    command: /tmp/kc-wait.sh
+    depends_on:
+      trustify-keycloak:
+        condition: service_started
+    networks:
+      - trustify
+
+  trustify-keycloak-init:
+    image: quay.io/keycloak/keycloak:latest
+    volumes:
+      - ./kc-init.sh:/tmp/kc-init.sh:Z
+    entrypoint: [ "/bin/sh" ]
+    command: /tmp/kc-init.sh
+    depends_on:
+      trustify-keycloak-wait:
+        condition: service_completed_successfully
+    networks:
+      - trustify
+
+  trustify-prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml:z
+    ports:
+      - "9091:9090"
+      - "9464:9464"
+    networks:
+      - trustify
+
+  trustify-jaeger:
+    image: jaegertracing/all-in-one:1.53.0
+    ports:
+      - "16686:16686"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - trustify
+
+  trustify-otel-collector:
+    image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector:0.115.1
+    command: [ "--config=/otel-collector-otel-collection-config.yaml" ]
+    volumes:
+      - './otel-collection-config.yaml:/otel-collector-otel-collection-config.yaml:z'
+    ports:
+      - "4317:4317"
+    depends_on: [ trustify-jaeger ]
+    networks:
+      - trustify
+
+  trustify-db:
+    image: postgres:16
+    restart: unless-stopped
+    volumes:
+      - trustify-postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: trustify
+      POSTGRES_DB: trustify
+      POSTGRES_HOSTNAME: localhost
+      POSTGRES_PORT: 5432
+    networks:
+      - trustify
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d trustify" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  trustify-migrate:
+    image: ghcr.io/trustification/trustd:latest
+    environment:
+      TRUSTD_DB_HOST: trustify-db
+    entrypoint: [ "/bin/sh" ]
+    command: /tmp/trustd-migrate.sh
+    volumes:
+      - ./trustd-migrate.sh:/tmp/trustd-migrate.sh:Z
+    networks:
+      - trustify
+    depends_on:
+      trustify-db:
+        condition: service_healthy
+
+  trustify-importer:
+    image: ghcr.io/trustification/trustd:latest
+    environment:
+      TRUSTD_DB_HOST: trustify-db
+#      INFRASTRUCTURE_ENABLED: "true"
+#      INFRASTRUCTURE_BIND: "[::]:"
+    entrypoint: [ "/bin/sh" ]
+    command: /tmp/trustd-importer.sh
+    volumes:
+      - ./trustd-importer.sh:/tmp/trustd-importer.sh:Z
+      - trustify-importer-data:/data/workdir
+    networks:
+      - trustify
+    depends_on:
+      trustify-migrate:
+        condition: service_completed_successfully
+
+  trustify:
+    image: ghcr.io/trustification/trustd:latest
+    environment:
+      TRUSTD_DB_HOST: trustify-db
+      HTTP_SERVER_BIND_ADDR: "::"
+      UI_ISSUER_URL: http://localhost:9090/realms/trustd
+      UI_CLIENT_ID: ui
+      AUTHENTICATOR_OIDC_ISSUER_URL: http://trustify-keycloak:8080/realms/trustd
+      AUTHENTICATOR_OIDC_CLIENT_IDS: ui
+      INFRASTRUCTURE_ENABLED: true
+      INFRASTRUCTURE_BIND: "[::]:9010"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://trustify-otel-collector:4317
+      OTEL_TRACES_SAMPLER_ARG: "1"
+    ports:
+      - "8080:8080"
+      - "9010:9010"
+    entrypoint: [ "/bin/sh" ]
+    command: /tmp/trustd.sh
+    volumes:
+      - ./trustd.sh:/tmp/trustd.sh:Z
+      - trustify-storage-data:/opt/trustify/storage
+    networks:
+      - trustify
+    depends_on:
+      trustify-migrate:
+        condition: service_completed_successfully
+      trustify-keycloak-init:
+        condition: service_completed_successfully

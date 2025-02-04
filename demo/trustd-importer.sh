@@ -1,0 +1,1 @@
+/usr/local/bin/trustd importer --working-dir /data/workdir
