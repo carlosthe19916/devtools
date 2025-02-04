@@ -1,4 +1,4 @@
-SERVER_URL="http://trustify-keycloak:8080"
+SERVER_URL="http://trustify-demo-keycloak:8080"
 USERNAME="admin"
 PASSWORD="admin"
 REALM="master"

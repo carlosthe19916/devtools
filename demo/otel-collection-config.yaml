@@ -6,7 +6,7 @@ receivers:
 
 exporters:
   otlp:
-    endpoint: trustify-jaeger:4317
+    endpoint: trustify-demo-jaeger:4317
     tls:
       insecure: true
   debug:
