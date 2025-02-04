@@ -2,6 +2,14 @@ global:
   scrape_interval: 10s
 
 scrape_configs:
-  - job_name: 'collector'
+#  - job_name: 'collector'
+#    static_configs:
+#      - targets: [ 'trustify-demo-otel-collector:9464' ]
+  - job_name: 'trustify-demo-metrics'
+    metrics_path: '/metrics'
     static_configs:
-      - targets: [ 'trustify-demo-otel-collector:9464' ]
+      - targets: [ 'trustify-demo:9010' ]
+  - job_name: 'trustify-demo-importer-metrics'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: [ 'trustify-demo-importer:9010' ]

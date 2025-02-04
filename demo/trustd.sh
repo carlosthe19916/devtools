@@ -1,1 +1,1 @@
-/usr/local/bin/trustd api --tracing enabled --metrics enabled
+/usr/local/bin/trustd api --sample-data --tracing enabled --metrics enabled

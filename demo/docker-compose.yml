@@ -113,6 +113,8 @@ services:
       TRUSTD_DB_HOST: trustify-demo-db
       INFRASTRUCTURE_ENABLED: true
       INFRASTRUCTURE_BIND: "[::]:9010"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://trustify-demo-otel-collector:4317
+      OTEL_TRACES_SAMPLER_ARG: "1"
     entrypoint: [ "/bin/sh" ]
     command: /tmp/trustd-importer.sh
     volumes:
@@ -124,7 +126,7 @@ services:
       trustify-demo-migrate:
         condition: service_completed_successfully
 
-  trustify:
+  trustify-demo:
     image: ghcr.io/trustification/trustd:latest
     environment:
       TRUSTD_DB_HOST: trustify-demo-db

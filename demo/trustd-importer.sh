@@ -1,1 +1,1 @@
-/usr/local/bin/trustd importer --working-dir /data/workdir
+/usr/local/bin/trustd importer --working-dir /data/workdir  --tracing enabled --metrics enabled
