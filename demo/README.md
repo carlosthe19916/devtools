@@ -6,6 +6,9 @@ podman compose up
 
 Open the UI at http://localhost:8080
 
+username: admin
+password: admin
+
 ## Open Jaeger
 
 Open http://localhost:16686

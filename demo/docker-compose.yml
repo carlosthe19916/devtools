@@ -115,6 +115,8 @@ services:
       INFRASTRUCTURE_BIND: "[::]:9010"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://trustify-demo-otel-collector:4317
       OTEL_TRACES_SAMPLER_ARG: "1"
+    ports:
+      - "9011:9010"
     entrypoint: [ "/bin/sh" ]
     command: /tmp/trustd-importer.sh
     volumes:
