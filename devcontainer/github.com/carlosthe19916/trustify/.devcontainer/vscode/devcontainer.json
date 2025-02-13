@@ -8,7 +8,8 @@
   "remoteUser": "vscode",
   "forwardPorts": [
     8080,
-    8090
+    8090,
+    9010
   ],
   "onCreateCommand": "sudo dnf install -y @development-tools && sudo dnf install -y @c-development && sudo dnf install -y openssl-devel gcc gcc-c++ cmake perl && sudo dnf install -y rustup && rustup-init -y && . \"$HOME/.cargo/env\" && rustup update",
   "postCreateCommand": "cd /workspace && cargo run --bin trustd db migrate",

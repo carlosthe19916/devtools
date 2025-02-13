@@ -23,6 +23,10 @@ services:
       UI_CLIENT_ID: ui
       AUTHENTICATOR_OIDC_ISSUER_URL: http://trustify-keycloak:8080/realms/trustd
       AUTHENTICATOR_OIDC_CLIENT_IDS: ui
+      OTEL_TRACES_SAMPLER_ARG: "1"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://trustify-otel-collector:4317
+      INFRASTRUCTURE_ENABLED: true
+      INFRASTRUCTURE_BIND: "[::]:9010"
     command: tail -f /dev/null
     volumes:
       - ${REPO_PATH}:/workspace:cached
@@ -31,7 +35,7 @@ services:
       - trustify
     depends_on:
       trustify-db:
-        condition: service_healthy
+        condition: service_started
 
   trustify-db:
     image: postgres:16
@@ -42,11 +46,6 @@ services:
       - .env_db
     networks:
       - trustify
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
   
   trustify-keycloak:
     image: quay.io/keycloak/keycloak:latest
@@ -57,7 +56,7 @@ services:
       KC_HOSTNAME: http://localhost:9090
     ports:
       - "9090:8080"
-    command: ["start-dev"]
+    command: [ "start-dev" ]
     networks:
       - trustify
 
@@ -65,7 +64,7 @@ services:
     image: docker.io/alpine/curl:latest
     volumes:
       - ./kc-wait.sh:/tmp/kc-wait.sh:Z
-    entrypoint: ["/bin/sh"]
+    entrypoint: [ "/bin/sh" ]
     command: /tmp/kc-wait.sh
     depends_on:
       trustify-keycloak:
@@ -77,10 +76,41 @@ services:
     image: quay.io/keycloak/keycloak:latest
     volumes:
       - ./kc-init.sh:/tmp/kc-init.sh:Z
-    entrypoint: ["/bin/sh"]
+    entrypoint: [ "/bin/sh" ]
     command: /tmp/kc-init.sh
     depends_on:
       trustify-keycloak-wait:
         condition: service_completed_successfully
+    networks:
+      - trustify
+
+  trustify-prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml:z
+    ports:
+      - "9091:9090"
+      - "9464:9464"
+    networks:
+      - trustify
+
+  trustify-jaeger:
+    image: jaegertracing/all-in-one:1.53.0
+    ports:
+      - "16686:16686"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - trustify
+
+  trustify-otel-collector:
+    image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector:0.115.1
+    command: [ "--config=/otel-collector-otel-collection-config.yaml" ]
+    volumes:
+      - './otel-collection-config.yaml:/otel-collector-otel-collection-config.yaml:z'
+    ports:
+      - "4317:4317"
+    depends_on: [ trustify-jaeger ]
     networks:
       - trustify
