@@ -13,12 +13,15 @@
     "vscode": {
       "extensions": [
         "k--kato.intellij-idea-keybindings",
+        "vadimcn.vscode-lldb",
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
         "github.vscode-pull-request-github",
         "GitHub.github-vscode-theme",
         "esbenp.prettier-vscode",
         "oderwat.indent-rainbow",
         "eamodio.gitlens"
-      ]
+      ],
     }
   }
 }
