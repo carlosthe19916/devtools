@@ -115,6 +115,7 @@ services:
       INFRASTRUCTURE_BIND: "[::]:9010"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://trustify-demo-otel-collector:4317
       OTEL_TRACES_SAMPLER_ARG: "1"
+      RUST_LOG: "debug"
     ports:
       - "9011:9010"
     entrypoint: [ "/bin/sh" ]
@@ -126,6 +127,8 @@ services:
       - trustify-demo
     depends_on:
       trustify-demo-migrate:
+        condition: service_completed_successfully
+      trustify-demo-keycloak-init:
         condition: service_completed_successfully
 
   trustify-demo:
