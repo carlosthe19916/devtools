@@ -1,0 +1,18 @@
+volumes:
+  npm-cache:
+
+services:
+  fabric8-analytics-vscode-extension:
+    image: localhost/fabric8-analytics-vscode-extension_devcontainer-fabric8-analytics-vscode-extension:latest
+    build:
+      context: ${CONTEXT_PATH}
+      dockerfile: ${CONTEXT_PATH}/Dockerfile
+      args:
+        USER_UID: ${USER_UID}
+    privileged: true
+    userns_mode: "keep-id"
+    command: tail -f /dev/null
+    volumes:
+      - ${REPO_PATH}:/workspace:cached
+      - npm-cache:/home/vscode/.npm
+      - /home/cferiavi/git/openubl/searchpe:/searchpe:z
