@@ -17,11 +17,15 @@
         "rust-lang.rust-analyzer",
         "tamasfe.even-better-toml",
         "github.vscode-pull-request-github",
-        "GitHub.github-vscode-theme",
+        "MichaelZhou.fleet-theme",
         "esbenp.prettier-vscode",
-        "oderwat.indent-rainbow",
         "eamodio.gitlens"
       ],
+      "settings": {
+        "editor.fontFamily": "JetBrains Mono, Consolas, 'Courier New', monospace",
+        "editor.fontSize": 13,
+        "editor.lineHeight": 1.6
+      }
     }
   }
 }
