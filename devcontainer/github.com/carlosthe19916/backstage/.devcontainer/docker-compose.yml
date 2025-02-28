@@ -23,14 +23,17 @@ services:
     env_file:
       - .env_db
     environment:
+      # Auth secret
+      SESSION_SECRET: xiaXDwU++YmGzvIdQ/g3pJti7hM2j2CS
       # Postgres
       POSTGRES_HOST: backstage-db
       # Keycloak
       KEYCLOAK_HOST: http://backstage-keycloak:8080
       KEYCLOAK_REALM: myrealm
-      KEYCLOAK_LOGIN_REALM: myrealm
-      KEYCLOAK_CLIENT_ID: backstage
-      KEYCLOAK_CLIENT_SECRET: secret
+      AUTH_CLIENT_ID: backstage-auth
+      AUTH_CLIENT_SECRET: secret
+      CATALOG_KEYCLOAK_CLIENT_ID: backstage-catalog
+      CATALOG_KEYCLOAK_CLIENT_SECRET: secret
     networks:
       - backstage
 
@@ -63,6 +66,8 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: true
+      KC_HOSTNAME: http://localhost:9090
     ports:
       - "9090:8080"
     command: [ "start-dev" ]

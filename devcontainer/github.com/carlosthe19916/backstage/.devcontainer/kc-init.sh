@@ -22,10 +22,26 @@ USERNAME="admin"
 /opt/keycloak/bin/kcadm.sh set-password -r ${MY_REALM} --username admin --new-password admin
 
 # Clients
-client_name=backstage
+auth_client=backstage-auth
+catalog_client=backstage-catalog
+
 /opt/keycloak/bin/kcadm.sh create clients -r ${MY_REALM} -f - << EOF
 {
-  "clientId": "${client_name}",
+  "clientId": "${auth_client}",
+  "publicClient": false,
+  "webOrigins": [
+    "*"
+  ],
+  "redirectUris": [
+    "*"
+  ],
+  "secret": "secret"
+}
+EOF
+
+/opt/keycloak/bin/kcadm.sh create clients -r ${MY_REALM} -f - << EOF
+{
+  "clientId": "${catalog_client}",
   "publicClient": false,
   "webOrigins": [
     "*"
@@ -45,8 +61,8 @@ queryGroupsRoleId=$(/opt/keycloak/bin/kcadm.sh get clients/${realmManagementClie
 queryUsersRoleId=$(/opt/keycloak/bin/kcadm.sh get clients/${realmManagementClientId}/roles -r ${MY_REALM} --fields id,name --format csv --noquotes | grep ",query-users" | sed 's/,.*//')
 viewUsersRoleId=$(/opt/keycloak/bin/kcadm.sh get clients/${realmManagementClientId}/roles -r ${MY_REALM} --fields id,name --format csv --noquotes | grep ",view-users" | sed 's/,.*//')
 
-backstageClientId=$(/opt/keycloak/bin/kcadm.sh get clients -r ${MY_REALM} --fields id,clientId --format csv --noquotes | grep ",${client_name}" | sed 's/,.*//')
-serviceAccountId=$(/opt/keycloak/bin/kcadm.sh get clients/${backstageClientId}/service-account-user -r ${MY_REALM} --fields id,username --format csv --noquotes | grep ",service-account-${client_name}" | sed 's/,.*//')
+backstageClientId=$(/opt/keycloak/bin/kcadm.sh get clients -r ${MY_REALM} --fields id,clientId --format csv --noquotes | grep ",${catalog_client}" | sed 's/,.*//')
+serviceAccountId=$(/opt/keycloak/bin/kcadm.sh get clients/${backstageClientId}/service-account-user -r ${MY_REALM} --fields id,username --format csv --noquotes | grep ",service-account-${catalog_client}" | sed 's/,.*//')
 
 /opt/keycloak/bin/kcadm.sh create users/${serviceAccountId}/role-mappings/clients/${realmManagementClientId} -r ${MY_REALM} -f - << EOF
 [
