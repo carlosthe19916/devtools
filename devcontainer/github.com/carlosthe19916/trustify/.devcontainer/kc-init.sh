@@ -52,18 +52,66 @@ done
   ],
   "defaultClientScopes": [
     "acr",
-    "address",
     "basic",
     "email",
-    "microprofile-jwt",
-    "offline_access",
-    "phone",
     "profile",
     "roles",
-    "read:document",
     "create:document",
+    "read:document",
     "update:document",
     "delete:document"
+  ],
+  "optionalClientScopes": [
+    "address",
+    "microprofile-jwt",
+    "offline_access",
+    "phone"
   ]
 }
+EOF
+
+/opt/keycloak/bin/kcadm.sh create clients -r ${TRUSTIFY_REALM} -f - << EOF
+{
+  "clientId": "cli",
+  "publicClient": false,
+  "standardFlowEnabled": false,
+  "serviceAccountsEnabled": true,
+  "secret": "secret",
+  "defaultClientScopes": [
+    "acr",
+    "basic",
+    "email",
+    "profile",
+    "roles",
+    "create:document",
+    "read:document",
+    "update:document",
+    "delete:document"
+  ],
+  "optionalClientScopes": [
+    "address",
+    "microprofile-jwt",
+    "offline_access",
+    "phone"
+  ]
+}
+EOF
+
+# Assign roles to service-account
+cli_client="cli"
+
+adminRoleId=$(/opt/keycloak/bin/kcadm.sh get roles -r ${TRUSTIFY_REALM} --fields id,name --format csv --noquotes | grep ",${TRUSTIFY_ROLE}" | sed 's/,.*//')
+
+cliClientId=$(/opt/keycloak/bin/kcadm.sh get clients -r ${TRUSTIFY_REALM} --fields id,clientId --format csv --noquotes | grep ",${cli_client}" | sed 's/,.*//')
+serviceAccountId=$(/opt/keycloak/bin/kcadm.sh get clients/${cliClientId}/service-account-user -r ${TRUSTIFY_REALM} --fields id,username --format csv --noquotes | grep ",service-account-${cli_client}" | sed 's/,.*//')
+
+/opt/keycloak/bin/kcadm.sh create users/${serviceAccountId}/role-mappings/realm -r ${TRUSTIFY_REALM} -f - << EOF
+[
+  {
+    "id": "${adminRoleId}",
+    "name": "${TRUSTIFY_ROLE}",
+    "clientRole": false,
+    "composite": false
+  }
+]
 EOF

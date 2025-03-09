@@ -22,7 +22,7 @@ services:
       UI_ISSUER_URL: http://localhost:9090/realms/trustd
       UI_CLIENT_ID: ui
       AUTHENTICATOR_OIDC_ISSUER_URL: http://trustify-keycloak:8080/realms/trustd
-      AUTHENTICATOR_OIDC_CLIENT_IDS: ui
+      AUTHENTICATOR_OIDC_CLIENT_IDS: ui,cli
       OTEL_TRACES_SAMPLER_ARG: "1"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://trustify-otel-collector:4317
       INFRASTRUCTURE_ENABLED: true
