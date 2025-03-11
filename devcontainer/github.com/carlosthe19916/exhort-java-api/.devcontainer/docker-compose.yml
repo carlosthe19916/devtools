@@ -2,9 +2,8 @@ volumes:
   maven-cache:
 
 services:
-  backend:
-    # https://github.com/microsoft/vscode-remote-release/issues/10215
-    image: localhost/trustify-operator_devcontainer-backend:latest
+  exhort-java-api:
+    image: localhost/exhort-java-api_devcontainer-exhort-java-api:latest
     build:
       context: ${CONTEXT_PATH}
       dockerfile: ${CONTEXT_PATH}/Dockerfile
@@ -12,11 +11,7 @@ services:
         USER_UID: ${USER_UID}
     privileged: true
     userns_mode: "keep-id"
-    environment:
-      TRUSTD_DB_HOST: db
-      HTTP_SERVER_BIND_ADDR: "::"
     command: tail -f /dev/null
     volumes:
       - ${REPO_PATH}:/workspace:cached
       - maven-cache:/home/vscode/.m2
-      - /run/user/115091/podman/podman.sock:/var/run/docker-host.sock

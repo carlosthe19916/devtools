@@ -1,0 +1,27 @@
+{
+  "name": "exhort-java-api",
+  "dockerComposeFile": "../docker-compose.yml",
+  "overrideCommand": true,
+  "shutdownAction": "stopCompose",
+  "service": "exhort-java-api",
+  "workspaceFolder": "/workspace",
+  "remoteUser": "vscode",
+  "forwardPorts": [],
+  "onCreateCommand": "curl -s https://raw.githubusercontent.com/devcontainers/features/refs/heads/main/src/java/install.sh | sudo VERSION=21 INSTALL_MAVEN=true INSTALL_GRADLE=true bash",
+  "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "k--kato.intellij-idea-keybindings",
+        "GitHub.github-vscode-theme",
+        "oderwat.indent-rainbow",
+        "redhat.java",
+        "vscjava.vscode-java-debug",
+        "vscjava.vscode-java-test",
+        "vscjava.vscode-maven",
+        "vscjava.vscode-java-dependency",
+        "vscjava.vscode-gradle"
+      ]
+    }
+  }
+}
