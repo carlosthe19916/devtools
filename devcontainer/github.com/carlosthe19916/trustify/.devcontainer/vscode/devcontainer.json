@@ -12,7 +12,7 @@
     9010
   ],
   "onCreateCommand": "sudo dnf install -y @development-tools && sudo dnf install -y @c-development && sudo dnf install -y psql openssl-devel gcc gcc-c++ cmake perl && sudo dnf install -y rustup && rustup-init -y && . \"$HOME/.cargo/env\" && rustup update",
-  "postCreateCommand": "cd /workspace && cargo run --bin trustd db migrate",
+//  "postCreateCommand": "cd /workspace && cargo run --bin trustd db migrate",
   "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
   "customizations": {
     "vscode": {

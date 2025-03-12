@@ -16,7 +16,7 @@
   //    }
   //  },
   "onCreateCommand": "curl -s https://raw.githubusercontent.com/devcontainers/features/refs/heads/main/src/node/install.sh | sudo VERSION=22 bash",
-  "postCreateCommand": "cd /workspace && npm ci --ignore-scripts",
+//  "postCreateCommand": "cd /workspace && npm ci --ignore-scripts",
   "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
   "customizations": {
     "vscode": {
