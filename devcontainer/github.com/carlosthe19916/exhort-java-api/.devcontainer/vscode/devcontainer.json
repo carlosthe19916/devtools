@@ -7,21 +7,38 @@
   "workspaceFolder": "/workspace",
   "remoteUser": "vscode",
   "forwardPorts": [],
-  "onCreateCommand": "curl -s https://raw.githubusercontent.com/devcontainers/features/refs/heads/main/src/java/install.sh | sudo VERSION=21 INSTALL_MAVEN=true INSTALL_GRADLE=true bash",
+  "onCreateCommand": "sudo dnf install -y golang && go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest && curl -s https://raw.githubusercontent.com/devcontainers/features/refs/heads/main/src/java/install.sh | sudo VERSION=11 INSTALLMAVEN=true INSTALLGRADLE=true bash && curl -s https://raw.githubusercontent.com/devcontainers/features/refs/heads/main/src/node/install.sh | sudo VERSION=20 bash && curl -s https://raw.githubusercontent.com/devcontainers/features/refs/heads/main/src/python/install.sh | sudo VERSION=3.9 bash",
   "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
   "customizations": {
     "vscode": {
       "extensions": [
         "k--kato.intellij-idea-keybindings",
-        "GitHub.github-vscode-theme",
-        "oderwat.indent-rainbow",
-        "redhat.java",
-        "vscjava.vscode-java-debug",
-        "vscjava.vscode-java-test",
-        "vscjava.vscode-maven",
-        "vscjava.vscode-java-dependency",
-        "vscjava.vscode-gradle"
-      ]
+        "dbaeumer.vscode-eslint",
+        "golang.Go",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.autopep8",
+        "vscjava.vscode-java-pack"
+      ],
+      "settings": {
+        "java.import.gradle.java.home": "/usr/local/sdkman/candidates/java/current",
+        "python.defaultInterpreterPath": "/usr/local/python/current/bin/python",
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.autopep8"
+        }
+      }
     }
+  },
+  containerEnv: {
+    "NVM_DIR": "/usr/local/share/nvm",
+    "NVM_SYMLINK_CURRENT": "true",
+    "GOROOT": "/usr/local/go",
+    "GOPATH": "/go",
+    "PYTHON_PATH": "/usr/local/python/current",
+    "PIPX_HOME": "/usr/local/py-utils",
+    "PIPX_BIN_DIR": "/usr/local/py-utils/bin",
+    "SDKMAN_DIR": "/usr/local/sdkman",
+    "JAVA_HOME": "/usr/local/sdkman/candidates/java/current",
+    "PATH": "/usr/local/python/current/bin:/usr/local/py-utils/bin:/usr/local/jupyter:/usr/local/share/nvm/current/bin:/usr/local/go/bin:/go/bin:/usr/local/sdkman/bin:/usr/local/sdkman/candidates/java/current/bin:/usr/local/sdkman/candidates/gradle/current/bin:/usr/local/sdkman/candidates/maven/current/bin:/usr/local/sdkman/candidates/ant/current/bin:${PATH}",
   }
 }
