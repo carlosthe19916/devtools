@@ -9,27 +9,32 @@
   "forwardPorts": [
     3000
   ],
-  // Disable features until https://github.com/devcontainers/cli/issues/863
-  //  "features": {
-  //    "ghcr.io/devcontainers/features/node:1": {
-  //      "version": "20"
-  //    }
-  //  },
   "onCreateCommand": "curl -s https://raw.githubusercontent.com/devcontainers/features/refs/heads/main/src/node/install.sh | sudo VERSION=22 bash",
-//  "postCreateCommand": "cd /workspace && npm ci --ignore-scripts",
   "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
   "customizations": {
     "vscode": {
       "extensions": [
-        "k--kato.intellij-idea-keybindings",
-        "vadimcn.vscode-lldb",
         "dsznajder.es7-react-js-snippets",
-        "github.vscode-pull-request-github",
-        "GitHub.github-vscode-theme",
-        "esbenp.prettier-vscode",
-        "oderwat.indent-rainbow",
-        "eamodio.gitlens"
-      ]
+        "biomejs.biome"
+      ],
+      "settings": {
+        "biome.searchInPath": false,
+        "biome.lspBin": "node_modules/@biomejs/cli-linux-x64/biome",
+        "editor.defaultFormatter": "biomejs.biome",
+        "[javascript]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "[typescriptreact]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "editor.codeActionsOnSave": {
+          "quickfix.biome": "explicit",
+          "source.organizeImports.biome": "explicit"
+        }
+      }
     }
   }
 }

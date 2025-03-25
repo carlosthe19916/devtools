@@ -12,20 +12,13 @@
     9010
   ],
   "onCreateCommand": "sudo dnf install -y @development-tools && sudo dnf install -y @c-development && sudo dnf install -y psql openssl-devel gcc gcc-c++ cmake perl && sudo dnf install -y rustup && rustup-init -y && . \"$HOME/.cargo/env\" && rustup update",
-//  "postCreateCommand": "cd /workspace && cargo run --bin trustd db migrate",
   "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
   "customizations": {
     "vscode": {
       "extensions": [
-        "k--kato.intellij-idea-keybindings",
         "vadimcn.vscode-lldb",
         "rust-lang.rust-analyzer",
-        "tamasfe.even-better-toml",
-        "github.vscode-pull-request-github",
-        "GitHub.github-vscode-theme",
-        "esbenp.prettier-vscode",
-        "oderwat.indent-rainbow",
-        "eamodio.gitlens"
+        "tamasfe.even-better-toml"
       ]
     }
   }

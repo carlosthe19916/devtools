@@ -23,10 +23,10 @@ services:
       UI_CLIENT_ID: ui
       AUTHENTICATOR_OIDC_ISSUER_URL: http://trustify-keycloak:8080/realms/trustd
       AUTHENTICATOR_OIDC_CLIENT_IDS: ui,cli
-      OTEL_TRACES_SAMPLER_ARG: "1"
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://trustify-otel-collector:4317
-      INFRASTRUCTURE_ENABLED: true
-      INFRASTRUCTURE_BIND: "[::]:9010"
+#      OTEL_TRACES_SAMPLER_ARG: "1"
+#      OTEL_EXPORTER_OTLP_ENDPOINT: http://trustify-otel-collector:4317
+#      INFRASTRUCTURE_ENABLED: true
+#      INFRASTRUCTURE_BIND: "[::]:9010"
     command: tail -f /dev/null
     volumes:
       - ${REPO_PATH}:/workspace:cached
@@ -84,33 +84,33 @@ services:
     networks:
       - trustify
 
-  trustify-prometheus:
-    container_name: prometheus
-    image: prom/prometheus:latest
-    volumes:
-      - ./prometheus.yaml:/etc/prometheus/prometheus.yml:z
-    ports:
-      - "9091:9090"
-      - "9464:9464"
-    networks:
-      - trustify
+#  trustify-prometheus:
+#    container_name: prometheus
+#    image: prom/prometheus:latest
+#    volumes:
+#      - ./prometheus.yaml:/etc/prometheus/prometheus.yml:z
+#    ports:
+#      - "9091:9090"
+#      - "9464:9464"
+#    networks:
+#      - trustify
 
-  trustify-jaeger:
-    image: jaegertracing/all-in-one:1.53.0
-    ports:
-      - "16686:16686"
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
-    networks:
-      - trustify
+#  trustify-jaeger:
+#    image: jaegertracing/all-in-one:1.53.0
+#    ports:
+#      - "16686:16686"
+#    environment:
+#      - COLLECTOR_OTLP_ENABLED=true
+#    networks:
+#      - trustify
 
-  trustify-otel-collector:
-    image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector:0.115.1
-    command: [ "--config=/otel-collector-otel-collection-config.yaml" ]
-    volumes:
-      - './otel-collection-config.yaml:/otel-collector-otel-collection-config.yaml:z'
-    ports:
-      - "4317:4317"
-    depends_on: [ trustify-jaeger ]
-    networks:
-      - trustify
+#  trustify-otel-collector:
+#    image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector:0.115.1
+#    command: [ "--config=/otel-collector-otel-collection-config.yaml" ]
+#    volumes:
+#      - './otel-collection-config.yaml:/otel-collector-otel-collection-config.yaml:z'
+#    ports:
+#      - "4317:4317"
+#    depends_on: [ trustify-jaeger ]
+#    networks:
+#      - trustify
