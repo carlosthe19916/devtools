@@ -16,16 +16,8 @@
         "vadimcn.vscode-lldb",
         "rust-lang.rust-analyzer",
         "tamasfe.even-better-toml",
-        "github.vscode-pull-request-github",
-        "MichaelZhou.fleet-theme",
-        "esbenp.prettier-vscode",
-        "eamodio.gitlens"
-      ],
-      "settings": {
-        "editor.fontFamily": "JetBrains Mono, Consolas, 'Courier New', monospace",
-        "editor.fontSize": 13,
-        "editor.lineHeight": 1.6
-      }
+        "github.vscode-pull-request-github"
+      ]
     }
   }
 }
