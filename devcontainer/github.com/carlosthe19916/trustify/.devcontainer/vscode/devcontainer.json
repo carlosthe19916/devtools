@@ -18,8 +18,23 @@
       "extensions": [
         "vadimcn.vscode-lldb",
         "rust-lang.rust-analyzer",
-        "tamasfe.even-better-toml"
-      ]
+        "tamasfe.even-better-toml",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg"
+      ],
+      "settings": {
+        "sqltools.connections": [
+          {
+            "server": "trustify-db",
+            "database": "trustify",
+            "username": "postgres",
+            "password": "trustify",
+            "port": 5432,
+            "name": "db",
+            "driver": "PostgreSQL"
+          }
+        ]
+      }
     }
   }
 }
