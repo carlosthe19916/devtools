@@ -38,10 +38,13 @@ services:
         condition: service_started
 
   trustify-db:
-    image: postgres:16
+    image: postgres:17
     restart: unless-stopped
     volumes:
       - trustify-postgres-data:/var/lib/postgresql/data
+#      - /home/cferiavi/git/dump.sql.gz:/docker-entrypoint-initdb.d/dump.sql.gz:Z
+#    command: >
+#      postgres -c random_page_cost=1.1 -c max_parallel_workers_per_gather=4 -c shared_preload_libraries='pg_stat_statements'
     env_file:
       - .env_db
     networks:
