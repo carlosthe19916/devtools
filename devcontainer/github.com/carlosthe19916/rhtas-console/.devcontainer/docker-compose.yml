@@ -17,6 +17,6 @@ services:
     command: tail -f /dev/null
     volumes:
       - ${REPO_PATH}:/workspace:cached
-      - go-cache:/home/vscode/go/pkg/mod
+      - go-cache:/home/vscode/go
     networks:
       - rhtas

@@ -7,13 +7,14 @@
   "workspaceFolder": "/workspace",
   "remoteUser": "vscode",
   "forwardPorts": [
-    8082
+    8080
   ],
-  "onCreateCommand": "sudo dnf install -y golang && mkdir -p $HOME/go && echo 'export GOPATH=$HOME/go' >> $HOME/.bashrc && echo 'export PATH=$PATH:$HOME/go/bin' >> ~/.bashrc && source $HOME/.bashrc",
+  "onCreateCommand": "sudo dnf install -y golang && go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest && mkdir -p $HOME/go && echo 'export GOPATH=$HOME/go' >> $HOME/.bashrc && echo 'export PATH=$PATH:$HOME/go/bin' >> ~/.bashrc && source $HOME/.bashrc",
   "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
   "customizations": {
     "vscode": {
       "extensions": [
+        "golang.Go"
       ]
     }
   }
