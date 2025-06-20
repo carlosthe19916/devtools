@@ -1,0 +1,71 @@
+networks:
+  trustify2:
+
+volumes:
+  trustify2-postgres-data:
+  cargo-cache:
+  npm-cache:
+
+services:
+  trustify2:
+    image: localhost/trustify2:latest
+    build:
+      context: ${CONTEXT_PATH}
+      dockerfile: ${CONTEXT_PATH}/Dockerfile
+      args:
+        USER_UID: ${USER_UID}
+    privileged: true
+    userns_mode: "keep-id"
+    environment:
+      TRUSTD_DB_HOST: trustify2-db
+    command: tail -f /dev/null
+    volumes:
+      - ${REPO_PATH}:/workspace:cached
+      - cargo-cache:/home/vscode/.cargo
+      - npm-cache:/home/vscode/.npm
+    networks:
+      - trustify2
+    depends_on:
+      trustify2-db:
+        condition: service_started
+      trustify2-keycloak:
+        condition: service_started
+
+  trustify2-db:
+    image: postgres:17
+    restart: unless-stopped
+    volumes:
+      - trustify2-postgres-data:/var/lib/postgresql/data
+    env_file:
+      - .env_db
+    networks:
+      - trustify2
+
+  trustify2-keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: true
+      KC_HOSTNAME: http://localhost:8089
+    ports:
+      - "8089:8080"
+    command: [ "start-dev" ]
+    networks:
+      - trustify2
+
+  trustify2-keycloak-init:
+    image: quay.io/keycloak/keycloak:latest
+    volumes:
+      - ./kc-init.sh:/tmp/kc-init.sh:Z
+    entrypoint: [ "/bin/sh" ]
+    command: /tmp/kc-init.sh
+    environment:
+      KEYCLOAK_SERVER_URL: http://trustify2-keycloak:8080
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    depends_on:
+      trustify2-keycloak:
+        condition: service_started
+    networks:
+      - trustify2

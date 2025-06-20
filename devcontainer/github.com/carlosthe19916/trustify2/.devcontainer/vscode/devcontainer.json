@@ -1,0 +1,63 @@
+{
+  "name": "trustify2",
+  "dockerComposeFile": "../docker-compose.yml",
+  "overrideCommand": true,
+  "shutdownAction": "stopCompose",
+  "service": "trustify2",
+  "workspaceFolder": "/workspace",
+  "remoteUser": "vscode",
+  "forwardPorts": [
+    // Backend
+    8089,
+    8088,
+    // UI
+    3009,
+    // Keycloak
+    8089,
+    8080,
+  ],
+  "onCreateCommand": "sudo dnf install -y @development-tools && sudo dnf install -y @c-development && sudo dnf install -y psql openssl-devel gcc gcc-c++ cmake perl && sudo dnf install -y rustup && rustup-init -y && . \"$HOME/.cargo/env\" && rustup update && curl -s https://raw.githubusercontent.com/devcontainers/features/refs/heads/main/src/node/install.sh | sudo VERSION=22 bash",
+  "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vadimcn.vscode-lldb",
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
+        "dsznajder.es7-react-js-snippets",
+        "biomejs.biome"
+      ],
+      "settings": {
+        "sqltools.connections": [
+          {
+            "server": "trustify-db",
+            "database": "trustify",
+            "username": "postgres",
+            "password": "trustify",
+            "port": 5432,
+            "name": "db",
+            "driver": "PostgreSQL"
+          }
+        ],
+        "biome.searchInPath": false,
+        "biome.lspBin": "node_modules/@biomejs/cli-linux-x64/biome",
+        "editor.defaultFormatter": "biomejs.biome",
+        "[javascript]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "[typescriptreact]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "editor.codeActionsOnSave": {
+          "quickfix.biome": "explicit",
+          "source.organizeImports.biome": "explicit"
+        }
+      }
+    }
+  }
+}
