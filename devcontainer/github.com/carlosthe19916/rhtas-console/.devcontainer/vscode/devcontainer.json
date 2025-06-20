@@ -1,0 +1,20 @@
+{
+  "name": "rhtas-console",
+  "dockerComposeFile": "../docker-compose.yml",
+  "overrideCommand": true,
+  "shutdownAction": "stopCompose",
+  "service": "rhtas-console",
+  "workspaceFolder": "/workspace",
+  "remoteUser": "vscode",
+  "forwardPorts": [
+    8082
+  ],
+  "onCreateCommand": "sudo dnf install -y golang && mkdir -p $HOME/go && echo 'export GOPATH=$HOME/go' >> $HOME/.bashrc && echo 'export PATH=$PATH:$HOME/go/bin' >> ~/.bashrc && source $HOME/.bashrc",
+  "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+      ]
+    }
+  }
+}

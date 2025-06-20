@@ -1,0 +1,22 @@
+networks:
+  rhtas:
+
+volumes:
+  go-cache:
+
+services:
+  rhtas-console:
+    image: localhost/rhtas-console:latest
+    build:
+      context: ${CONTEXT_PATH}
+      dockerfile: ${CONTEXT_PATH}/Dockerfile
+      args:
+        USER_UID: ${USER_UID}
+    privileged: true
+    userns_mode: "keep-id"
+    command: tail -f /dev/null
+    volumes:
+      - ${REPO_PATH}:/workspace:cached
+      - go-cache:/home/vscode/go/pkg/mod
+    networks:
+      - rhtas
