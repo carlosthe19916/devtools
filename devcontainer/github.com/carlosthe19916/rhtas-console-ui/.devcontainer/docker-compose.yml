@@ -14,6 +14,10 @@ services:
         USER_UID: ${USER_UID}
     privileged: true
     userns_mode: "keep-id"
+    environment:
+      CONSOLE_API_URL: http://rhtas-console:8080
+      OIDC_SERVER_URL: http://localhost:9090/realms/trustd
+      OIDC_CLIENT_ID: ui
     command: tail -f /dev/null
     volumes:
       - ${REPO_PATH}:/workspace:cached
