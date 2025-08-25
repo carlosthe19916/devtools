@@ -14,9 +14,28 @@ services:
         USER_UID: ${USER_UID}
     privileged: true
     userns_mode: "keep-id"
+    environment:
+      DB_DSN: rootuser:root@tcp(rhtas-console-db:3306)/tuf_trust
+      TUF_REPO_URL: https://tuf-repo-cdn.sigstore.dev
     command: tail -f /dev/null
     volumes:
       - ${REPO_PATH}:/workspace:cached
       - go-cache:/home/vscode/go
     networks:
       - rhtas
+
+  rhtas-console-db:
+    image: mariadb:lts-ubi
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: tuf_trust
+      MYSQL_USER: rootuser
+      MYSQL_PASSWORD: root
+    networks:
+      - rhtas
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpassword" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
