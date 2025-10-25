@@ -52,6 +52,7 @@ set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'crhistoomey/vim-tmux-navigator'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
 
 run '~/.tmux/plugins/tpm/tpm'
 EOF
