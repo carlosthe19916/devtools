@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora:41
+FROM quay.io/fedora/fedora:42
 
 ARG USERNAME=vscode
 ARG USER_UID=1000
@@ -8,27 +8,33 @@ COPY entrypoint.sh /entrypoint.sh
 
 RUN dnf -y update && \
     dnf install -y @development-tools && \
-    dnf install -y curl wget podman tmux
+    dnf install -y @c-development && \
+    dnf install -y curl wget && \
+    # Neovim RPMs \
+    dnf install -y neovim luarocks fzf ripgrep fd-find magick gs perl python-pip ruby-devel && \
+    # Lazy git \
+    dnf copr enable -y dejan/lazygit && \
+    dnf install -y lazygit && \
+    # Terminal \
+    dnf copr enable -y scottames/ghostty && \
+    dnf install -y ghostty && \
+    # Tectonic \
+    curl --proto '=https' --tlsv1.2 -fsSL https://drop-sh.fullyjustified.net |sh && \
+    mv tectonic /usr/bin/
 
 RUN groupadd --gid $USER_GID $USERNAME && \
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
     echo $USERNAME:10000:5000 > /etc/subuid && echo $USERNAME:10000:5000 > /etc/subgid && \
-    # Allow user to execute 'sudo' without password
+    # Allow user to execute 'sudo' without password \
     usermod -aG wheel $USERNAME && \
     echo "%wheel ALL=(ALL) NOPASSWD:ALL" | tee -a /etc/sudoers > /dev/null
-
-# Podman
-# https://github.com/containers/podman/issues/2788#issuecomment-479923274
-RUN chmod 4755 /usr/bin/newgidmap && chmod 4755 /usr/bin/newuidmap
 
 # set permissions
 RUN chown $USERNAME:$USERNAME -R /home/$USERNAME
 
 RUN usermod -aG wheel $USERNAME && \
-    # Allow user to execute 'sudo' without password
-    echo "%wheel ALL=(ALL) NOPASSWD:ALL" | tee -a /etc/sudoers > /dev/null && \
-    # https://github.com/containers/podman/issues/2788#issuecomment-479923274
-    chmod 4755 /usr/bin/newgidmap && chmod 4755 /usr/bin/newuidmap
+    # Allow user to execute 'sudo' without password \
+    echo "%wheel ALL=(ALL) NOPASSWD:ALL" | tee -a /etc/sudoers > /dev/null
 
 ENV _CONTAINERS_USERNS_CONFIGURED=""
 
