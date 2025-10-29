@@ -10,7 +10,6 @@
     3000
   ],
   "onCreateCommand": "curl -s https://raw.githubusercontent.com/devcontainers/features/refs/heads/main/src/node/install.sh | sudo VERSION=22 bash",
-  "postStartCommand": "echo \"source /usr/share/bash-completion/completions/git\" >> ~/.bashrc",
   "customizations": {
     "vscode": {
       "extensions": [

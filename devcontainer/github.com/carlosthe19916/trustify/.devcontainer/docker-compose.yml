@@ -3,6 +3,7 @@ networks:
 
 volumes:
   cargo-cache:
+  nvim-cache:
   trustify-postgres-data:
 
 services:
@@ -31,6 +32,8 @@ services:
     volumes:
       - ${REPO_PATH}:/workspace:cached
       - cargo-cache:/home/vscode/.cargo
+      - nvim-cache:/home/vscode/.local/share/nvim
+      - ${NVIM_PATH}:/home/vscode/.config/nvim
     networks:
       - trustify
     depends_on:

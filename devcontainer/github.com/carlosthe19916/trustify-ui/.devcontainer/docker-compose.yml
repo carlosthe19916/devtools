@@ -3,6 +3,7 @@ networks:
 
 volumes:
   npm-cache:
+  nvim-cache:
 
 services:
   trustify-ui:
@@ -23,5 +24,7 @@ services:
     volumes:
       - ${REPO_PATH}:/workspace:cached
       - npm-cache:/home/vscode/.npm
+      - nvim-cache:/home/vscode/.local/share/nvim
+      - ${NVIM_PATH}:/home/vscode/.config/nvim
     networks:
       - trustify
