@@ -18,6 +18,8 @@
         "mtxr.sqltools-driver-pg"
       ],
       "settings": {
+        "git.enableCommitSigning": true,
+        "git.alwaysSignOff": true,
         "sqltools.connections": [
           {
             "server": "trustify-db",

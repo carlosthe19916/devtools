@@ -13,7 +13,11 @@
         "dsznajder.es7-react-js-snippets",
         "esbenp.prettier-vscode",
         "vitest.explorer"
-      ]
+      ],
+      "settings": {
+        "git.enableCommitSigning": true,
+        "git.alwaysSignOff": true
+      }
     }
   }
 }

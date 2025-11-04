@@ -17,6 +17,8 @@
         "alexkrechik.cucumberautocomplete"
       ],
       "settings": {
+        "git.enableCommitSigning": true,
+        "git.alwaysSignOff": true,
         "biome.searchInPath": false,
         "biome.lspBin": "node_modules/@biomejs/cli-linux-x64/biome",
         "editor.defaultFormatter": "biomejs.biome",
@@ -28,9 +30,6 @@
         },
         "[typescriptreact]": {
           "editor.defaultFormatter": "biomejs.biome"
-        },
-        "editor.codeActionsOnSave": {
-          "quickfix.biome": "explicit",
         },
         "cucumberautocomplete.steps": [
           "e2e/tests/ui/features/@*/*.step.ts",

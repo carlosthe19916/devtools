@@ -11,7 +11,11 @@
     "vscode": {
       "extensions": [
         "golang.Go"
-      ]
+      ],
+      "settings": {
+        "git.enableCommitSigning": true,
+        "git.alwaysSignOff": true
+      }
     }
   }
 }
