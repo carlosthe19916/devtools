@@ -1,8 +1,12 @@
 networks:
   rhtas:
+    external: true
 
 volumes:
   go-cache:
+    external: true
+  nvim-cache:
+    external: true
 
 services:
   rhtas-console:
@@ -17,10 +21,14 @@ services:
     environment:
       DB_DSN: rootuser:root@tcp(rhtas-console-db:3306)/tuf_trust
       TUF_REPO_URL: https://tuf-repo-cdn.sigstore.dev
+    ports:
+      - "8081:8080"
     command: tail -f /dev/null
     volumes:
       - ${REPO_PATH}:/workspace:cached
       - go-cache:/home/vscode/go
+      - nvim-cache:/home/vscode/.local/share/nvim
+      - ${NVIM_PATH}:/home/vscode/.config/nvim
     networks:
       - rhtas
 

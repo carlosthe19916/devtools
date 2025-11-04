@@ -1,9 +1,12 @@
 networks:
   trustify:
+    external: true
 
 volumes:
   npm-cache:
+    external: true
   nvim-cache:
+    external: true
 
 services:
   trustify-ui:
@@ -20,9 +23,12 @@ services:
       OIDC_SERVER_URL: http://localhost:9090/realms/trustd
       OIDC_CLIENT_ID: ui
       PLAYWRIGHT_AUTH_URL: http://trustify-keycloak:8080/realms/trustd
+    ports:
+      - "3000:3000"
     command: tail -f /dev/null
     volumes:
       - ${REPO_PATH}:/workspace:cached
+      - ./post-create.sh:/tmp/post-create.sh:Z
       - npm-cache:/home/vscode/.npm
       - nvim-cache:/home/vscode/.local/share/nvim
       - ${NVIM_PATH}:/home/vscode/.config/nvim

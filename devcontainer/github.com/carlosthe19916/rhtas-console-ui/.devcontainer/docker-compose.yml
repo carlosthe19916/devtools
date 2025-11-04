@@ -1,8 +1,12 @@
 networks:
   rhtas:
+    external: true
 
 volumes:
   npm-cache:
+    external: true
+  nvim-cache:
+    external: true
 
 services:
   rhtas-console-ui:
@@ -16,11 +20,13 @@ services:
     userns_mode: "keep-id"
     environment:
       CONSOLE_API_URL: http://rhtas-console:8080
-      OIDC_SERVER_URL: http://localhost:9090/realms/trustd
-      OIDC_CLIENT_ID: ui
+    ports:
+      - "3001:3000"
     command: tail -f /dev/null
     volumes:
       - ${REPO_PATH}:/workspace:cached
       - npm-cache:/home/vscode/.npm
+      - nvim-cache:/home/vscode/.local/share/nvim
+      - ${NVIM_PATH}:/home/vscode/.config/nvim
     networks:
       - rhtas

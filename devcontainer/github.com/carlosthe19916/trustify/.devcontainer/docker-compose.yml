@@ -1,9 +1,12 @@
 networks:
   trustify:
+    external: true
 
 volumes:
   cargo-cache:
+    external: true
   nvim-cache:
+    external: true
   trustify-postgres-data:
 
 services:
@@ -28,9 +31,14 @@ services:
 #      OTEL_EXPORTER_OTLP_ENDPOINT: http://trustify-otel-collector:4317
 #      INFRASTRUCTURE_ENABLED: true
 #      INFRASTRUCTURE_BIND: "[::]:9010"
+    ports:
+      - "8080:8080"
+      - "8090:8090"
+      - "9010:9010"
     command: tail -f /dev/null
     volumes:
       - ${REPO_PATH}:/workspace:cached
+      - ./post-create.sh:/tmp/post-create.sh:Z
       - cargo-cache:/home/vscode/.cargo
       - nvim-cache:/home/vscode/.local/share/nvim
       - ${NVIM_PATH}:/home/vscode/.config/nvim

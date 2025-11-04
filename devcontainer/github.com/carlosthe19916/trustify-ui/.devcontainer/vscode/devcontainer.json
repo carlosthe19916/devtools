@@ -6,10 +6,8 @@
   "service": "trustify-ui",
   "workspaceFolder": "/workspace",
   "remoteUser": "vscode",
-  "forwardPorts": [
-    3000
-  ],
   "onCreateCommand": "curl -s https://raw.githubusercontent.com/devcontainers/features/refs/heads/main/src/node/install.sh | sudo VERSION=22 bash",
+  "postCreateCommand": "bash -c /tmp/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -33,7 +31,6 @@
         },
         "editor.codeActionsOnSave": {
           "quickfix.biome": "explicit",
-          "source.organizeImports.biome": "explicit"
         },
         "cucumberautocomplete.steps": [
           "e2e/tests/ui/features/@*/*.step.ts",
