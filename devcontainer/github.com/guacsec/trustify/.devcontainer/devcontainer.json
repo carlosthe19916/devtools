@@ -1,13 +1,19 @@
 {
   "name": "trustify",
-  "dockerComposeFile": "../docker-compose.yml",
-  "overrideCommand": true,
-  "shutdownAction": "stopCompose",
+  "dockerComposeFile": "./docker-compose.yml",
   "service": "trustify",
   "workspaceFolder": "/workspace",
-  "remoteUser": "vscode",
-  "onCreateCommand": "sudo dnf install -y @development-tools && sudo dnf install -y @c-development && sudo dnf install -y psql openssl-devel gcc gcc-c++ cmake perl && sudo dnf install -y rustup && rustup-init -y && . \"$HOME/.cargo/env\" && rustup update",
-  "postCreateCommand": "bash -c /tmp/post-create.sh",
+  "initializeCommand": "bash ~/git/devtools/devcontainer/github.com/guacsec/trustify/.devcontainer/initializeCommand.sh ${devcontainerId}",
+  "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
+  "forwardPorts": [
+    8080,
+    9010,
+    9090
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/rust:1": {}
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -18,7 +24,6 @@
         "mtxr.sqltools-driver-pg"
       ],
       "settings": {
-        "git.enableCommitSigning": true,
         "git.alwaysSignOff": true,
         "sqltools.connections": [
           {
