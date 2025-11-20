@@ -1,0 +1,47 @@
+{
+  "name": "trustify-ui",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "trustify-ui",
+  "workspaceFolder": "/workspace",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "username": "vscode",
+      "userUid": "${localEnv:UID}",
+      "userGid": "${localEnv:UID}"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dsznajder.es7-react-js-snippets",
+        "biomejs.biome",
+        "ms-playwright.playwright",
+        "alexkrechik.cucumberautocomplete"
+      ],
+      "settings": {
+        "git.enableCommitSigning": true,
+        "git.alwaysSignOff": true,
+        "biome.searchInPath": false,
+        "biome.lspBin": "node_modules/@biomejs/cli-linux-x64/biome",
+        "editor.defaultFormatter": "biomejs.biome",
+        "[javascript]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "[typescriptreact]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "cucumberautocomplete.steps": [
+          "e2e/tests/ui/features/@*/*.step.ts",
+          "e2e/tests/ui/steps/*.ts"
+        ],
+        "cucumberautocomplete.strictGherkinCompletion": true
+      }
+    }
+  }
+}

@@ -4,3 +4,5 @@
 # Intellij IDEA
 .idea/
 .vagrant/
+
+**/*.tmp.json

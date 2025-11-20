@@ -1,0 +1,9 @@
+services:
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.55.0-jammy
+    security_opt:
+      - "label=disable"
+    userns_mode: "keep-id"
+    network_mode: host
+    volumes:
+      - ${TRUSTIFY_UI_PATH:-~/git/guacsec/trustify-ui}:/workspace:cached

@@ -1,0 +1,27 @@
+networks:
+  trustify:
+    name: "trustify"
+
+volumes:
+  npm-cache:
+
+services:
+  trustify-ui:
+    image: localhost/devcontainer-trustify-ui:latest
+    build:
+      dockerfile: ./Dockerfile
+    security_opt:
+      - "label=disable"
+    userns_mode: "keep-id"
+    environment:
+      TRUSTIFY_API_URL: http://trustify:8080
+      OIDC_SERVER_URL: http://localhost:9090/realms/trustd
+      OIDC_CLIENT_ID: ui
+    ports:
+      - "3000:3000"
+    command: tail -f /dev/null
+    volumes:
+      - ${TRUSTIFY_UI_PATH:-~/git/guacsec/trustify-ui}:/workspace:cached
+      - npm-cache:/home/vscode/.npm
+    networks:
+      - trustify
