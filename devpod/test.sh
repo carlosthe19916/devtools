@@ -1,0 +1,1 @@
+sed "s|\${localEnv:UID}|$UID|g" trustify-ui/.devcontainer/node/devcontainer.json > trustify-ui/.devcontainer/node/devcontainer.tmp.json
