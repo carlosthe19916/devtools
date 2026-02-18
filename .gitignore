@@ -6,3 +6,8 @@
 .vagrant/
 
 **/*.tmp.json
+
+monitor/
+.mcp.json
+test_suite_analysis/
+managed_context/
