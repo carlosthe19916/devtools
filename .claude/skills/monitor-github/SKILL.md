@@ -19,7 +19,7 @@ Here is the list of repositories to monitor:
 
 ## What to monitor
 
-- Pull Requests
+- Pull Requests (ignore closed ones)
   - I opened
   - Where I am a reviewer
   - Where I am participating in

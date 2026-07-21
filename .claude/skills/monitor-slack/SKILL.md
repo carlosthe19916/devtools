@@ -51,7 +51,7 @@ Artificial intelligence:
 
 ## Outcome
 
-- Make a summary of the messages and consider only today's messages
+- Make a summary of the messages and consider only today's messages. Use `during:today` for filtering data
   - Write the final output in a markdown file `monitor/slack/dd-month-year-channels.md` file inside this repository
 - Identify common patterns or conversations between all channels.
   - Make a summary of common things happening
