@@ -3,11 +3,18 @@
   "dockerComposeFile": "./docker-compose.yml",
   "service": "pulp-maven",
   "workspaceFolder": "/workspace",
-  "forwardPorts": [24817],
+  "forwardPorts": [
+    24816,
+    24817
+  ],
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/devcontainers/features/python:1": { "version": "3.11" },
-    "ghcr.io/devcontainers/features/node:1": { "version": "22" },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    },
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
@@ -17,6 +24,7 @@
     "vscode": {
       "extensions": [
         "eamodio.gitlens",
+        "tamasfe.even-better-toml",
         "ms-python.python",
         "ms-python.vscode-pylance",
         "charliermarsh.ruff",

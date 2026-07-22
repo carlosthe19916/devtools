@@ -25,6 +25,7 @@ services:
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULP_MAVEN_PATH:-~/git/pulp/pulp_maven}:/workspace:cached
+      - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/repositories/pulpcore:cached
       - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
       - pulp-maven-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached

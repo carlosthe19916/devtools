@@ -7,6 +7,16 @@ sudo chown -R "$(id -u):$(id -g)" /var/lib/pulp /etc/pulp
 # Python dependencies
 ################################################################################
 
+# Install local pulpcore checkout (if mounted) before the plugin so pip reuses it instead of pulling from PyPI
+pulp-core-local() {
+    if [ -f /repositories/pulpcore/pyproject.toml ] || [ -f /repositories/pulpcore/setup.cfg ]; then
+        pip install -e /repositories/pulpcore
+    else
+        echo "No pulpcore checkout found at /repositories/pulpcore — using PyPI version"
+    fi
+}
+pulp-core-pypi() { pip install pulpcore; }
+pulp-core-local
 pip install -e .
 pip install -r lint_requirements.txt
 pip install -r test_requirements.txt
@@ -49,6 +59,9 @@ pulp-services() {
   wait
 }
 PULP_FUNCTIONS
+
+declare -f pulp-core-local >> ~/.bashrc
+declare -f pulp-core-pypi >> ~/.bashrc
 
 ################################################################################
 # Claude Code: MCP servers and plugins
