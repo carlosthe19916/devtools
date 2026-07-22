@@ -1,0 +1,60 @@
+networks:
+  pulp:
+    name: "pulp"
+
+volumes:
+  pulp-python-claude-config:
+  pulp-python-postgres-data:
+
+services:
+  pulp-python:
+    image: localhost/devcontainer-pulp-python:latest
+    build:
+      dockerfile: ./Dockerfile
+    security_opt:
+      - "label=disable"
+    userns_mode: "keep-id"
+    environment:
+      GH_TOKEN: ${GH_TOKEN}
+      PULP_DATABASES__default__HOST: pulp-python-db
+      PULP_DATABASES__default__PASSWORD: pulp
+      PULP_REDIS_URL: redis://pulp-python-redis:6379/0
+      CLAUDE_CODE_USE_VERTEX: "1"
+      CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
+      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    volumes:
+      - ${PULP_PYTHON_PATH:-~/git/pulp/pulp_python}:/workspace:cached
+      - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
+      - pulp-python-claude-config:/home/vscode/.claude
+      - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
+    networks:
+      - pulp
+    depends_on:
+      pulp-python-db:
+        condition: service_healthy
+      pulp-python-redis:
+        condition: service_started
+
+  pulp-python-db:
+    image: postgres:17
+    restart: unless-stopped
+    volumes:
+      - pulp-python-postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: pulp
+      POSTGRES_PASSWORD: pulp
+      POSTGRES_DB: pulp
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pulp -d pulp"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pulp
+
+  pulp-python-redis:
+    image: redis:7
+    restart: unless-stopped
+    networks:
+      - pulp
