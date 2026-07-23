@@ -3,22 +3,15 @@
   "dockerComposeFile": "./docker-compose.yml",
   "service": "pulp-maven",
   "workspaceFolder": "/workspace",
-  "forwardPorts": [
-    24816,
-    24817
-  ],
+  "forwardPorts": [24816, 24817],
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/devcontainers/features/python:1": {
-      "version": "3.11"
-    },
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "22"
-    },
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.11" },
+    "ghcr.io/devcontainers/features/node:1": { "version": "22" },
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "initializeCommand": "bash ${localEnv:DEVTOOLS_TSD_UI_PATH:~/git/devtools}/devcontainer/github.com/pulp/pulp_maven/.devcontainer/initializeCommand.sh ${devcontainerId}",
+  "initializeCommand": "bash ${localEnv:DEVTOOLS_CARLOSTHE19916_PATH:~/git/devtools}/devcontainer/github.com/pulp/pulp_maven/.devcontainer/initializeCommand.sh ${devcontainerId}",
   "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
   "customizations": {
     "vscode": {

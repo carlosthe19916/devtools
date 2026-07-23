@@ -7,13 +7,23 @@ sudo chown -R "$(id -u):$(id -g)" /var/lib/pulp /etc/pulp
 # Python dependencies
 ################################################################################
 
+# Install local pulpcore checkout (if mounted) before the plugin so pip reuses it instead of pulling from PyPI
+pulp-core-local() {
+    if [ -f /repositories/pulpcore/pyproject.toml ] || [ -f /repositories/pulpcore/setup.cfg ]; then
+        pip install -e /repositories/pulpcore
+    else
+        echo "No pulpcore checkout found at /repositories/pulpcore — using PyPI version"
+    fi
+}
+pulp-core-pypi() { pip install pulpcore; }
+pulp-core-local
 pip install -e .
-pip install -r lint_requirements.txt
-pip install -r unittest_requirements.txt
-pip install -r functest_requirements.txt
-pip install -r test_requirements.txt
-pip install -r doc_requirements.txt
+for req in lint_requirements.txt unittest_requirements.txt functest_requirements.txt test_requirements.txt doc_requirements.txt; do
+    [ -f "$req" ] && pip install -r "$req"
+done
 pip install httpie pulp-cli
+plugin_suffix=$(basename /workspace | sed 's/^pulp_//')
+pip install "pulp-cli-${plugin_suffix}" 2>/dev/null || true
 
 ################################################################################
 # Database initialization
@@ -51,6 +61,9 @@ pulp-services() {
   wait
 }
 PULP_FUNCTIONS
+
+declare -f pulp-core-local >> ~/.bashrc
+declare -f pulp-core-pypi >> ~/.bashrc
 
 ################################################################################
 # Claude Code: MCP servers and plugins

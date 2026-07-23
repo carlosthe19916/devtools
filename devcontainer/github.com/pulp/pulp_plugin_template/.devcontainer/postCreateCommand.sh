@@ -21,6 +21,8 @@ pip install -e .
 for req in lint_requirements.txt unittest_requirements.txt functest_requirements.txt test_requirements.txt doc_requirements.txt; do
     [ -f "$req" ] && pip install -r "$req"
 done
+
+# Install pulp-cli (base CLI) and its plugin-specific extension (e.g. pulp-cli-maven)
 pip install httpie pulp-cli
 plugin_suffix=$(basename /workspace | sed 's/^pulp_//')
 pip install "pulp-cli-${plugin_suffix}" 2>/dev/null || true

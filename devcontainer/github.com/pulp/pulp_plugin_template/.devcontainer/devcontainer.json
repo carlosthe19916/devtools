@@ -1,7 +1,7 @@
 {
-  "name": "pulp_python",
+  "name": "pulp___PLUGIN__",
   "dockerComposeFile": "./docker-compose.yml",
-  "service": "pulp-python",
+  "service": "pulp-__PLUGIN__",
   "workspaceFolder": "/workspace",
   "forwardPorts": [24816, 24817],
   "features": {
@@ -11,7 +11,7 @@
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "initializeCommand": "bash ${localEnv:DEVTOOLS_CARLOSTHE19916_PATH:~/git/devtools}/devcontainer/github.com/pulp/pulp_python/.devcontainer/initializeCommand.sh ${devcontainerId}",
+  "initializeCommand": "bash ${localEnv:DEVTOOLS_CARLOSTHE19916_PATH:~/git/devtools}/devcontainer/github.com/pulp/pulp___PLUGIN__/.devcontainer/initializeCommand.sh ${devcontainerId}",
   "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
   "customizations": {
     "vscode": {
@@ -29,7 +29,7 @@
         "git.alwaysSignOff": true,
         "sqltools.connections": [
           {
-            "server": "pulp-python-db",
+            "server": "pulp-__PLUGIN__-db",
             "database": "pulp",
             "username": "pulp",
             "password": "pulp",

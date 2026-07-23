@@ -4,7 +4,7 @@ Environment variables:
 
 | Environment variable | default value           |
 |----------------------|-------------------------|
-| DEVTOOLS_TSD_UI_PATH | ~/git/devtools          |
+| DEVTOOLS_CARLOSTHE19916_PATH | ~/git/devtools          |
 | PULPCORE_PATH        | ~/git/pulp/pulpcore     |
 | PULP_MAVEN_PATH      | ~/git/pulp/pulp_maven   |
 | PULP_PYTHON_PATH     | ~/git/pulp/pulp_python  |
@@ -12,8 +12,8 @@ Environment variables:
 Make sure the environment variables are defined at `~/.bashrc` or equivalent:
 
 ```shell
-if [ -z "$DEVTOOLS_TSD_UI_PATH" ]; then
-  echo "export DEVTOOLS_TSD_UI_PATH=/cloned_repository_directory" >> ~/.bashrc;
+if [ -z "$DEVTOOLS_CARLOSTHE19916_PATH" ]; then
+  echo "export DEVTOOLS_CARLOSTHE19916_PATH=/cloned_repository_directory" >> ~/.bashrc;
 fi
 ```
 
