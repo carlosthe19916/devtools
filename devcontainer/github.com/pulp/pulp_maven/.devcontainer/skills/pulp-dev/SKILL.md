@@ -50,6 +50,16 @@ Connect directly:
 redis-cli -u "$PULP_REDIS_URL"
 ```
 
+## Generating client bindings
+
+Generate and install Python client bindings (requires services running):
+
+```bash
+pulp-bindings <component>   # e.g., pulp-bindings maven, pulp-bindings core
+```
+
+This fetches the OpenAPI spec from the running Pulp instance, generates a Python client using `openapi-generator-cli` (7.10.0) with Pulp-specific templates, and installs it in editable mode.
+
 ## Running tests
 
 Unit tests:

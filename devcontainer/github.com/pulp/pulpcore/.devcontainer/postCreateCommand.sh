@@ -12,8 +12,24 @@ for req in lint_requirements.txt unittest_requirements.txt functest_requirements
     [ -f "$req" ] && pip install -r "$req"
 done
 
-pip install httpie pulp-cli
+pip install httpie pulp-cli packaging
 npm install -g concurrently
+
+################################################################################
+# OpenAPI Generator (binding generation tooling)
+################################################################################
+
+sudo curl -L -o /opt/openapi-generator-cli.jar \
+    https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.10.0/openapi-generator-cli-7.10.0.jar
+
+sudo mkdir -p /opt/templates
+cd /opt/templates
+sudo curl -sO https://raw.githubusercontent.com/pulp/pulp-openapi-generator/refs/heads/main/templates/python/v7.10.0/configuration.mustache
+sudo curl -sO https://raw.githubusercontent.com/pulp/pulp-openapi-generator/refs/heads/main/templates/python/v7.10.0/partial_api_args.mustache
+sudo curl -sO https://raw.githubusercontent.com/pulp/pulp-openapi-generator/refs/heads/main/templates/python/v7.10.0/requirements.mustache
+sudo curl -sO https://raw.githubusercontent.com/pulp/pulp-openapi-generator/refs/heads/main/templates/python/v7.10.0/setup.mustache
+sudo bash -c 'printf "from pkgutil import extend_path\n__path__ = extend_path(__path__, __name__)\n" > /opt/templates/__init__.py'
+cd /workspace
 
 ################################################################################
 # Database initialization
@@ -71,7 +87,32 @@ pulp-content() { pulpcore-content --bind 127.0.0.1:24816 --timeout 90 --workers 
 pulp-worker() { pulpcore-worker; }
 pulp-services() {
   concurrently --names "api,content,worker" --prefix-colors "green,blue,magenta" \
-    "pulp-api" "pulp-content" "pulp-worker"
+    "pulpcore-api --bind 127.0.0.1:24817 --timeout 90 --workers 2 --access-logfile -" \
+    "pulpcore-content --bind 127.0.0.1:24816 --timeout 90 --workers 2 --access-logfile -" \
+    "pulpcore-worker"
+}
+pulp-bindings() {
+  local component="${1:?Usage: pulp-bindings <component> [language]}"
+  local language="${2:-python}"
+  local api_root="${PULP_API_ROOT:-/pulp/}"
+  local api_url="http://localhost:24817${api_root}api/v3/docs/api.json?bindings&component=${component}"
+  local tmpspec
+  tmpspec=$(mktemp)
+  echo "Fetching API spec for ${component}..."
+  curl -s "${api_url}" | jq . > "${tmpspec}"
+  local pkg_name="pulp_${component}-client"
+  echo "Generating ${language} bindings for ${component}..."
+  java -jar /opt/openapi-generator-cli.jar generate \
+    -i "${tmpspec}" \
+    -g "${language}" \
+    -o "${pkg_name}" \
+    -t /opt/templates \
+    --skip-validate-spec \
+    --strict-spec=false \
+    --additional-properties=packageName=pulpcore.client.${component},projectName="${pkg_name}",packageVersion=0.0.0.dev
+  pip install -e "${pkg_name}"
+  rm -f "${tmpspec}"
+  echo "Installed ${pkg_name} (editable)"
 }
 PULP_FUNCTIONS
 
