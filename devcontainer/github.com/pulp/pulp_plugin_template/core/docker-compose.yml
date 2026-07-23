@@ -27,6 +27,7 @@ services:
     volumes:
       - ${__NAME_UPPER___PATH:-~/git/pulp/__NAME__}:/workspace:cached
       - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
+      - ./postStartCommand.sh:/tmp/postStartCommand.sh:Z
       - ./prepare-bindings.sh:/tmp/prepare-bindings.sh:Z
       - ./patches:/tmp/patches:ro,Z
       - __NAME__-claude-config:/home/vscode/.claude

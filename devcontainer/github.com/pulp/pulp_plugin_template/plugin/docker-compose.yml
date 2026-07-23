@@ -28,6 +28,7 @@ services:
       - ${PULP___PLUGIN_UPPER___PATH:-~/git/pulp/pulp___PLUGIN__}:/workspace:cached
       - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/repositories/pulpcore:cached
       - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
+      - ./postStartCommand.sh:/tmp/postStartCommand.sh:Z
       - ./prepare-bindings.sh:/tmp/prepare-bindings.sh:Z
       - ./patches:/tmp/patches:ro,Z
       - pulp-__PLUGIN__-claude-config:/home/vscode/.claude

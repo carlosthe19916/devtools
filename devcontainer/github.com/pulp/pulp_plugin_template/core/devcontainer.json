@@ -14,7 +14,7 @@
   },
   "initializeCommand": "bash ${localEnv:DEVTOOLS_CARLOSTHE19916_PATH:~/git/devtools}/devcontainer/github.com/pulp/__NAME__/.devcontainer/initializeCommand.sh ${devcontainerId}",
   "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
-  "postStartCommand": "sudo service nginx start",
+  "postStartCommand": "bash /tmp/postStartCommand.sh",
   "customizations": {
     "vscode": {
       "extensions": [

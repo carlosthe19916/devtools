@@ -48,12 +48,6 @@ pulpcore-manager migrate --noinput
 pulpcore-manager reset-admin-password --password password
 
 ################################################################################
-# Generate OpenAPI client bindings
-################################################################################
-
-bash /tmp/prepare-bindings.sh core "${plugin_suffix}"
-
-################################################################################
 # pulp-smash configuration
 ################################################################################
 

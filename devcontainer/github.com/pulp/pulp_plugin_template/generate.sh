@@ -32,7 +32,7 @@ if [ "$1" = "core" ]; then
     cp "${TEMPLATE_DIR}/postCreateCommand.sh" "${TARGET_DIR}/postCreateCommand.sh"
 
     # Copy shared files
-    for f in Dockerfile initializeCommand.sh settings.py prepare-bindings.sh nginx.conf; do
+    for f in Dockerfile initializeCommand.sh settings.py prepare-bindings.sh nginx.conf postStartCommand.sh; do
         cp "${SHARED_DIR}/${f}" "${TARGET_DIR}/${f}"
     done
 
@@ -70,7 +70,7 @@ else
         cp "${TEMPLATE_DIR}/postCreateCommand.sh" "${TARGET_DIR}/postCreateCommand.sh"
 
         # Copy shared files
-        for f in Dockerfile initializeCommand.sh settings.py prepare-bindings.sh nginx.conf; do
+        for f in Dockerfile initializeCommand.sh settings.py prepare-bindings.sh nginx.conf postStartCommand.sh; do
             cp "${SHARED_DIR}/${f}" "${TARGET_DIR}/${f}"
         done
 
