@@ -36,6 +36,12 @@ if [ "$1" = "core" ]; then
         cp "${SHARED_DIR}/${f}" "${TARGET_DIR}/${f}"
     done
 
+    # Copy skills
+    if [ -d "${SHARED_DIR}/skills" ]; then
+        rm -rf "${TARGET_DIR}/skills"
+        cp -r "${SHARED_DIR}/skills" "${TARGET_DIR}/skills"
+    fi
+
     echo "  Done: pulpcore"
 else
     TEMPLATE_DIR="${SCRIPT_DIR}/plugin"
@@ -61,6 +67,12 @@ else
         for f in Dockerfile initializeCommand.sh settings.py; do
             cp "${SHARED_DIR}/${f}" "${TARGET_DIR}/${f}"
         done
+
+        # Copy skills
+        if [ -d "${SHARED_DIR}/skills" ]; then
+            rm -rf "${TARGET_DIR}/skills"
+            cp -r "${SHARED_DIR}/skills" "${TARGET_DIR}/skills"
+        fi
 
         echo "  Done: pulp_${PLUGIN}"
     done

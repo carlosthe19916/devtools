@@ -95,3 +95,8 @@ PULP_FUNCTIONS
 
 claude mcp add --transport http --scope user atlassian https://mcp.atlassian.com/v1/mcp 2>/dev/null || true
 claude plugin install superpowers@claude-plugins-official --scope user 2>/dev/null || true
+
+if [ -d /tmp/claude-skills ]; then
+    mkdir -p ~/.claude/skills
+    cp -r /tmp/claude-skills/* ~/.claude/skills/
+fi
