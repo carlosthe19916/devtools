@@ -6,3 +6,5 @@
 echo "devcontainerID ${1}"
 
 mkdir -p "${HOME}/.config/gcloud"
+mkdir -p "${HOME}/.ssh"
+[ -f "${HOME}/.gitconfig" ] || touch "${HOME}/.gitconfig"

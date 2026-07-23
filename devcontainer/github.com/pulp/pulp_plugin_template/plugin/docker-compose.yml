@@ -29,6 +29,8 @@ services:
       - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
       - pulp-__PLUGIN__-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
+      - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
+      - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
     networks:
       - pulp
     depends_on:
