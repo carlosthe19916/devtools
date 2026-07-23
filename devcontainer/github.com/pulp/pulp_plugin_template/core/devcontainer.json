@@ -1,7 +1,7 @@
 {
-  "name": "pulpcore",
+  "name": "__NAME__",
   "dockerComposeFile": "./docker-compose.yml",
-  "service": "pulpcore",
+  "service": "__NAME__",
   "workspaceFolder": "/workspace",
   "forwardPorts": [24816, 24817],
   "features": {
@@ -11,7 +11,7 @@
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "initializeCommand": "bash ${localEnv:DEVTOOLS_CARLOSTHE19916_PATH:~/git/devtools}/devcontainer/github.com/pulp/pulpcore/.devcontainer/initializeCommand.sh ${devcontainerId}",
+  "initializeCommand": "bash ${localEnv:DEVTOOLS_CARLOSTHE19916_PATH:~/git/devtools}/devcontainer/github.com/pulp/__NAME__/.devcontainer/initializeCommand.sh ${devcontainerId}",
   "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
   "customizations": {
     "vscode": {
@@ -29,7 +29,7 @@
         "git.alwaysSignOff": true,
         "sqltools.connections": [
           {
-            "server": "pulpcore-db",
+            "server": "__NAME__-db",
             "database": "pulp",
             "username": "pulp",
             "password": "pulp",

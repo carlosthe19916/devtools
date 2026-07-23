@@ -1,7 +1,8 @@
 CONTENT_ORIGIN = "http://localhost:24816"
 CONTENT_PATH_PREFIX = "/api/pulp-content/"
+DOMAIN_ENABLED = True
 API_ROOT = "/api/pulp/"
-SECRET_KEY = "unsafe-dev-secret-key"
+SECRET_KEY = "dev-secret-key-not-for-production"
 
 DATABASES = {
     "default": {
