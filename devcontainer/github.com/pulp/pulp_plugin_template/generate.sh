@@ -32,7 +32,7 @@ if [ "$1" = "core" ]; then
     cp "${TEMPLATE_DIR}/postCreateCommand.sh" "${TARGET_DIR}/postCreateCommand.sh"
 
     # Copy shared files
-    for f in Dockerfile initializeCommand.sh settings.py; do
+    for f in Dockerfile initializeCommand.sh settings.py prepare-bindings.sh nginx.conf; do
         cp "${SHARED_DIR}/${f}" "${TARGET_DIR}/${f}"
     done
 
@@ -40,6 +40,12 @@ if [ "$1" = "core" ]; then
     if [ -d "${SHARED_DIR}/skills" ]; then
         rm -rf "${TARGET_DIR}/skills"
         cp -r "${SHARED_DIR}/skills" "${TARGET_DIR}/skills"
+    fi
+
+    # Copy patches
+    if [ -d "${SHARED_DIR}/patches" ]; then
+        rm -rf "${TARGET_DIR}/patches"
+        cp -r "${SHARED_DIR}/patches" "${TARGET_DIR}/patches"
     fi
 
     echo "  Done: pulpcore"
@@ -64,7 +70,7 @@ else
         cp "${TEMPLATE_DIR}/postCreateCommand.sh" "${TARGET_DIR}/postCreateCommand.sh"
 
         # Copy shared files
-        for f in Dockerfile initializeCommand.sh settings.py; do
+        for f in Dockerfile initializeCommand.sh settings.py prepare-bindings.sh nginx.conf; do
             cp "${SHARED_DIR}/${f}" "${TARGET_DIR}/${f}"
         done
 
@@ -72,6 +78,12 @@ else
         if [ -d "${SHARED_DIR}/skills" ]; then
             rm -rf "${TARGET_DIR}/skills"
             cp -r "${SHARED_DIR}/skills" "${TARGET_DIR}/skills"
+        fi
+
+        # Copy patches
+        if [ -d "${SHARED_DIR}/patches" ]; then
+            rm -rf "${TARGET_DIR}/patches"
+            cp -r "${SHARED_DIR}/patches" "${TARGET_DIR}/patches"
         fi
 
         echo "  Done: pulp_${PLUGIN}"

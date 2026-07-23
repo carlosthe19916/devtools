@@ -50,15 +50,17 @@ Connect directly:
 redis-cli -u "$PULP_REDIS_URL"
 ```
 
-## Generating client bindings
+## Client bindings
 
-Generate and install Python client bindings (requires services running):
+OpenAPI Python client bindings (`pulpcore.client.*`) are **auto-generated during container setup** for `core` and the current plugin. They are installed to `/opt/bindings/`.
+
+To regenerate bindings (e.g., after changing the API schema):
 
 ```bash
-pulp-bindings <component>   # e.g., pulp-bindings maven, pulp-bindings core
+pulp-bindings <component> [component2 ...]   # e.g., pulp-bindings maven, pulp-bindings core
 ```
 
-This fetches the OpenAPI spec from the running Pulp instance, generates a Python client using `openapi-generator-cli` (7.10.0) with Pulp-specific templates, and installs it in editable mode.
+This forces regeneration regardless of whether bindings already exist.
 
 ## Running tests
 
@@ -71,7 +73,8 @@ pytest pulp_*/tests/unit/ -v
 Functional tests (requires services running):
 
 ```bash
-pytest pulp_*/tests/functional/ -v
+pytest pulp_*/tests/functional/ -v ## Execute all tests
+pytest pulp_*/tests/functional/{myFilePath}.py -v ## Execute one file test
 ```
 
 ## Pulp CLI
@@ -89,4 +92,10 @@ If a local pulpcore is mounted at `/repositories/pulpcore`:
 ```bash
 pulp-core-local   # Install from local checkout
 pulp-core-pypi    # Switch back to PyPI version
+```
+
+## Kill all services
+
+```shell
+pkill -f 'pulpcore-(api|content|worker)|concurrently.*pulpcore'
 ```

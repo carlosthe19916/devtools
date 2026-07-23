@@ -3,17 +3,18 @@
   "dockerComposeFile": "./docker-compose.yml",
   "service": "__NAME__",
   "workspaceFolder": "/workspace",
-  "forwardPorts": [24816, 24817],
+  "forwardPorts": [80, 24816, 24817],
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {},
     "ghcr.io/devcontainers/features/python:1": { "version": "3.11" },
-    "ghcr.io/devcontainers/features/java:1": { "version": "17" },
+    "ghcr.io/devcontainers/features/java:1": { "version": "17", "installMaven": "true" },
     "ghcr.io/devcontainers/features/node:1": { "version": "22" },
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "initializeCommand": "bash ${localEnv:DEVTOOLS_CARLOSTHE19916_PATH:~/git/devtools}/devcontainer/github.com/pulp/__NAME__/.devcontainer/initializeCommand.sh ${devcontainerId}",
   "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
+  "postStartCommand": "sudo service nginx start",
   "customizations": {
     "vscode": {
       "extensions": [

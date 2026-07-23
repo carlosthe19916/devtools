@@ -16,34 +16,36 @@ pip install httpie pulp-cli packaging
 npm install -g concurrently
 
 ################################################################################
-# OpenAPI Generator (binding generation tooling)
+# Apply patches to pulpcore
 ################################################################################
 
-sudo curl -L -o /opt/openapi-generator-cli.jar \
-    https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.10.0/openapi-generator-cli-7.10.0.jar
-
-sudo mkdir -p /opt/templates
-cd /opt/templates
-sudo curl -sO https://raw.githubusercontent.com/pulp/pulp-openapi-generator/refs/heads/main/templates/python/v7.10.0/configuration.mustache
-sudo curl -sO https://raw.githubusercontent.com/pulp/pulp-openapi-generator/refs/heads/main/templates/python/v7.10.0/partial_api_args.mustache
-sudo curl -sO https://raw.githubusercontent.com/pulp/pulp-openapi-generator/refs/heads/main/templates/python/v7.10.0/requirements.mustache
-sudo curl -sO https://raw.githubusercontent.com/pulp/pulp-openapi-generator/refs/heads/main/templates/python/v7.10.0/setup.mustache
-sudo bash -c 'printf "from pkgutil import extend_path\n__path__ = extend_path(__path__, __name__)\n" > /opt/templates/__init__.py'
-cd /workspace
+if [ -d /tmp/patches ]; then
+    for p in /tmp/patches/*.patch; do
+        [ -f "$p" ] || continue
+        patch -p1 --forward --no-backup-if-mismatch -d /workspace < "$p" || true
+    done
+fi
 
 ################################################################################
 # Database initialization
 ################################################################################
 
+python3 -c "import redis; redis.from_url('$PULP_REDIS_URL').flushall(); print('Redis flushed')" 2>/dev/null || true
 pulpcore-manager migrate --noinput
 pulpcore-manager reset-admin-password --password password
+
+################################################################################
+# Generate OpenAPI client bindings
+################################################################################
+
+bash /tmp/prepare-bindings.sh core
 
 ################################################################################
 # pulp-smash configuration
 ################################################################################
 
-mkdir -p ~/.config/pulp_smash
-cat > ~/.config/pulp_smash/settings.json << 'SMASH_CONFIG'
+sudo mkdir -p /etc/xdg/pulp_smash
+sudo tee /etc/xdg/pulp_smash/settings.json > /dev/null << 'SMASH_CONFIG'
 {
   "pulp": {
     "auth": ["admin", "password"],
@@ -92,27 +94,7 @@ pulp-services() {
     "pulpcore-worker"
 }
 pulp-bindings() {
-  local component="${1:?Usage: pulp-bindings <component> [language]}"
-  local language="${2:-python}"
-  local api_root="${PULP_API_ROOT:-/api/pulp/}"
-  local api_url="http://localhost:24817${api_root}api/v3/docs/api.json?bindings&component=${component}"
-  local tmpspec
-  tmpspec=$(mktemp)
-  echo "Fetching API spec for ${component}..."
-  curl -s "${api_url}" | jq . > "${tmpspec}"
-  local pkg_name="pulp_${component}-client"
-  echo "Generating ${language} bindings for ${component}..."
-  java -jar /opt/openapi-generator-cli.jar generate \
-    -i "${tmpspec}" \
-    -g "${language}" \
-    -o "${pkg_name}" \
-    -t /opt/templates \
-    --skip-validate-spec \
-    --strict-spec=false \
-    --additional-properties=packageName=pulpcore.client.${component},projectName="${pkg_name}",packageVersion=0.0.0.dev
-  pip install -e "${pkg_name}"
-  rm -f "${tmpspec}"
-  echo "Installed ${pkg_name} (editable)"
+  bash /tmp/prepare-bindings.sh --force "${@:?Usage: pulp-bindings <component> [component2 ...]}"
 }
 PULP_FUNCTIONS
 

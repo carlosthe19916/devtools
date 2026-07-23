@@ -5,6 +5,7 @@ networks:
 volumes:
   __NAME__-claude-config:
   __NAME__-postgres-data:
+  __NAME__-pulp-media:
 
 services:
   __NAME__:
@@ -26,10 +27,13 @@ services:
     volumes:
       - ${__NAME_UPPER___PATH:-~/git/pulp/__NAME__}:/workspace:cached
       - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
+      - ./prepare-bindings.sh:/tmp/prepare-bindings.sh:Z
+      - ./patches:/tmp/patches:ro,Z
       - __NAME__-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
       - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
       - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
+      - __NAME__-pulp-media:/var/lib/pulp
       - ./skills:/tmp/claude-skills:ro,Z
     networks:
       - pulp
