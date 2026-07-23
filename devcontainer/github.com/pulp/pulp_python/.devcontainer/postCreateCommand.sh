@@ -26,6 +26,7 @@ done
 pip install httpie pulp-cli
 plugin_suffix=$(basename /workspace | sed 's/^pulp_//')
 pip install "pulp-cli-${plugin_suffix}" 2>/dev/null || true
+npm install -g concurrently
 
 ################################################################################
 # Database initialization
@@ -33,6 +34,44 @@ pip install "pulp-cli-${plugin_suffix}" 2>/dev/null || true
 
 pulpcore-manager migrate --noinput
 pulpcore-manager reset-admin-password --password password
+
+################################################################################
+# pulp-smash configuration
+################################################################################
+
+mkdir -p ~/.config/pulp_smash
+cat > ~/.config/pulp_smash/settings.json << 'SMASH_CONFIG'
+{
+  "pulp": {
+    "auth": ["admin", "password"],
+    "selinux enabled": false,
+    "version": "3"
+  },
+  "hosts": [
+    {
+      "hostname": "localhost",
+      "roles": {
+        "api": {
+          "port": 24817,
+          "scheme": "http",
+          "service": "pulpcore-api"
+        },
+        "content": {
+          "port": 24816,
+          "scheme": "http",
+          "service": "pulp_content_app"
+        },
+        "pulp resource manager": {},
+        "pulp workers": {},
+        "redis": {},
+        "shell": {
+          "transport": "local"
+        }
+      }
+    }
+  ]
+}
+SMASH_CONFIG
 
 ################################################################################
 # Shell aliases
@@ -44,23 +83,8 @@ pulp-api() { pulpcore-api --bind 127.0.0.1:24817 --timeout 90 --workers 2 --acce
 pulp-content() { pulpcore-content --bind 127.0.0.1:24816 --timeout 90 --workers 2 --access-logfile -; }
 pulp-worker() { pulpcore-worker; }
 pulp-services() {
-  local pids=()
-  pulp-api 2>&1 | sed -u "s/^/$(printf '\033[32m')[api]$(printf '\033[0m') /" &
-  pids+=($!)
-  pulp-content 2>&1 | sed -u "s/^/$(printf '\033[34m')[content]$(printf '\033[0m') /" &
-  pids+=($!)
-  pulp-worker 2>&1 | sed -u "s/^/$(printf '\033[35m')[worker]$(printf '\033[0m') /" &
-  pids+=($!)
-  _pulp_cleanup() {
-    for pid in "${pids[@]}"; do
-      pkill -P "$pid" 2>/dev/null
-      kill "$pid" 2>/dev/null
-    done
-    wait 2>/dev/null
-    echo "Pulp services stopped."
-  }
-  trap '_pulp_cleanup; return 0' INT TERM
-  wait
+  concurrently --names "api,content,worker" --prefix-colors "green,blue,magenta" \
+    "pulp-api" "pulp-content" "pulp-worker"
 }
 PULP_FUNCTIONS
 
@@ -73,3 +97,8 @@ declare -f pulp-core-pypi >> ~/.bashrc
 
 claude mcp add --transport http --scope user atlassian https://mcp.atlassian.com/v1/mcp 2>/dev/null || true
 claude plugin install superpowers@claude-plugins-official --scope user 2>/dev/null || true
+
+if [ -d /tmp/claude-skills ]; then
+    mkdir -p ~/.claude/skills
+    cp -r /tmp/claude-skills/* ~/.claude/skills/
+fi

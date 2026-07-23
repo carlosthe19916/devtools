@@ -26,6 +26,7 @@ done
 pip install httpie pulp-cli
 plugin_suffix=$(basename /workspace | sed 's/^pulp_//')
 pip install "pulp-cli-${plugin_suffix}" 2>/dev/null || true
+npm install -g concurrently
 
 ################################################################################
 # Database initialization
@@ -82,23 +83,8 @@ pulp-api() { pulpcore-api --bind 127.0.0.1:24817 --timeout 90 --workers 2 --acce
 pulp-content() { pulpcore-content --bind 127.0.0.1:24816 --timeout 90 --workers 2 --access-logfile -; }
 pulp-worker() { pulpcore-worker; }
 pulp-services() {
-  local pids=()
-  pulp-api 2>&1 | sed -u "s/^/$(printf '\033[32m')[api]$(printf '\033[0m') /" &
-  pids+=($!)
-  pulp-content 2>&1 | sed -u "s/^/$(printf '\033[34m')[content]$(printf '\033[0m') /" &
-  pids+=($!)
-  pulp-worker 2>&1 | sed -u "s/^/$(printf '\033[35m')[worker]$(printf '\033[0m') /" &
-  pids+=($!)
-  _pulp_cleanup() {
-    for pid in "${pids[@]}"; do
-      pkill -P "$pid" 2>/dev/null
-      kill "$pid" 2>/dev/null
-    done
-    wait 2>/dev/null
-    echo "Pulp services stopped."
-  }
-  trap '_pulp_cleanup; return 0' INT TERM
-  wait
+  concurrently --names "api,content,worker" --prefix-colors "green,blue,magenta" \
+    "pulp-api" "pulp-content" "pulp-worker"
 }
 PULP_FUNCTIONS
 

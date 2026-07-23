@@ -31,6 +31,7 @@ services:
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
       - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
       - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
+      - ./skills:/tmp/claude-skills:ro,Z
     networks:
       - pulp
     depends_on:
