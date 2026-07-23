@@ -11,3 +11,8 @@ monitor/
 .mcp.json
 test_suite_analysis/
 managed_context/
+
+# Generated devcontainers (recreated by generate.sh)
+devcontainer/github.com/pulp/pulpcore/
+devcontainer/github.com/pulp/pulp_maven/
+devcontainer/github.com/pulp/pulp_python/
