@@ -22,6 +22,44 @@ pulpcore-manager migrate --noinput
 pulpcore-manager reset-admin-password --password password
 
 ################################################################################
+# pulp-smash configuration
+################################################################################
+
+mkdir -p ~/.config/pulp_smash
+cat > ~/.config/pulp_smash/settings.json << 'SMASH_CONFIG'
+{
+  "pulp": {
+    "auth": ["admin", "password"],
+    "selinux enabled": false,
+    "version": "3"
+  },
+  "hosts": [
+    {
+      "hostname": "localhost",
+      "roles": {
+        "api": {
+          "port": 24817,
+          "scheme": "http",
+          "service": "pulpcore-api"
+        },
+        "content": {
+          "port": 24816,
+          "scheme": "http",
+          "service": "pulp_content_app"
+        },
+        "pulp resource manager": {},
+        "pulp workers": {},
+        "redis": {},
+        "shell": {
+          "transport": "local"
+        }
+      }
+    }
+  ]
+}
+SMASH_CONFIG
+
+################################################################################
 # Shell aliases
 ################################################################################
 
