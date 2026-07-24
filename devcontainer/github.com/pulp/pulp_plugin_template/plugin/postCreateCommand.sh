@@ -103,6 +103,7 @@ pulp-services() {
 pulp-bindings() {
   bash /tmp/prepare-bindings.sh --force "${@:?Usage: pulp-bindings <component> [component2 ...]}"
 }
+pulp-psql() { env PGPASSWORD=pulp psql -U pulp -d pulp -h "$PULP_DATABASES__default__HOST" -p 5432 "$@"; }
 PULP_FUNCTIONS
 
 declare -f pulp-core-local >> ~/.bashrc
