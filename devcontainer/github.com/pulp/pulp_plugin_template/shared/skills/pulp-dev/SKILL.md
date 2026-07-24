@@ -23,7 +23,7 @@ pulp-worker     # Background task worker
 ## PostgreSQL database
 
 - Database: `pulp`, User: `pulp`, Password: `pulp`, Port: `5432`
-- Host: set via `PULP_DATABASES__default__HOST` env var (the docker service name, e.g., `pulpcore-db` or `pulp-maven-db`)
+- Host: set via `DB_HOST` env var (the docker service name, e.g., `pulpcore-db` or `pulp-maven-db`)
 - The SQLTools VS Code extension is pre-configured with these credentials
 
 ```bash
@@ -33,21 +33,21 @@ pulp-migrate    # Run Django migrations
 Connect directly with psql:
 
 ```bash
-psql -h "$PULP_DATABASES__default__HOST" -U pulp -d pulp
+psql -h "$DB_HOST" -U pulp -d pulp
 ```
 
 Pulp admin credentials (for the API, not the database): `admin` / `password`
 
 ## Redis
 
-- Host: set via `PULP_REDIS_URL` env var (e.g., `redis://pulpcore-redis:6379/0` or `redis://pulp-maven-redis:6379/0`)
+- Host: set via `REDIS_URL` env var (e.g., `redis://pulpcore-redis:6379/0` or `redis://pulp-maven-redis:6379/0`)
 - Port: `6379`, database `0`
 - Used for task queueing (Pulp workers) and caching
 
 Connect directly:
 
 ```bash
-redis-cli -u "$PULP_REDIS_URL"
+redis-cli -u "$REDIS_URL"
 ```
 
 ## Client bindings

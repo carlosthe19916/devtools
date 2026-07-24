@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-GENERATOR_VERSION="7.19.0"
+GENERATOR_VERSION="7.10.0"
 GENERATOR_JAR="/opt/openapi-generator-cli.jar"
 TEMPLATES_DIR="/opt/templates"
 BINDINGS_DIR="/opt/bindings"

@@ -30,7 +30,7 @@ fi
 # Database initialization
 ################################################################################
 
-python3 -c "import redis; redis.from_url('$PULP_REDIS_URL').flushall(); print('Redis flushed')" 2>/dev/null || true
+python3 -c "import redis; redis.from_url('$REDIS_URL').flushall(); print('Redis flushed')" 2>/dev/null || true
 pulpcore-manager migrate --noinput
 pulpcore-manager reset-admin-password --password password
 
@@ -90,7 +90,7 @@ pulp-services() {
 pulp-bindings() {
   bash /tmp/prepare-bindings.sh --force "${@:?Usage: pulp-bindings <component> [component2 ...]}"
 }
-pulp-psql() { env PGPASSWORD=pulp psql -U pulp -d pulp -h "$PULP_DATABASES__default__HOST" -p 5432 "$@"; }
+pulp-psql() { env PGPASSWORD=pulp psql -U pulp -d pulp -h "$DB_HOST" -p 5432 "$@"; }
 PULP_FUNCTIONS
 
 ################################################################################

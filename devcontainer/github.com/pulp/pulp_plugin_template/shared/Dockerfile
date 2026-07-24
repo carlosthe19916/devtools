@@ -6,7 +6,8 @@ RUN sudo apt update && \
 RUN mkdir -p /etc/pulp/certs && \
     openssl rand -base64 32 > /etc/pulp/certs/database_fields.symmetric.key
 
-RUN mkdir -p /var/lib/pulp/media \
+RUN mkdir -p /var/lib/pulp/assets\
+             /var/lib/pulp/media \
              /var/lib/pulp/tmp
 
 COPY settings.py /etc/pulp/settings.py
