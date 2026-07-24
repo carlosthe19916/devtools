@@ -16,7 +16,6 @@ pulp-core-local() {
     fi
 }
 pulp-core-pypi() { pip install pulpcore; }
-pulp-core-local
 pip install -e .
 for req in lint_requirements.txt unittest_requirements.txt functest_requirements.txt test_requirements.txt doc_requirements.txt; do
     [ -f "$req" ] && pip install -r "$req"

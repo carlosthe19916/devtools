@@ -26,3 +26,5 @@ WORKING_DIRECTORY = "/var/lib/pulp/tmp/"
 ALLOWED_CONTENT_CHECKSUMS = ["sha224", "sha256", "sha384", "sha512"]
 
 TOKEN_AUTH_DISABLED = True
+
+PYPI_API_HOSTNAME = "http://localhost:24817"
