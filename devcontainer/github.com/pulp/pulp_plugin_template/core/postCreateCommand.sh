@@ -91,6 +91,7 @@ pulp-bindings() {
   bash /tmp/prepare-bindings.sh --force "${@:?Usage: pulp-bindings <component> [component2 ...]}"
 }
 pulp-psql() { env PGPASSWORD=pulp psql -U pulp -d pulp -h "$DB_HOST" -p 5432 "$@"; }
+postgres-psql() { env PGPASSWORD=pulp psql -U pulp -d postgres -h "$DB_HOST" -p 5432 "$@"; }
 PULP_FUNCTIONS
 
 ################################################################################
