@@ -4,7 +4,7 @@ CONTENT_ORIGIN = "http://localhost:24816"
 CONTENT_PATH_PREFIX = "/api/pulp-content/"
 PYPI_PATH_PREFIX = "/api/pypi/"
 PYPI_API_HOSTNAME = "http://localhost:24817"
-DOMAIN_ENABLED = True
+DOMAIN_ENABLED = False
 API_ROOT = "/pulp/"
 SECRET_KEY = "dev-secret-key-not-for-production"
 
@@ -30,6 +30,7 @@ WORKING_DIRECTORY = "/var/lib/pulp/tmp/"
 ALLOWED_CONTENT_CHECKSUMS = ["sha224", "sha256", "sha384", "sha512"]
 
 TOKEN_AUTH_DISABLED = True
+CSRF_TRUSTED_ORIGINS = ["http://localhost:24817", "http://localhost:80", "http://localhost"]
 
 DISTRIBUTED_PUBLICATION_RETENTION_PERIOD = 5
 

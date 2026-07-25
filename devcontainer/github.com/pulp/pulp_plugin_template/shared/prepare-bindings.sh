@@ -80,7 +80,7 @@ for comp in "${components[@]}"; do
         -t "${TEMPLATES_DIR}" \
         --skip-validate-spec \
         --strict-spec=false \
-        --additional-properties=packageName=pulpcore.client.${python_pkg},projectName="${pkg_name}",packageVersion=0.0.0.dev,domainEnabled=true
+        --additional-properties=packageName=pulpcore.client.${python_pkg},projectName="${pkg_name}",packageVersion=0.0.0.dev,domainEnabled=false
 
     cp "${TEMPLATES_DIR}/__init__.py" "${BINDINGS_DIR}/${comp}-client/pulpcore/__init__.py"
     cp "${TEMPLATES_DIR}/__init__.py" "${BINDINGS_DIR}/${comp}-client/pulpcore/client/__init__.py"
