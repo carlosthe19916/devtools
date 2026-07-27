@@ -2,7 +2,7 @@ import os
 
 CONTENT_ORIGIN = "http://localhost:24816"
 CONTENT_PATH_PREFIX = "/api/pulp-content/"
-PYPI_PATH_PREFIX = "/api/pypi/"
+PYPI_PATH_PREFIX = "/pypi/"
 PYPI_API_HOSTNAME = "http://localhost:24817"
 DOMAIN_ENABLED = False
 API_ROOT = "/pulp/"
