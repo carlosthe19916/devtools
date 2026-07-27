@@ -1,0 +1,46 @@
+{
+  "name": "pulp-service",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "pulp-service",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [80, 24816, 24817],
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.11" },
+    "ghcr.io/devcontainers/features/java:1": { "version": "17", "installMaven": "true" },
+    "ghcr.io/devcontainers/features/node:1": { "version": "22" },
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "initializeCommand": "bash ${localEnv:DEVTOOLS_CARLOSTHE19916_PATH:~/git/devtools}/devcontainer/github.com/pulp/pulp-service/.devcontainer/initializeCommand.sh ${devcontainerId}",
+  "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
+  "postStartCommand": "bash /tmp/postStartCommand.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens",
+        "tamasfe.even-better-toml",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "redhat.vscode-yaml",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg"
+      ],
+      "settings": {
+        "git.alwaysSignOff": true,
+        "sqltools.connections": [
+          {
+            "server": "pulp-service-db",
+            "database": "pulp",
+            "username": "pulp",
+            "password": "pulp",
+            "port": 5432,
+            "name": "db",
+            "driver": "PostgreSQL"
+          }
+        ]
+      }
+    }
+  }
+}

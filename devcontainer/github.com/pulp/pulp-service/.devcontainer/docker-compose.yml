@@ -1,0 +1,78 @@
+networks:
+  pulp-service:
+    name: "pulp-service"
+
+volumes:
+  pulp-service-claude-config:
+  pulp-service-postgres-data:
+  pulp-service-pulp-media:
+
+services:
+  pulp-service:
+    image: localhost/devcontainer-pulp-service:latest
+    build:
+      dockerfile: ./Dockerfile
+    security_opt:
+      - "label=disable"
+    userns_mode: "keep-id"
+    environment:
+      GH_TOKEN: ${GH_TOKEN}
+      PULP_SETTINGS: /etc/pulp/settings.py
+      DB_HOST: pulp-service-db
+      DB_PASSWORD: pulp
+      REDIS_URL: redis://pulp-service-redis:6379/0
+      API_PROTOCOL: http
+      API_HOST: localhost
+      API_PORT: "24817"
+      CLAUDE_CODE_USE_VERTEX: "1"
+      CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
+      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+      # Prevent cwd (/workspace) from shadowing the editable pulp_service package
+      # (repo has a pulp_service/ project dir that is not the importable package).
+      PYTHONSAFEPATH: "1"
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    volumes:
+      - ${PULP_SERVICE_PATH:-~/git/pulp/pulp-service}:/workspace:cached
+      - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/repositories/pulpcore:cached
+      - ${PULP_MAVEN_PATH:-~/git/pulp/pulp_maven}:/repositories/pulp_maven:cached
+      - ${PULP_PYTHON_PATH:-~/git/pulp/pulp_python}:/repositories/pulp_python:cached
+      - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
+      - ./postStartCommand.sh:/tmp/postStartCommand.sh:Z
+      - ./prepare-bindings.sh:/tmp/prepare-bindings.sh:Z
+      - ./patches:/tmp/patches:ro,Z
+      - pulp-service-claude-config:/home/vscode/.claude
+      - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
+      - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
+      - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
+      - pulp-service-pulp-media:/var/lib/pulp
+      - ./skills:/tmp/claude-skills:ro,Z
+    networks:
+      - pulp-service
+    depends_on:
+      pulp-service-db:
+        condition: service_healthy
+      pulp-service-redis:
+        condition: service_started
+
+  pulp-service-db:
+    image: postgres:17
+    restart: unless-stopped
+    volumes:
+      - pulp-service-postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: pulp
+      POSTGRES_PASSWORD: pulp
+      POSTGRES_DB: pulp
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pulp -d pulp"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pulp-service
+
+  pulp-service-redis:
+    image: redis:7
+    restart: unless-stopped
+    networks:
+      - pulp-service
