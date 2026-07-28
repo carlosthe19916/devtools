@@ -80,13 +80,3 @@ services:
     restart: unless-stopped
     networks:
       - pulp-service
-
-  swagger-ui:
-    image: swaggerapi/swagger-ui:v5.27.1
-    restart: unless-stopped
-    environment:
-      # Served via pulp-service nginx at /swagger/ (same-origin as the API).
-      BASE_URL: /swagger
-      URL: /api/pulp/api/v3/docs/api.json
-    networks:
-      - pulp-service

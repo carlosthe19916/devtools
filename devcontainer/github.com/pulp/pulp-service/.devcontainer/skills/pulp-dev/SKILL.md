@@ -21,7 +21,7 @@ Inside the container, scripts mount at `/opt/pulp-dev/scripts` (sourced via `she
 | ClowdApp `PULP_*` env | `pulp-dev.env` |
 | Django bootstrap | `settings.py` |
 | This skill + Claude install | `skills/` (+ `setup/70-claude.sh`) |
-| Compose stack | `docker-compose.yml` (app + Postgres 16 + Redis + Swagger UI) |
+| Compose stack | `docker-compose.yml` (app + Postgres + Redis) |
 | Image build | `Dockerfile` |
 
 ### First-boot order (`lifecycle/post-create.sh`)
@@ -55,12 +55,12 @@ pulp config create --base-url http://localhost:80 --username admin --password pa
 curl -s http://localhost:80/api/pulp/api/v3/status/ | jq .
 ```
 
-After `pulp-services`, Swagger UI is at **`/swagger/`** on the forwarded nginx `:80` port (same-origin OpenAPI under `/api/pulp/...`). If VS Code remaps host port 80, use the Ports panel URL + `/swagger/`.
+After `pulp-services`, OpenAPI ReDoc is at **`/api/pulp/api/v3/docs/`** on the forwarded nginx `:80` port (raw schema: `/api/pulp/api/v3/docs/api.json`). If VS Code remaps host port 80, use the Ports panel URL.
 
 - Admin API: `admin` / `password`  
 - Postgres 16: `pulp` / `pulp` @ `$DB_HOST` (`pulp-service-db`) — `pulp-migrate`, `pulp-psql`  
 - Redis: `$REDIS_URL`  
-- Swagger UI: `http://localhost:<forwarded-80>/swagger/`
+- API docs (ReDoc): `http://localhost:<forwarded-80>/api/pulp/api/v3/docs/`
 
 ## Starting services
 
