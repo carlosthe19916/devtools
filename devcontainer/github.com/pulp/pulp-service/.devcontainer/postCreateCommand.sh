@@ -58,17 +58,20 @@ done
 # and is listed in pulp-test COMPONENTS even though it is not in requirements.txt
 pip install pulp-file
 
-pip install httpie pulp-cli packaging
+pip install httpie pulp-cli packaging setproctitle pytest-asyncio
 npm install -g concurrently
 
 ################################################################################
-# Apply patches only when a local pulpcore checkout is present
+# Apply patches to site-packages
 ################################################################################
 
-if [ -d /tmp/patches ] && [ -d /repositories/pulpcore/.git ]; then
+_site_packages="$(python3 -c 'import site; print(site.getsitepackages()[0])')"
+
+if [ -d /tmp/patches ]; then
     for p in /tmp/patches/*.patch; do
         [ -f "$p" ] || continue
-        patch -p1 --forward --no-backup-if-mismatch -d /repositories/pulpcore < "$p" || true
+        echo "Applying $(basename "$p") ..."
+        patch -p1 --forward --no-backup-if-mismatch --batch -d "$_site_packages" < "$p" || true
     done
 fi
 
@@ -79,6 +82,7 @@ fi
 python3 -c "import redis; redis.from_url('$REDIS_URL').flushall(); print('Redis flushed')" 2>/dev/null || true
 pulpcore-manager migrate --noinput
 pulpcore-manager reset-admin-password --password password
+pulpcore-manager collectstatic --clear --noinput --link 2>/dev/null || true
 
 ################################################################################
 # pulp-smash configuration

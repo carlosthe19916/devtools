@@ -45,6 +45,7 @@ services:
       - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
       - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
       - pulp-service-pulp-media:/var/lib/pulp
+      - ./pulp-services-non-prod.pem:/etc/pulp/certs/pulp-services-non-prod.pem:ro,Z
       - ./skills:/tmp/claude-skills:ro,Z
     networks:
       - pulp-service
