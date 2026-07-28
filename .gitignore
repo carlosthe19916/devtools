@@ -16,4 +16,4 @@ managed_context/
 devcontainer/github.com/pulp/pulpcore/
 devcontainer/github.com/pulp/pulp_maven/
 devcontainer/github.com/pulp/pulp_python/
-devcontainer/github.com/pulp/pulp-service/.devcontainer/pulp-services-non-prod.pem
+devcontainer/github.com/pulp/pulp-service/.devcontainer/config/certs/pulp-services-non-prod.pem
