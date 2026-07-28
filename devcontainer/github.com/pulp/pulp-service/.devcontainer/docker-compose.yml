@@ -34,6 +34,7 @@ services:
       PULP_PATCH_DIR: /workspace/images/assets/patches
       PULP_DEV_SCRIPTS: /opt/pulp-dev/scripts
       PULP_DEV_CONFIG: /opt/pulp-dev/config
+      PULP_DEV_SKILLS: /opt/pulp-dev/skills
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULP_SERVICE_PATH:-~/git/pulp/pulp-service}:/workspace:cached
@@ -42,13 +43,13 @@ services:
       - ${PULP_PYTHON_PATH:-~/git/pulp/pulp_python}:/repositories/pulp_python:cached
       - ./scripts:/opt/pulp-dev/scripts:ro,Z
       - ./config:/opt/pulp-dev/config:ro,Z
+      - ./skills:/opt/pulp-dev/skills:ro,Z
       - pulp-service-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
       - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
       - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
       - pulp-service-pulp-media:/var/lib/pulp
-      - ./pulp-services-non-prod.pem:/etc/pulp/certs/pulp-services-non-prod.pem:ro,Z
-      - ./skills:/tmp/claude-skills:ro,Z
+      - ./config/certs/pulp-services-non-prod.pem:/etc/pulp/certs/pulp-services-non-prod.pem:ro,Z
     networks:
       - pulp-service
     depends_on:
@@ -77,5 +78,15 @@ services:
   pulp-service-redis:
     image: redis:7
     restart: unless-stopped
+    networks:
+      - pulp-service
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui:v5.27.1
+    restart: unless-stopped
+    environment:
+      # Served via pulp-service nginx at /swagger/ (same-origin as the API).
+      BASE_URL: /swagger
+      URL: /api/pulp/api/v3/docs/api.json
     networks:
       - pulp-service

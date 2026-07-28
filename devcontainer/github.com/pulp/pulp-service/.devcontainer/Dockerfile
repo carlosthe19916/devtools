@@ -31,10 +31,11 @@ RUN sudo mkdir -p /etc/pki/attestation && \
         /etc/pki/attestation/test-key.pem
 
 COPY settings.py /etc/pulp/settings.py
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY config/nginx.conf /etc/nginx/nginx.conf
 COPY config/nginx-proxy-params.conf /etc/nginx/pulp-proxy-params.conf
 
 ENV DJANGO_SETTINGS_MODULE=pulpcore.app.settings
 ENV PULP_SETTINGS=/etc/pulp/settings.py
 ENV PULP_DEV_SCRIPTS=/opt/pulp-dev/scripts
 ENV PULP_DEV_CONFIG=/opt/pulp-dev/config
+ENV PULP_DEV_SKILLS=/opt/pulp-dev/skills
