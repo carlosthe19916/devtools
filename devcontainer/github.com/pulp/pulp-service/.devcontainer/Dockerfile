@@ -11,10 +11,16 @@ RUN mkdir -p /etc/pulp/certs && \
 
 RUN mkdir -p /var/lib/pulp/assets\
              /var/lib/pulp/media \
-             /var/lib/pulp/tmp
+             /var/lib/pulp/tmp \
+             /etc/nginx/pulp \
+             /etc/pki/sigstore && \
+    # Keep include /etc/nginx/pulp/*.conf valid when no plugin snippets exist yet.
+    touch /etc/nginx/pulp/.keep.conf
 
-# Test attestation keypair used by pulp-service settings (openssl avoids a Dockerfile
-# parse hazard: a line starting with Python "from ..." is treated as FROM)
+# Test attestation keypair for functional tests that sign locally.
+# Production / pulp-docs verify with vendored Sigstore PEM (installed at postCreate
+# from /workspace/images/assets/keys/). openssl avoids a Dockerfile parse hazard:
+# a line starting with Python "from ..." is treated as FROM.
 RUN sudo mkdir -p /etc/pki/attestation && \
     sudo openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 \
         -out /etc/pki/attestation/test-key-private.pem && \
@@ -26,7 +32,9 @@ RUN sudo mkdir -p /etc/pki/attestation && \
 
 COPY settings.py /etc/pulp/settings.py
 COPY nginx.conf /etc/nginx/nginx.conf
-
+COPY config/nginx-proxy-params.conf /etc/nginx/pulp-proxy-params.conf
 
 ENV DJANGO_SETTINGS_MODULE=pulpcore.app.settings
 ENV PULP_SETTINGS=/etc/pulp/settings.py
+ENV PULP_DEV_SCRIPTS=/opt/pulp-dev/scripts
+ENV PULP_DEV_CONFIG=/opt/pulp-dev/config

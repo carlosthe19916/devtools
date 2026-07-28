@@ -12,9 +12,9 @@
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "initializeCommand": "bash ${localEnv:DEVTOOLS_CARLOSTHE19916_PATH:~/git/devtools}/devcontainer/github.com/pulp/pulp-service/.devcontainer/initializeCommand.sh ${devcontainerId}",
-  "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
-  "postStartCommand": "bash /tmp/postStartCommand.sh",
+  "initializeCommand": "bash ${localEnv:DEVTOOLS_CARLOSTHE19916_PATH:~/git/devtools}/devcontainer/github.com/pulp/pulp-service/.devcontainer/scripts/initialize.sh ${devcontainerId}",
+  "postCreateCommand": "bash /opt/pulp-dev/scripts/post-create.sh",
+  "postStartCommand": "bash /opt/pulp-dev/scripts/post-start.sh",
   "customizations": {
     "vscode": {
       "extensions": [

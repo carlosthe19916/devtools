@@ -15,6 +15,8 @@ services:
     security_opt:
       - "label=disable"
     userns_mode: "keep-id"
+    env_file:
+      - ./pulp-dev.env
     environment:
       GH_TOKEN: ${GH_TOKEN}
       PULP_SETTINGS: /etc/pulp/settings.py
@@ -23,23 +25,23 @@ services:
       REDIS_URL: redis://pulp-service-redis:6379/0
       API_PROTOCOL: http
       API_HOST: localhost
-      API_PORT: "24817"
+      API_PORT: "80"
       CLAUDE_CODE_USE_VERTEX: "1"
       CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
       ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
-      # Prevent cwd (/workspace) from shadowing the editable pulp_service package
-      # (repo has a pulp_service/ project dir that is not the importable package).
+      # Prevent cwd (/workspace) from shadowing the editable pulp_service package.
       PYTHONSAFEPATH: "1"
+      PULP_PATCH_DIR: /workspace/images/assets/patches
+      PULP_DEV_SCRIPTS: /opt/pulp-dev/scripts
+      PULP_DEV_CONFIG: /opt/pulp-dev/config
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULP_SERVICE_PATH:-~/git/pulp/pulp-service}:/workspace:cached
       - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/repositories/pulpcore:cached
       - ${PULP_MAVEN_PATH:-~/git/pulp/pulp_maven}:/repositories/pulp_maven:cached
       - ${PULP_PYTHON_PATH:-~/git/pulp/pulp_python}:/repositories/pulp_python:cached
-      - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
-      - ./postStartCommand.sh:/tmp/postStartCommand.sh:Z
-      - ./prepare-bindings.sh:/tmp/prepare-bindings.sh:Z
-      - ./patches:/tmp/patches:ro,Z
+      - ./scripts:/opt/pulp-dev/scripts:ro,Z
+      - ./config:/opt/pulp-dev/config:ro,Z
       - pulp-service-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
       - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
@@ -56,7 +58,7 @@ services:
         condition: service_started
 
   pulp-service-db:
-    image: postgres:17
+    image: postgres:16
     restart: unless-stopped
     volumes:
       - pulp-service-postgres-data:/var/lib/postgresql/data
