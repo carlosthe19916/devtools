@@ -1,19 +1,16 @@
 # pulp_plugin_template
 
-Shared devcontainer templates for Pulp projects. A `generate.sh` script renders per-project devcontainer configs from two template layers:
+Shared devcontainer templates for Pulp **plugins**. A `generate.sh` script renders per-plugin devcontainer configs.
 
-- **core/** — base templates for pulpcore (no external Pulp dependencies)
 - **plugin/** — templates for Pulp plugins (mounts pulpcore as a dependency under `/repositories`)
-- **shared/** — files identical for both (Dockerfile, initializeCommand.sh, settings.py)
+- **shared/** — files identical across plugins (Dockerfile, initializeCommand.sh, settings.py, …)
+
+**pulpcore** is not generated here. Its definition is hand-maintained at [`../pulpcore/.devcontainer/`](../pulpcore/.devcontainer/) (same pattern as pulp-service).
 
 ## Structure
 
 ```
 pulp_plugin_template/
-├── core/
-│   ├── devcontainer.json         # Template: uses __NAME__ placeholders
-│   ├── docker-compose.yml        # Template: uses __NAME__, __NAME_UPPER__ placeholders
-│   └── postCreateCommand.sh      # Core: no pulpcore-as-dependency logic
 ├── plugin/
 │   ├── devcontainer.json         # Template: uses __PLUGIN__ placeholders
 │   ├── docker-compose.yml        # Template: uses __PLUGIN__, __PLUGIN_UPPER__ placeholders
@@ -21,19 +18,15 @@ pulp_plugin_template/
 ├── shared/
 │   ├── Dockerfile                # Base image with build tools and Pulp dirs
 │   ├── initializeCommand.sh      # Host-side setup before container starts
-│   └── settings.py               # Django/Pulp settings for dev
+│   ├── settings.py               # Django/Pulp settings for dev
+│   ├── prepare-bindings.sh
+│   ├── nginx.conf
+│   ├── postStartCommand.sh
+│   ├── skills/
+│   └── patches/
 ├── generate.sh                   # Renders templates + copies shared files
 └── README.md
 ```
-
-## Generating pulpcore
-
-```bash
-cd devcontainer/github.com/pulp/pulp_plugin_template
-./generate.sh core
-```
-
-This creates `../pulpcore/.devcontainer/` with all necessary files.
 
 ## Adding a new plugin
 
@@ -53,11 +46,10 @@ This creates `../pulp_rpm/.devcontainer/` with all necessary files. Then copy th
 cp ../pulp_maven/.devcontainer/devcontainer-lock.json ../pulp_rpm/.devcontainer/
 ```
 
-## Regenerating existing projects
+## Regenerating existing plugins
 
-After modifying templates or shared files, regenerate all:
+After modifying templates or shared files, regenerate plugins:
 
 ```bash
-./generate.sh core
 ./generate.sh maven python
 ```

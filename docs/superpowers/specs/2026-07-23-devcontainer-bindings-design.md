@@ -37,25 +37,15 @@ prepare-bindings.sh [component1 component2 ...] [--force]
 
 **OpenAPI Generator and templates installation** (currently in postCreateCommand.sh) moves into this script with an idempotent check — if `/opt/openapi-generator-cli.jar` exists, skip download.
 
-### Changes to `core/postCreateCommand.sh`
+### Changes to pulpcore (hand-maintained)
 
-After the existing `migrate` and `reset-admin-password` steps, add:
-```bash
-/tmp/prepare-bindings.sh core
-```
-
-Remove the OpenAPI Generator download section (now handled by prepare-bindings.sh).
-
-Simplify the `pulp-bindings` bashrc function to a thin wrapper:
-```bash
-pulp-bindings() {
-  /tmp/prepare-bindings.sh --force "${@:?Usage: pulp-bindings <component> [component2 ...]}"
-}
-```
+pulpcore is no longer generated from `core/` templates. Bindings live under
+`pulpcore/.devcontainer/scripts/runtime/prepare-bindings.sh`, invoked by
+`ensure-bindings.sh` on post-start and by the `pulp-bindings` shell helper.
 
 ### Changes to `plugin/postCreateCommand.sh`
 
-Same as core, but auto-detect the plugin suffix and generate both `core` and plugin bindings:
+Auto-detect the plugin suffix and generate both `core` and plugin bindings:
 ```bash
 plugin_suffix=$(basename /workspace | sed 's/^pulp_//')
 /tmp/prepare-bindings.sh core "${plugin_suffix}"
@@ -99,17 +89,16 @@ Following the pulp-docs convention:
 ## Files modified
 
 - `shared/prepare-bindings.sh` (new)
-- `core/postCreateCommand.sh` (remove OpenAPI download, add prepare-bindings call, simplify pulp-bindings function)
-- `plugin/postCreateCommand.sh` (same changes as core, plus plugin detection)
-- `core/docker-compose.yml` (add volume mount for prepare-bindings.sh)
+- `plugin/postCreateCommand.sh` (prepare-bindings call, simplify pulp-bindings function)
 - `plugin/docker-compose.yml` (add volume mount for prepare-bindings.sh)
 - `generate.sh` (add prepare-bindings.sh to shared files list)
 - `shared/skills/pulp-dev/SKILL.md` (update documentation)
-- All generated devcontainers (pulpcore, pulp_maven, pulp_python) will be regenerated
+- Generated plugin devcontainers (pulp_maven, pulp_python) will be regenerated
+- Hand-maintained `pulpcore/.devcontainer/` (bindings live under `scripts/runtime/prepare-bindings.sh`)
 
 ## Verification
 
-1. Run `generate.sh core` and `generate.sh maven python` to regenerate all devcontainers
+1. Run `generate.sh maven python` to regenerate plugin devcontainers (pulpcore is hand-maintained)
 2. Open one devcontainer (e.g., pulp_maven) and verify:
    - Container builds and starts successfully
    - postCreateCommand completes without errors

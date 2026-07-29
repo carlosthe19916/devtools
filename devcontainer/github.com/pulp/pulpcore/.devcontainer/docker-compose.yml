@@ -1,58 +1,63 @@
 networks:
-  pulp:
-    name: "pulp"
+  pulpcore:
+    name: "pulpcore"
 
 volumes:
-  __NAME__-claude-config:
-  __NAME__-postgres-data:
-  __NAME__-pulp-media:
+  pulpcore-claude-config:
+  pulpcore-postgres-data:
+  pulpcore-pulp-media:
 
 services:
-  __NAME__:
-    image: localhost/devcontainer-__NAME__:latest
+  pulpcore:
+    image: localhost/devcontainer-pulpcore:latest
     build:
       dockerfile: ./Dockerfile
     security_opt:
       - "label=disable"
     userns_mode: "keep-id"
+    env_file:
+      - ./pulp-dev.env
     environment:
       GH_TOKEN: ${GH_TOKEN}
       PULP_SETTINGS: /etc/pulp/settings.py
-      DB_HOST: __NAME__-db
+      DB_HOST: pulpcore-db
       DB_PASSWORD: pulp
-      REDIS_URL: redis://__NAME__-redis:6379/0
+      REDIS_URL: redis://pulpcore-redis:6379/0
       API_PROTOCOL: http
       API_HOST: localhost
       API_PORT: "24817"
       CLAUDE_CODE_USE_VERTEX: "1"
       CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
       ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+      PULP_PATCH_DIR: /opt/pulp-dev/patches
+      PULP_DEV_SCRIPTS: /opt/pulp-dev/scripts
+      PULP_DEV_CONFIG: /opt/pulp-dev/config
+      PULP_DEV_SKILLS: /opt/pulp-dev/skills
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
-      - ${__NAME_UPPER___PATH:-~/git/pulp/__NAME__}:/workspace:cached
-      - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
-      - ./postStartCommand.sh:/tmp/postStartCommand.sh:Z
-      - ./prepare-bindings.sh:/tmp/prepare-bindings.sh:Z
-      - ./patches:/tmp/patches:ro,Z
-      - __NAME__-claude-config:/home/vscode/.claude
+      - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/workspace:cached
+      - ./scripts:/opt/pulp-dev/scripts:ro,Z
+      - ./config:/opt/pulp-dev/config:ro,Z
+      - ./skills:/opt/pulp-dev/skills:ro,Z
+      - ./patches:/opt/pulp-dev/patches:ro,Z
+      - pulpcore-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
       - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
       - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
-      - __NAME__-pulp-media:/var/lib/pulp
-      - ./skills:/tmp/claude-skills:ro,Z
+      - pulpcore-pulp-media:/var/lib/pulp
     networks:
-      - pulp
+      - pulpcore
     depends_on:
-      __NAME__-db:
+      pulpcore-db:
         condition: service_healthy
-      __NAME__-redis:
+      pulpcore-redis:
         condition: service_started
 
-  __NAME__-db:
+  pulpcore-db:
     image: postgres:17
     restart: unless-stopped
     volumes:
-      - __NAME__-postgres-data:/var/lib/postgresql/data
+      - pulpcore-postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: pulp
       POSTGRES_PASSWORD: pulp
@@ -63,10 +68,10 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - pulp
+      - pulpcore
 
-  __NAME__-redis:
+  pulpcore-redis:
     image: redis:7
     restart: unless-stopped
     networks:
-      - pulp
+      - pulpcore

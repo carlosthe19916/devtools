@@ -1,6 +1,21 @@
 # Pulp
 
-Environment variables:
+## Devcontainers
+
+| Project | Location | Maintained how |
+|---------|----------|----------------|
+| **pulpcore** | [`pulpcore/.devcontainer/`](pulpcore/.devcontainer/) | Hand-maintained (tracked in git) |
+| **pulp-service** | [`pulp-service/.devcontainer/`](pulp-service/.devcontainer/) | Hand-maintained (tracked in git) |
+| **plugins** (maven, python, …) | `pulp_<name>/.devcontainer/` | Generated via [`pulp_plugin_template/generate.sh`](pulp_plugin_template/generate.sh) |
+
+Regenerate plugin devcontainers after template edits:
+
+```bash
+cd pulp_plugin_template
+./generate.sh maven python
+```
+
+## Environment variables
 
 | Environment variable | default value           |
 |----------------------|-------------------------|
@@ -8,6 +23,7 @@ Environment variables:
 | PULPCORE_PATH        | ~/git/pulp/pulpcore     |
 | PULP_MAVEN_PATH      | ~/git/pulp/pulp_maven   |
 | PULP_PYTHON_PATH     | ~/git/pulp/pulp_python  |
+| PULP_SERVICE_PATH    | ~/git/pulp/pulp-service |
 
 Make sure the environment variables are defined at `~/.bashrc` or equivalent:
 
