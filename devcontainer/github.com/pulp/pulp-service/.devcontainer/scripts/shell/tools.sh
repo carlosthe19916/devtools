@@ -1,4 +1,4 @@
-# Patch / bindings / version helpers.
+# Patch / bindings / version / populate helpers.
 
 pulp-bindings() {
   bash "${PULP_DEV_SCRIPTS}/runtime/prepare-bindings.sh" --force \
@@ -7,3 +7,4 @@ pulp-bindings() {
 
 pulp-patches() { bash "${PULP_DEV_SCRIPTS}/runtime/patches.sh" "$@"; }
 pulp-check-versions() { bash "${PULP_DEV_SCRIPTS}/runtime/check-versions.sh" "$@"; }
+pulp-populate() { bash "${PULP_DEV_SCRIPTS}/runtime/populate.sh" "$@"; }

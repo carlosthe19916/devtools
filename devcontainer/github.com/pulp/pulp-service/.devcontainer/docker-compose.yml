@@ -35,6 +35,7 @@ services:
       PULP_DEV_SCRIPTS: /opt/pulp-dev/scripts
       PULP_DEV_CONFIG: /opt/pulp-dev/config
       PULP_DEV_SKILLS: /opt/pulp-dev/skills
+      PULP_POPULATE_ROOT: /opt/pulp-dev/populate
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULP_SERVICE_PATH:-~/git/pulp/pulp-service}:/workspace:cached
@@ -44,6 +45,7 @@ services:
       - ./scripts:/opt/pulp-dev/scripts:ro,Z
       - ./config:/opt/pulp-dev/config:ro,Z
       - ./skills:/opt/pulp-dev/skills:ro,Z
+      - ./populate:/opt/pulp-dev/populate:ro,Z
       - pulp-service-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
       - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached

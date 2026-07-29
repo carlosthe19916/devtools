@@ -17,6 +17,7 @@ Inside the container, scripts mount at `/opt/pulp-dev/scripts` (sourced via `she
 | First-boot steps (ordered) | `scripts/setup/NN-*.sh` |
 | Runtime tools / process entrypoints | `scripts/runtime/` |
 | Interactive aliases | `scripts/shell/` |
+| Sample package populate | `populate/` (`pulp-populate` / skill `pulp-populate`) |
 | Nginx / smash / certs | `config/` |
 | ClowdApp `PULP_*` env | `pulp-dev.env` |
 | Django bootstrap | `settings.py` |
@@ -43,6 +44,8 @@ Inside the container, scripts mount at `/opt/pulp-dev/scripts` (sourced via `she
 
 ```bash
 pulp-services          # api + content + worker
+pulp-reset             # drop/recreate DB, migrate, reset admin password
+pulp-populate          # seed domain + upload sample packages (see pulp-populate skill)
 pulp-patches apply     # RH overlays from /workspace/images/assets/patches
 pulp-check-versions    # pip pins vs requirements.txt
 pulp-bindings core     # regenerate OpenAPI clients
