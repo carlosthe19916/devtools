@@ -1,4 +1,5 @@
 ---
+name: pulp-dev
 description: Pulp-service Cursor/VS Code devcontainer — layout, services, patches, testing, CLI
 ---
 
@@ -58,12 +59,10 @@ pulp config create --base-url http://localhost:80 --username admin --password pa
 curl -s http://localhost:80/api/pulp/api/v3/status/ | jq .
 ```
 
-After `pulp-services`, OpenAPI ReDoc is at **`/api/pulp/api/v3/docs/`** on the forwarded nginx `:80` port (raw schema: `/api/pulp/api/v3/docs/api.json`). If VS Code remaps host port 80, use the Ports panel URL.
-
 - Admin API: `admin` / `password`  
 - Postgres 16: `pulp` / `pulp` @ `$DB_HOST` (`pulp-service-db`) — `pulp-migrate`, `pulp-psql`  
 - Redis: `$REDIS_URL`  
-- API docs (ReDoc): `http://localhost:<forwarded-80>/api/pulp/api/v3/docs/`
+- OpenAPI / ReDoc: see `pulp-openapi` skill
 
 ## Starting services
 

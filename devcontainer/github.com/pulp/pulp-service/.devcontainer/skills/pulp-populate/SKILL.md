@@ -1,4 +1,5 @@
 ---
+name: pulp-populate
 description: Populate pulp-service domain with sample file/pypi/maven/npm/rpm packages via pulp-populate
 ---
 

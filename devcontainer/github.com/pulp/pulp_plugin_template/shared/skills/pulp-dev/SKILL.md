@@ -1,101 +1,54 @@
 ---
-description: Pulp development environment — services, testing, and CLI usage
+name: pulp-dev
+description: Pulp plugin development — services, tests, CLI, and bindings. Use when starting Pulp, running tests, or configuring the local CLI.
 ---
 
 # Pulp Development
 
-## Starting services
-
-Run all Pulp services (API, content, worker) in one terminal:
+## Services
 
 ```bash
-pulp-services
+pulp-services    # API :24817, content :24816, worker
+# or: pulp-api | pulp-content | pulp-worker
+pkill -f 'pulpcore-(api|content|worker)|concurrently.*pulpcore'  # stop all
 ```
 
-Or start them individually:
+API admin: `admin` / `password`
 
-```bash
-pulp-api        # API server on 127.0.0.1:24817
-pulp-content    # Content server on 127.0.0.1:24816
-pulp-worker     # Background task worker
-```
-
-## PostgreSQL database
-
-- Database: `pulp`, User: `pulp`, Password: `pulp`, Port: `5432`
-- Host: set via `DB_HOST` env var (the docker service name, e.g., `pulpcore-db` or `pulp-maven-db`)
-- The SQLTools VS Code extension is pre-configured with these credentials
-
-```bash
-pulp-migrate    # Run Django migrations
-```
-
-Connect directly with psql:
-
-```bash
-psql -h "$DB_HOST" -U pulp -d pulp
-```
-
-Pulp admin credentials (for the API, not the database): `admin` / `password`
-
-## Redis
-
-- Host: set via `REDIS_URL` env var (e.g., `redis://pulpcore-redis:6379/0` or `redis://pulp-maven-redis:6379/0`)
-- Port: `6379`, database `0`
-- Used for task queueing (Pulp workers) and caching
-
-Connect directly:
-
-```bash
-redis-cli -u "$REDIS_URL"
-```
-
-## Client bindings
-
-OpenAPI Python client bindings (`pulpcore.client.*`) are **auto-generated during container setup** for `core` and the current plugin. They are installed to `/opt/bindings/`.
-
-To regenerate bindings (e.g., after changing the API schema):
-
-```bash
-pulp-bindings <component> [component2 ...]   # e.g., pulp-bindings maven, pulp-bindings core
-```
-
-This forces regeneration regardless of whether bindings already exist.
-
-## Running tests
-
-Unit tests:
+## Tests
 
 ```bash
 pytest pulp_*/tests/unit/ -v
+pytest pulp_*/tests/functional/ -v                    # needs pulp-services
+pytest pulp_*/tests/functional/{path}.py -v           # one file
 ```
 
-Functional tests (requires services running):
-
-```bash
-pytest pulp_*/tests/functional/ -v ## Execute all tests
-pytest pulp_*/tests/functional/{myFilePath}.py -v ## Execute one file test
-```
-
-## Pulp CLI
-
-The `pulp` CLI is pre-installed. Configure it to point at the local API:
+## CLI
 
 ```bash
 pulp config create --base-url http://localhost:24817 --username admin --password password --no-verify-ssl
 ```
 
-## Using local pulpcore checkout
+## Bindings
 
-If a local pulpcore is mounted at `/repositories/pulpcore`:
+OpenAPI clients (`pulpcore.client.*`) are generated at setup into `/opt/bindings/`. Regenerate after schema changes:
 
 ```bash
-pulp-core-local   # Install from local checkout
-pulp-core-pypi    # Switch back to PyPI version
+pulp-bindings <component> [...]   # e.g. pulp-bindings maven, pulp-bindings core
 ```
 
-## Kill all services
+## Local pulpcore
 
-```shell
-pkill -f 'pulpcore-(api|content|worker)|concurrently.*pulpcore'
+If mounted at `/repositories/pulpcore`:
+
+```bash
+pulp-core-local   # editable install
+pulp-core-pypi    # back to PyPI
 ```
+
+## DB / Redis
+
+| | |
+|---|---|
+| Postgres | `pulp`/`pulp` @ `$DB_HOST`:5432 — `pulp-migrate`, `psql -h "$DB_HOST" -U pulp -d pulp` |
+| Redis | `$REDIS_URL` — `redis-cli -u "$REDIS_URL"` |
