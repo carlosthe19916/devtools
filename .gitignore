@@ -12,8 +12,6 @@ monitor/
 test_suite_analysis/
 managed_context/
 
-# Generated plugin devcontainers (recreated by generate.sh)
-# pulpcore/.devcontainer is hand-maintained and tracked
-devcontainer/github.com/pulp/pulp_maven/
-devcontainer/github.com/pulp/pulp_python/
+# Hand-maintained: pulpcore, pulp_maven, pulp_python, pulp-service
+# Generated plugin scaffolds (new plugins via generate.sh) stay ignored until promoted
 devcontainer/github.com/pulp/pulp-service/.devcontainer/config/certs/pulp-services-non-prod.pem

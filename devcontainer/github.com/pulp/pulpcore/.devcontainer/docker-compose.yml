@@ -26,6 +26,7 @@ services:
       API_PROTOCOL: http
       API_HOST: localhost
       API_PORT: "24817"
+      PYTHONSAFEPATH: "1"
       CLAUDE_CODE_USE_VERTEX: "1"
       CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
       ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
@@ -33,13 +34,17 @@ services:
       PULP_DEV_SCRIPTS: /opt/pulp-dev/scripts
       PULP_DEV_CONFIG: /opt/pulp-dev/config
       PULP_DEV_SKILLS: /opt/pulp-dev/skills
+      PULP_POPULATE_ROOT: /opt/pulp-dev/populate
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/workspace:cached
+      - ${PULP_MAVEN_PATH:-~/git/pulp/pulp_maven}:/repositories/pulp_maven:cached
+      - ${PULP_PYTHON_PATH:-~/git/pulp/pulp_python}:/repositories/pulp_python:cached
       - ./scripts:/opt/pulp-dev/scripts:ro,Z
       - ./config:/opt/pulp-dev/config:ro,Z
       - ./skills:/opt/pulp-dev/skills:ro,Z
       - ./patches:/opt/pulp-dev/patches:ro,Z
+      - ./populate:/opt/pulp-dev/populate:ro,Z
       - pulpcore-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
       - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached

@@ -1,0 +1,81 @@
+networks:
+  pulp-python:
+    name: "pulp-python"
+
+volumes:
+  pulp-python-claude-config:
+  pulp-python-postgres-data:
+  pulp-python-pulp-media:
+
+services:
+  pulp-python:
+    image: localhost/devcontainer-pulp-python:latest
+    build:
+      dockerfile: ./Dockerfile
+    security_opt:
+      - "label=disable"
+    userns_mode: "keep-id"
+    env_file:
+      - ./pulp-dev.env
+    environment:
+      GH_TOKEN: ${GH_TOKEN}
+      PULP_SETTINGS: /etc/pulp/settings.py
+      DB_HOST: pulp-python-db
+      DB_PASSWORD: pulp
+      REDIS_URL: redis://pulp-python-redis:6379/0
+      API_PROTOCOL: http
+      API_HOST: localhost
+      API_PORT: "80"
+      PYTHONSAFEPATH: "1"
+      CLAUDE_CODE_USE_VERTEX: "1"
+      CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
+      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+      PULP_PATCH_DIR: /opt/pulp-dev/patches
+      PULP_DEV_SCRIPTS: /opt/pulp-dev/scripts
+      PULP_DEV_CONFIG: /opt/pulp-dev/config
+      PULP_DEV_SKILLS: /opt/pulp-dev/skills
+      PULP_POPULATE_ROOT: /opt/pulp-dev/populate
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    volumes:
+      - ${PULP_PYTHON_PATH:-~/git/pulp/pulp_python}:/workspace:cached
+      - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/repositories/pulpcore:cached
+      - ./scripts:/opt/pulp-dev/scripts:ro,Z
+      - ./config:/opt/pulp-dev/config:ro,Z
+      - ./skills:/opt/pulp-dev/skills:ro,Z
+      - ./patches:/opt/pulp-dev/patches:ro,Z
+      - ./populate:/opt/pulp-dev/populate:ro,Z
+      - pulp-python-claude-config:/home/vscode/.claude
+      - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
+      - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
+      - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
+      - pulp-python-pulp-media:/var/lib/pulp
+    networks:
+      - pulp-python
+    depends_on:
+      pulp-python-db:
+        condition: service_healthy
+      pulp-python-redis:
+        condition: service_started
+
+  pulp-python-db:
+    image: postgres:17
+    restart: unless-stopped
+    volumes:
+      - pulp-python-postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: pulp
+      POSTGRES_PASSWORD: pulp
+      POSTGRES_DB: pulp
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pulp -d pulp"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pulp-python
+
+  pulp-python-redis:
+    image: redis:7
+    restart: unless-stopped
+    networks:
+      - pulp-python

@@ -5,13 +5,12 @@ description: Pulp OpenAPI schema and ReDoc UI for the local API. Use when inspec
 
 # Pulp OpenAPI
 
-With `pulp-services` (or `pulp-api`) running, the OpenAPI schema and docs are served at:
+With `pulp-services` (or `pulp-api`) running:
 
 - Schema (JSON): http://localhost:24817/pulp/api/v3/docs/api.json
 - ReDoc UI: http://localhost:24817/pulp/api/v3/docs/
 
-(Also via nginx on port 80: http://localhost/pulp/api/v3/docs/)
+Nginx proxy also exposes the same paths on `:80`.
+Auth: `admin` / `password`.
 
-Auth for protected endpoints: `admin` / `password`.
-
-To regenerate Python client bindings from the schema, see the `pulp-dev` skill (`pulp-bindings`).
+Regenerate Python clients with `pulp-bindings` (see `pulp-dev` skill).

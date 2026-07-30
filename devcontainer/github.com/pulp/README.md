@@ -5,15 +5,21 @@
 | Project | Location | Maintained how |
 |---------|----------|----------------|
 | **pulpcore** | [`pulpcore/.devcontainer/`](pulpcore/.devcontainer/) | Hand-maintained (tracked in git) |
+| **pulp_maven** | [`pulp_maven/.devcontainer/`](pulp_maven/.devcontainer/) | Hand-maintained (tracked in git) |
+| **pulp_python** | [`pulp_python/.devcontainer/`](pulp_python/.devcontainer/) | Hand-maintained (tracked in git) |
 | **pulp-service** | [`pulp-service/.devcontainer/`](pulp-service/.devcontainer/) | Hand-maintained (tracked in git) |
-| **plugins** (maven, python, …) | `pulp_<name>/.devcontainer/` | Generated via [`pulp_plugin_template/generate.sh`](pulp_plugin_template/generate.sh) |
+| **new plugins** | `pulp_<name>/.devcontainer/` | Copy from `pulp_maven` / `pulp_python`, then customize |
 
-Regenerate plugin devcontainers after template edits:
+All `pulp_<plugin>` trees must follow the modular `/opt/pulp-dev` layout (see `.claude/skills/pulp-plugin-devcontainer`). Reference implementations: **pulp_maven**, **pulp_python**. Structure follows **pulp-service** (`scripts/{lifecycle,setup,runtime,shell}`, mounts under `/opt/pulp-dev`).
 
-```bash
-cd pulp_plugin_template
-./generate.sh maven python
-```
+Do **not** modify [`pulp_plugin_template/`](pulp_plugin_template/) for these hand-maintained containers, and do **not** run `generate.sh` into `pulpcore` / `pulp_maven` / `pulp_python` — that still emits the old flat `/tmp` layout and would overwrite the modular trees.
+
+### Client front door
+
+| Container | Clients (CLI / smash / populate) | Processes |
+|-----------|----------------------------------|-----------|
+| **pulpcore** | Direct `:24817` (API) / `:24816` (content) — intentional for certguard / client-cert functional tests | Same ports on localhost |
+| **pulp_maven**, **pulp_python**, **pulp-service** | Nginx `:80` | API `:24817` / content `:24816` behind nginx |
 
 ## Environment variables
 
