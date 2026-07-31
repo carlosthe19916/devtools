@@ -12,6 +12,8 @@ monitor/
 test_suite_analysis/
 managed_context/
 
-# Hand-maintained: pulpcore, pulp_maven, pulp_python, pulp-service
-# Generated plugin scaffolds (new plugins via generate.sh) stay ignored until promoted
+# Hand-maintained: pulpcore, pulp_maven, pulp_python, pulp-service (+ pulp-dev-common)
 devcontainer/github.com/pulp/pulp-service/.devcontainer/config/certs/pulp-services-non-prod.pem
+
+__pycache__/
+*.py[cod]

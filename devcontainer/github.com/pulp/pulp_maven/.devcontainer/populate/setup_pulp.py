@@ -12,7 +12,7 @@ import requests
 
 POPULATE_ROOT = Path(os.environ.get("PULP_POPULATE_ROOT", "/opt/pulp-dev/populate"))
 ASSETS_ROOT = Path(os.environ.get("PULP_POPULATE_ASSETS", str(POPULATE_ROOT / "assets")))
-BASE_URL = os.environ.get("PULP_POPULATE_BASE_URL", "http://localhost:80").rstrip("/")
+BASE_URL = os.environ.get("PULP_POPULATE_BASE_URL", "http://localhost:24817").rstrip("/")
 API_ROOT = os.environ.get("PULP_POPULATE_API_ROOT", "/pulp/").rstrip("/") + "/"
 AUTH = (
     os.environ.get("PULP_POPULATE_USER", "admin"),

@@ -4,15 +4,18 @@
 
 | Project | Location | Maintained how |
 |---------|----------|----------------|
-| **pulpcore** | [`pulpcore/.devcontainer/`](pulpcore/.devcontainer/) | Hand-maintained (tracked in git) |
-| **pulp_maven** | [`pulp_maven/.devcontainer/`](pulp_maven/.devcontainer/) | Hand-maintained (tracked in git) |
-| **pulp_python** | [`pulp_python/.devcontainer/`](pulp_python/.devcontainer/) | Hand-maintained (tracked in git) |
-| **pulp-service** | [`pulp-service/.devcontainer/`](pulp-service/.devcontainer/) | Hand-maintained (tracked in git) |
-| **new plugins** | `pulp_<name>/.devcontainer/` | Copy from `pulp_maven` / `pulp_python`, then customize |
+| **pulp-dev-common** | [`pulp-dev-common/`](pulp-dev-common/) | Shared scripts/config (single source of truth) |
+| **pulpcore** | [`pulpcore/.devcontainer/`](pulpcore/.devcontainer/) | Thin tree + overlays; mounts common scripts |
+| **pulp_maven** | [`pulp_maven/.devcontainer/`](pulp_maven/.devcontainer/) | Thin plugin tree; mounts common scripts |
+| **pulp_python** | [`pulp_python/.devcontainer/`](pulp_python/.devcontainer/) | Thin plugin tree; mounts common scripts |
+| **pulp-service** | [`pulp-service/.devcontainer/`](pulp-service/.devcontainer/) | Thin + RH overlays; mounts common scripts |
+| **new plugins** | `pulp_<name>/.devcontainer/` | Copy thin skeleton from `pulp_maven`, set `PULP_PLUGIN` / populate |
 
-All `pulp_<plugin>` trees must follow the modular `/opt/pulp-dev` layout (see `.claude/skills/pulp-plugin-devcontainer`). Reference implementations: **pulp_maven**, **pulp_python**. Structure follows **pulp-service** (`scripts/{lifecycle,setup,runtime,shell}`, mounts under `/opt/pulp-dev`).
+Shared logic lives in [`pulp-dev-common/`](pulp-dev-common/) (scripts, config, populate, skills, Dockerfile, settings) and is bind-mounted under `/opt/pulp-dev/*` (real directories, **no symlinks**). Edit common first; keep per-project only compose, `pulp-dev.env`, patches, and overlays (e.g. pulpcore smash, RH nginx/scripts).
 
-Do **not** modify [`pulp_plugin_template/`](pulp_plugin_template/) for these hand-maintained containers, and do **not** run `generate.sh` into `pulpcore` / `pulp_maven` / `pulp_python` — that still emits the old flat `/tmp` layout and would overwrite the modular trees.
+Do **not** symlink under `.devcontainer/` (Podman/`COPY`/`:Z` break).
+
+See `.claude/skills/pulp-plugin-devcontainer` and [`pulp-dev-common/README.md`](pulp-dev-common/README.md).
 
 ### Client front door
 
@@ -30,6 +33,8 @@ Do **not** modify [`pulp_plugin_template/`](pulp_plugin_template/) for these han
 | PULP_MAVEN_PATH      | ~/git/pulp/pulp_maven   |
 | PULP_PYTHON_PATH     | ~/git/pulp/pulp_python  |
 | PULP_SERVICE_PATH    | ~/git/pulp/pulp-service |
+
+`DEVTOOLS_CARLOSTHE19916_PATH` must resolve so compose can mount `pulp-dev-common/scripts`.
 
 Make sure the environment variables are defined at `~/.bashrc` or equivalent:
 

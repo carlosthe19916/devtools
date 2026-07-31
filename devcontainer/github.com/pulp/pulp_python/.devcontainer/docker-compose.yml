@@ -11,7 +11,8 @@ services:
   pulp-python:
     image: localhost/devcontainer-pulp-python:latest
     build:
-      dockerfile: ./Dockerfile
+      context: ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp
+      dockerfile: pulp-dev-common/Dockerfile
     security_opt:
       - "label=disable"
     userns_mode: "keep-id"
@@ -35,15 +36,25 @@ services:
       PULP_DEV_CONFIG: /opt/pulp-dev/config
       PULP_DEV_SKILLS: /opt/pulp-dev/skills
       PULP_POPULATE_ROOT: /opt/pulp-dev/populate
+      PULP_DEV_KIND: plugin
+      PULP_PLUGIN: python
+      PULP_BINDINGS: core python
+      PULP_PATCH_TREE: /repositories/pulpcore
+      PULP_NGINX_REMOUNT: "1"
+      PULP_SHELL_MARKER: "# pulp-python devcontainer helpers"
+      PULP_BINDINGS_DOMAIN_ENABLED: "false"
+      PULP_POPULATE_MODE: plugin
+      PULP_POPULATE_TYPES: pypi
+      PULP_POPULATE_BASE_URL: http://localhost:24817
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULP_PYTHON_PATH:-~/git/pulp/pulp_python}:/workspace:cached
       - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/repositories/pulpcore:cached
-      - ./scripts:/opt/pulp-dev/scripts:ro,Z
+      - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
       - ./config:/opt/pulp-dev/config:ro,Z
-      - ./skills:/opt/pulp-dev/skills:ro,Z
+      - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/skills:/opt/pulp-dev/skills:ro,Z
+      - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
       - ./patches:/opt/pulp-dev/patches:ro,Z
-      - ./populate:/opt/pulp-dev/populate:ro,Z
       - pulp-python-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
       - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached

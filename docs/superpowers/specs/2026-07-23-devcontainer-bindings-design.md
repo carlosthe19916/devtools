@@ -1,5 +1,9 @@
 # Devcontainer Binding Auto-Generation
 
+> **Historical note:** `pulp_plugin_template/` / `generate.sh` were removed.
+> Bindings live under `pulp-dev-common/scripts/runtime/` (`prepare-bindings.sh`,
+> `ensure-bindings.sh`) and are mounted into each thin `.devcontainer`.
+
 ## Problem
 
 Functional tests in Pulp devcontainers fail with `ModuleNotFoundError: No module named 'pulpcore.client.pulp_maven'` (and similar) because OpenAPI client bindings are not generated during container setup. The `pulp-bindings` shell function exists for manual generation but is never called automatically.
@@ -53,18 +57,12 @@ plugin_suffix=$(basename /workspace | sed 's/^pulp_//')
 
 Remove the OpenAPI Generator download section. Simplify `pulp-bindings` the same way.
 
-### Changes to `generate.sh`
+### Shared scripts (`pulp-dev-common`)
 
-Add `prepare-bindings.sh` to the list of shared files copied from `shared/` to generated outputs. The script will be mounted into the container at `/tmp/prepare-bindings.sh` via docker-compose (same pattern as postCreateCommand.sh).
+`prepare-bindings.sh` / `ensure-bindings.sh` live under
+`pulp-dev-common/scripts/runtime/` and are bind-mounted to `/opt/pulp-dev/scripts`.
 
-### Changes to docker-compose templates
-
-Add a volume mount for the new script:
-```yaml
-- ${DEVTOOLS_PATH:-.devcontainer}/prepare-bindings.sh:/tmp/prepare-bindings.sh
-```
-
-### Changes to `shared/skills/pulp-dev/SKILL.md`
+### Changes to in-container skills
 
 - Document that bindings are auto-generated during container setup for `core` and the current plugin
 - Document `pulp-bindings <component> [--force]` for manual regeneration
@@ -74,7 +72,7 @@ Add a volume mount for the new script:
 
 - Docker-compose model (separate DB, Redis containers)
 - Manual service start via `pulp-services`
-- Dockerfile, settings.py, initializeCommand.sh
+- Dockerfile, settings.py, initializeCommand (from common)
 - devcontainer.json features (Java 17 as devcontainer feature)
 - devcontainer-lock.json files
 
@@ -88,18 +86,15 @@ Following the pulp-docs convention:
 
 ## Files modified
 
-- `shared/prepare-bindings.sh` (new)
-- `plugin/postCreateCommand.sh` (prepare-bindings call, simplify pulp-bindings function)
-- `plugin/docker-compose.yml` (add volume mount for prepare-bindings.sh)
-- `generate.sh` (add prepare-bindings.sh to shared files list)
-- `shared/skills/pulp-dev/SKILL.md` (update documentation)
-- Generated plugin devcontainers (pulp_maven, pulp_python) will be regenerated
-- Hand-maintained `pulpcore/.devcontainer/` (bindings live under `scripts/runtime/prepare-bindings.sh`)
+- `pulp-dev-common/scripts/runtime/prepare-bindings.sh`
+- `pulp-dev-common/scripts/runtime/ensure-bindings.sh`
+- Thin `.devcontainer/` trees (compose mounts common scripts; env sets `PULP_BINDINGS`)
+- In-container `skills/pulp-dev/SKILL.md`
 
 ## Verification
 
-1. Run `generate.sh maven python` to regenerate plugin devcontainers (pulpcore is hand-maintained)
-2. Open one devcontainer (e.g., pulp_maven) and verify:
+1. Recreate a thin plugin container (e.g. pulp_maven) with `pulp-dev-common` mounted
+2. Open the devcontainer and verify:
    - Container builds and starts successfully
    - postCreateCommand completes without errors
    - `python -c "from pulpcore.client.pulp_maven import ApiClient"` succeeds

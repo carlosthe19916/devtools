@@ -11,7 +11,8 @@ services:
   pulp-service:
     image: localhost/devcontainer-pulp-service:latest
     build:
-      dockerfile: ./Dockerfile
+      context: ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp
+      dockerfile: pulp-service/.devcontainer/Dockerfile
     security_opt:
       - "label=disable"
     userns_mode: "keep-id"
@@ -36,16 +37,35 @@ services:
       PULP_DEV_CONFIG: /opt/pulp-dev/config
       PULP_DEV_SKILLS: /opt/pulp-dev/skills
       PULP_POPULATE_ROOT: /opt/pulp-dev/populate
+      PULP_DEV_KIND: service
+      PULP_BINDINGS: core python npm rpm maven file service container hugging_face
+      PULP_PATCH_TREE: /repositories/pulpcore
+      PULP_SETUP_30: 30-keys-and-patches.sh
+      PULP_NGINX_REMOUNT: "0"
+      PULP_SHELL_MARKER: "# pulp-service devcontainer helpers"
+      PULP_BINDINGS_DOMAIN_ENABLED: "true"
+      PULP_PYPROJECT: /repositories/pulpcore/pyproject.toml
+      PULP_POPULATE_MODE: service
+      PULP_POPULATE_TYPES: file,pypi,maven,npm,rpm
+      PULP_POPULATE_BASE_URL: http://localhost:24817
+      PULP_POPULATE_DOMAIN: my-public-domain
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULP_SERVICE_PATH:-~/git/pulp/pulp-service}:/workspace:cached
       - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/repositories/pulpcore:cached
       - ${PULP_MAVEN_PATH:-~/git/pulp/pulp_maven}:/repositories/pulp_maven:cached
       - ${PULP_PYTHON_PATH:-~/git/pulp/pulp_python}:/repositories/pulp_python:cached
-      - ./scripts:/opt/pulp-dev/scripts:ro,Z
-      - ./config:/opt/pulp-dev/config:ro,Z
-      - ./skills:/opt/pulp-dev/skills:ro,Z
-      - ./populate:/opt/pulp-dev/populate:ro,Z
+      - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
+      - ./scripts/setup/10-dirs.sh:/opt/pulp-dev/scripts/setup/10-dirs.sh:ro,Z
+      - ./scripts/setup/20-python-deps.sh:/opt/pulp-dev/scripts/setup/20-python-deps.sh:ro,Z
+      - ./scripts/setup/30-keys-and-patches.sh:/opt/pulp-dev/scripts/setup/30-keys-and-patches.sh:ro,Z
+      - ./scripts/runtime/patches.sh:/opt/pulp-dev/scripts/runtime/patches.sh:ro,Z
+      - ./scripts/runtime/run-content.sh:/opt/pulp-dev/scripts/runtime/run-content.sh:ro,Z
+      - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/config:/opt/pulp-dev/config:ro,Z
+      - ./config/nginx.conf:/opt/pulp-dev/config/nginx.conf:ro,Z
+      - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/skills:/opt/pulp-dev/skills:ro,Z
+      - ./skills/pulp-profile:/opt/pulp-dev/skills/pulp-profile:ro,Z
+      - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
       - pulp-service-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
       - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
