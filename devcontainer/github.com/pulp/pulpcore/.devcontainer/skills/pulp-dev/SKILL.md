@@ -20,7 +20,7 @@ Inside the container, scripts mount at `/opt/pulp-dev/scripts` (sourced via `she
 | Nginx / smash | `config/` |
 | Pulp `PULP_*` env | `pulp-dev.env` |
 | Django bootstrap | `settings.py` |
-| Dev patches | `patches/` |
+| Dev patches | `patches/` (empty by default — CI parity; no RH overlays) |
 
 ### First-boot (`lifecycle/post-create.sh`)
 
