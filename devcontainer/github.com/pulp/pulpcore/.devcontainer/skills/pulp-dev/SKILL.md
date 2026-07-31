@@ -46,7 +46,7 @@ pulp-bindings core file certguard   # regenerate OpenAPI clients (in-tree plugin
 
 API admin: `admin` / `password`
 
-Functional tests and smash use **direct** API `:24817` / content `:24816` (client-cert content guards cannot go through nginx). Nginx `:80` remains available as an optional proxy.
+Smash/CLI use **direct API `:24817`** (certguard client certs). Content uses **nginx `:80`** with `CONTENT_PATH_PREFIX=/pulp/content/` (CI parity / trailing-slash redirects). Processes still bind `:24817` / `:24816`.
 
 ```bash
 pulp config create --base-url http://localhost:24817 --username admin --password password --no-verify-ssl

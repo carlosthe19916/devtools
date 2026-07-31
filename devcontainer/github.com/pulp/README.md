@@ -18,7 +18,7 @@ Do **not** modify [`pulp_plugin_template/`](pulp_plugin_template/) for these han
 
 | Container | Clients (CLI / smash / populate) | Processes |
 |-----------|----------------------------------|-----------|
-| **pulpcore** | Direct `:24817` (API) / `:24816` (content) — intentional for certguard / client-cert functional tests | Same ports on localhost |
+| **pulpcore** | API smash/CLI on `:24817` (certguard client certs); content via nginx `:80` + `/pulp/content/` (CI parity) | API `:24817` / content `:24816` |
 | **pulp_maven**, **pulp_python**, **pulp-service** | Nginx `:80` | API `:24817` / content `:24816` behind nginx |
 
 ## Environment variables

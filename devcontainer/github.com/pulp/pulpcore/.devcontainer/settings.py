@@ -2,8 +2,10 @@ import os
 
 # Keep pulp_plugin_template shared/settings.py defaults for functional-test parity.
 # Env overrides (PULP_*) from pulp-dev.env still apply via pulpcore settings loading.
-CONTENT_ORIGIN = "http://localhost:24816"
-CONTENT_PATH_PREFIX = "/api/pulp-content/"
+# Content via nginx :80 (matches CI front door / trailing-slash redirects).
+# API processes still bind :24817 for certguard client-cert tests.
+CONTENT_ORIGIN = "http://localhost:80"
+CONTENT_PATH_PREFIX = "/pulp/content/"
 PYPI_PATH_PREFIX = "/pypi/"
 PYPI_API_HOSTNAME = "http://localhost:24817"
 DOMAIN_ENABLED = False

@@ -25,6 +25,7 @@ services:
       REDIS_URL: redis://pulpcore-redis:6379/0
       API_PROTOCOL: http
       API_HOST: localhost
+      # Bindings/CLI default host port (API). Content uses nginx :80 via CONTENT_ORIGIN.
       API_PORT: "24817"
       PYTHONSAFEPATH: "1"
       CLAUDE_CODE_USE_VERTEX: "1"

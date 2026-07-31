@@ -20,4 +20,6 @@ done
 plugin_suffix=$(basename /workspace | sed 's/^pulp_//')
 pip install httpie pulp-cli packaging
 pip install "pulp-cli-${plugin_suffix}" 2>/dev/null || true
+# Keep twine below 7 for shared fixture compatibility with pulp_python.
+pip install "twine>=4,<7"
 npm install -g concurrently

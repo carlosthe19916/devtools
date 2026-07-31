@@ -14,9 +14,9 @@
           "service": "pulpcore-api"
         },
         "content": {
-          "port": 24816,
+          "port": 80,
           "scheme": "http",
-          "service": "pulp_content_app"
+          "service": "nginx"
         },
         "pulp resource manager": {},
         "pulp workers": {},

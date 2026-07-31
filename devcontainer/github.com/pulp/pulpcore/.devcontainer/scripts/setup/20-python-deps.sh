@@ -26,5 +26,7 @@ pip install httpie pulp-cli packaging
 # Soft-install plugin CLI extensions when the server plugin is present.
 python3 -c "import pulp_maven" 2>/dev/null && pip install pulp-cli-maven || true
 python3 -c "import pulp_python" 2>/dev/null && pip install pulp-cli-python 2>/dev/null || true
+# Twine 7+ rejects Metadata-Version 2.0 (used by pulp_python fixtures).
+pip install "twine>=4,<7"
 
 npm install -g concurrently

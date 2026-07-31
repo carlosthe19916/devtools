@@ -20,4 +20,6 @@ done
 plugin_suffix=$(basename /workspace | sed 's/^pulp_//')
 pip install httpie pulp-cli packaging
 pip install "pulp-cli-${plugin_suffix}" 2>/dev/null || true
+# Twine 7+ rejects Metadata-Version 2.0 (shelf-reader wheel fixture).
+pip install "twine>=4,<7"
 npm install -g concurrently
