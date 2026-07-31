@@ -23,7 +23,7 @@ Kind is selected by compose env: `PULP_DEV_KIND` = `plugin` | `core` | `service`
 
 ### First-boot (`lifecycle/post-create.sh`)
 
-1. `10-dirs` → `20-python-deps` → step 30 (`30-patches.sh` by default; pulp-service overlays `30-keys-and-patches.sh` via `PULP_SETUP_30`)
+1. `10-dirs` → `20-python-deps` → step 30 (`30-patches.sh`; pulp-service mounts its `30-keys-and-patches.sh` over that path)
 2. `40-database` → `50-smash` → `60-shell` → `70-claude`
 
 ### Every start (`lifecycle/post-start.sh`)

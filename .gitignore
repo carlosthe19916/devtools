@@ -15,5 +15,9 @@ managed_context/
 # Hand-maintained: pulpcore, pulp_maven, pulp_python, pulp-service (+ pulp-dev-common)
 devcontainer/github.com/pulp/pulp-service/.devcontainer/config/certs/pulp-services-non-prod.pem
 
+# Podman creates empty host stubs when file-mounting onto a path missing from a
+# directory bind. Never commit these; fix compose to overlay an existing path.
+devcontainer/github.com/pulp/pulp-dev-common/scripts/setup/30-keys-and-patches.sh
+
 __pycache__/
 *.py[cod]

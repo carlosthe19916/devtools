@@ -90,6 +90,7 @@ Build: `context: …/pulp`, `dockerfile: pulp-dev-common/Dockerfile`.
 - Full duplicated `scripts/{lifecycle,setup,runtime,shell}` trees
 - Symlinks into `pulp-dev-common`
 - Smash/CLI only on `:24817`/`:24816` (processes may bind those; **clients use `:80`**)
+- File-mount overlays onto a path that does **not** exist under the `pulp-dev-common` bind (Podman creates empty `nobody`-owned host stubs). Overlay an existing name, or commit a placeholder mount point.
 
 ## Checklist before finishing
 

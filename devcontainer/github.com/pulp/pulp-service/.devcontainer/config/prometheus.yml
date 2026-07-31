@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: pulp-otel-collector
+    static_configs:
+      - targets: ["pulp-service-otel:9464"]

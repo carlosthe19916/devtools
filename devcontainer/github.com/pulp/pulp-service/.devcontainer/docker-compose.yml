@@ -6,6 +6,8 @@ volumes:
   pulp-service-claude-config:
   pulp-service-postgres-data:
   pulp-service-pulp-media:
+  pulp-service-grafana-data:
+  pulp-service-prometheus-data:
 
 services:
   pulp-service:
@@ -40,7 +42,8 @@ services:
       PULP_DEV_KIND: service
       PULP_BINDINGS: core python npm rpm maven file service container hugging_face
       PULP_PATCH_TREE: /repositories/pulpcore
-      PULP_SETUP_30: 30-keys-and-patches.sh
+      # RH step 30 is mounted over common's 30-patches.sh (do not file-mount a
+      # path missing from pulp-dev-common — Podman creates an empty host stub).
       PULP_NGINX_REMOUNT: "0"
       PULP_SHELL_MARKER: "# pulp-service devcontainer helpers"
       PULP_BINDINGS_DOMAIN_ENABLED: "true"
@@ -49,6 +52,9 @@ services:
       PULP_POPULATE_TYPES: file,pypi,maven,npm,rpm
       PULP_POPULATE_BASE_URL: http://localhost:24817
       PULP_POPULATE_DOMAIN: my-public-domain
+      # OTLP → pulp-service-otel (localhost:4318 would miss the sibling collector).
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://pulp-service-otel:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULP_SERVICE_PATH:-~/git/pulp/pulp-service}:/workspace:cached
@@ -58,7 +64,7 @@ services:
       - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
       - ./scripts/setup/10-dirs.sh:/opt/pulp-dev/scripts/setup/10-dirs.sh:ro,Z
       - ./scripts/setup/20-python-deps.sh:/opt/pulp-dev/scripts/setup/20-python-deps.sh:ro,Z
-      - ./scripts/setup/30-keys-and-patches.sh:/opt/pulp-dev/scripts/setup/30-keys-and-patches.sh:ro,Z
+      - ./scripts/setup/30-keys-and-patches.sh:/opt/pulp-dev/scripts/setup/30-patches.sh:ro,Z
       - ./scripts/runtime/patches.sh:/opt/pulp-dev/scripts/runtime/patches.sh:ro,Z
       - ./scripts/runtime/run-content.sh:/opt/pulp-dev/scripts/runtime/run-content.sh:ro,Z
       - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/config:/opt/pulp-dev/config:ro,Z
@@ -78,6 +84,8 @@ services:
       pulp-service-db:
         condition: service_healthy
       pulp-service-redis:
+        condition: service_started
+      pulp-service-otel:
         condition: service_started
 
   pulp-service-db:
@@ -102,3 +110,49 @@ services:
     restart: unless-stopped
     networks:
       - pulp-service
+
+  pulp-service-otel:
+    # contrib includes the prometheus exporter (core does not).
+    image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.115.1
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./config/otel-collector-config.yaml:/etc/otelcol/config.yaml:ro,Z
+    networks:
+      - pulp-service
+    restart: unless-stopped
+
+  pulp-service-prometheus:
+    image: prom/prometheus:v2.55.1
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro,Z
+      - pulp-service-prometheus-data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-lifecycle
+    ports:
+      - "9090:9090"
+    networks:
+      - pulp-service
+    depends_on:
+      - pulp-service-otel
+    restart: unless-stopped
+
+  pulp-service-grafana:
+    image: grafana/grafana:11.3.1
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+    volumes:
+      - ./config/grafana/provisioning:/etc/grafana/provisioning:ro,Z
+      - pulp-service-grafana-data:/var/lib/grafana
+    ports:
+      - "3200:3000"
+    networks:
+      - pulp-service
+    depends_on:
+      - pulp-service-prometheus
+    restart: unless-stopped

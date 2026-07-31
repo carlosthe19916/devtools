@@ -9,13 +9,27 @@ See also shared `pulp-dev` / `pulp-openapi` / `pulp-populate` skills from `pulp-
 
 ## RH deltas
 
-- Local script overlays: `10-dirs`, `20-python-deps`, `30-keys-and-patches`, `patches.sh`, `run-content.sh`
-- Setup step 30: `PULP_SETUP_30=30-keys-and-patches.sh` (service overlay; Sigstore key + patches)
+- Local script overlays: `10-dirs`, `20-python-deps`, `patches.sh`, `run-content.sh`
+- Setup step 30: host `30-keys-and-patches.sh` mounted over common `30-patches.sh` (Sigstore key + patches)
 - Patches: `/workspace/images/assets/patches` (production parity)
 - Status: `http://localhost:80/api/pulp/api/v3/status/`
 - Postgres **16** (delete `pulp-service-postgres-data` if migrating from 17)
 - Populate: `PULP_POPULATE_MODE=service`, multi-type + `PULP_POPULATE_DOMAIN`
 - Attestation: `/etc/pki/attestation/test-key.pem`; Sigstore PEM under `/etc/pki/sigstore/`
+
+## Local telemetry (OTEL + Prometheus + Grafana)
+
+Compose starts `pulp-service-otel`, `pulp-service-prometheus`, and `pulp-service-grafana`.
+
+| UI / endpoint | URL |
+|---------------|-----|
+| Grafana | http://localhost:3200 (admin/admin; anonymous Viewer) |
+| Prometheus | http://localhost:9090 |
+| Collector (from pulp container) | `http://pulp-service-otel:4318` |
+
+Pulp is wired with `OTEL_EXPORTER_OTLP_ENDPOINT` / `OTEL_EXPORTER_OTLP_PROTOCOL` in `docker-compose.yml` and `PULP_OTEL_ENABLED=true` in `pulp-dev.env`.
+
+Confirm: generate API traffic, then in Prometheus or Grafana Explore query metrics such as `api_active_connections` (OpenTelemetry names may appear with dots converted to underscores).
 
 ```bash
 pulp-core-local / pulp-maven-local / pulp-python-local

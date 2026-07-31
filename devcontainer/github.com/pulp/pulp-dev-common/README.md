@@ -65,3 +65,5 @@ Prefer changing shared behavior under this directory. Only add a per-project ove
 ## Host paths Podman must resolve
 
 Compose bind mounts require the **host path to exist** before `up` (including `--no-recreate` of an older container). Do not delete per-project `config/` (plugins keep a copy identical to `pulp-dev-common/config/`). After changing volume sources, use **Rebuild Container** (recreate), not a plain reopen — stale containers still reference old mount sources.
+
+**File/dir overlays under a common bind:** the mount *target* path must already exist on the host under `pulp-dev-common/`. If it does not, Podman creates an empty `nobody`-owned stub there on every start (e.g. a bogus `scripts/setup/30-keys-and-patches.sh`). Overlay onto an existing name (pulp-service mounts RH `30-keys-and-patches.sh` → common `30-patches.sh`) or commit a placeholder directory (see `skills/pulp-profile/`).
