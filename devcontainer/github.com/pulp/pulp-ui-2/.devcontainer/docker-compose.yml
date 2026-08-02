@@ -1,0 +1,53 @@
+networks:
+  pulp-ui-2:
+    name: "pulp-ui-2"
+
+volumes:
+  pulp-ui-2-claude-config:
+  pulp-storage:
+  pulp-pgsql:
+  pulp-containers:
+
+services:
+  pulp-ui-2:
+    image: localhost/devcontainer-pulp-ui-2:latest
+    build:
+      dockerfile: ./Dockerfile
+    security_opt:
+      - "label=disable"
+    userns_mode: "keep-id"
+    environment:
+      # In-compose DNS → service "pulp" (not localhost; host maps that as :8089).
+      PULP_API_URL: http://pulp
+      GH_TOKEN: ${GH_TOKEN}
+      CLAUDE_CODE_USE_VERTEX: "1"
+      CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
+      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    volumes:
+      - ${PULP_UI_2_PATH:-~/git/pulp/pulp-ui-2}:/workspace:cached
+      - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
+      - pulp-ui-2-claude-config:/home/vscode/.claude
+      - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
+    ports:
+      - "3000:3000"
+    networks:
+      - pulp-ui-2
+    depends_on:
+      - pulp
+
+  pulp:
+    image: docker.io/pulp/pulp:latest
+    container_name: pulp-ui-2-backend
+    environment:
+      # Sets admin password on first boot when the admin user does not yet exist.
+      PULP_DEFAULT_ADMIN_PASSWORD: password
+    ports:
+      - "8089:80"
+    volumes:
+      - ./pulp/settings:/etc/pulp:Z
+      - pulp-storage:/var/lib/pulp:Z
+      - pulp-pgsql:/var/lib/pgsql:Z
+      - pulp-containers:/var/lib/containers:Z
+    networks:
+      - pulp-ui-2

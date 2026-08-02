@@ -1,0 +1,35 @@
+{
+  "name": "pulp-ui-2",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "pulp-ui-2",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [
+    3000
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12"
+    },
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "initializeCommand": "bash ${localEnv:DEVTOOLS_CARLOSTHE19916_PATH:~/git/devtools}/devcontainer/github.com/pulp/pulp-ui-2/.devcontainer/initializeCommand.sh ${devcontainerId}",
+  "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens",
+        "dsznajder.es7-react-js-snippets",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "git.alwaysSignOff": true
+      }
+    }
+  }
+}
