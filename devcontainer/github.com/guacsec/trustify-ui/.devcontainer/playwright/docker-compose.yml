@@ -1,0 +1,23 @@
+volumes:
+  trustify-e2e-claude-config:
+
+services:
+  trustify-playwright:
+    image: localhost/devcontainer-trustify-e2e:latest
+    build:
+      dockerfile: ./Dockerfile
+    security_opt:
+      - "label=disable"
+    userns_mode: "keep-id"
+    network_mode: host
+    environment:
+      GH_TOKEN: ${GH_TOKEN}
+      CLAUDE_CODE_USE_VERTEX: "1"
+      CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
+      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    volumes:
+      - ${TRUSTIFY_UI_PATH:-~/git/guacsec/trustify-ui}:/workspace:cached
+      - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
+      - trustify-e2e-claude-config:/home/pwuser/.claude
+      - ${HOME}/.config/gcloud:/home/pwuser/.config/gcloud:cached

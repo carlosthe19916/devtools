@@ -1,0 +1,30 @@
+networks:
+  trustify:
+    name: "trustify"
+
+volumes:
+  trustify-ui-claude-config:
+
+services:
+  trustify-ui:
+    image: localhost/devcontainer-trustify-ui:latest
+    build:
+      dockerfile: ./Dockerfile
+    security_opt:
+      - "label=disable"
+    userns_mode: "keep-id"
+    environment:
+      TRUSTIFY_API_URL: http://trustify:8080
+      OIDC_SERVER_URL: http://localhost:9090/realms/trustify
+      GH_TOKEN: ${GH_TOKEN}
+      CLAUDE_CODE_USE_VERTEX: "1"
+      CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
+      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    volumes:
+      - ${TRUSTIFY_UI_PATH:-~/git/guacsec/trustify}:/workspace:cached
+      - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
+      - trustify-ui-claude-config:/home/vscode/.claude
+      - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
+    networks:
+      - trustify

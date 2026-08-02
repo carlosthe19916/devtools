@@ -1,0 +1,49 @@
+{
+  "name": "trustify-ui",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "trustify-ui",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [
+    3000
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    },
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "initializeCommand": "bash ${localEnv:DEVTOOLS_TSD_UI_PATH:~/git/devtools}/devcontainer/github.com/guacsec/trustify-ui/.devcontainer/node/initializeCommand.sh ${devcontainerId}",
+  "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens",
+        "dsznajder.es7-react-js-snippets",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-playwright.playwright",
+        "alexkrechik.cucumberautocomplete"
+      ],
+      "settings": {
+        "git.alwaysSignOff": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[javascript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescriptreact]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "cucumberautocomplete.steps": [
+          "e2e/tests/ui/features/@*/*.step.ts",
+          "e2e/tests/ui/steps/*.ts"
+        ],
+        "cucumberautocomplete.strictGherkinCompletion": true
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "name": "rhtas-console-e2e",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "rhtas-console-playwright",
+  "workspaceFolder": "/workspace/e2e",
+  "remoteUser": "pwuser",
+  "initializeCommand": "bash ${localEnv:DEVTOOLS_TSD_UI_PATH:~/git/devtools}/devcontainer/github.com/securesign/rhtas-console-ui/.devcontainer/playwright/initializeCommand.sh ${devcontainerId}",
+  "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
+  "forwardPorts": [
+    6080,
+    5901
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "username": "pwuser"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    },
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/desktop-lite:1": {
+      "VNC_RESOLUTION": "1920x1200x16"
+    }
+  },
+  "containerEnv": {
+    "DISPLAY": ":2"
+  },
+  "portsAttributes": {
+    "6080": {
+      "label": "browser vnc"
+    },
+    "5901": {
+      "label": "real vnc"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens",
+        "ms-playwright.playwright"
+      ],
+      "settings": {
+        "git.alwaysSignOff": true
+      }
+    }
+  }
+}

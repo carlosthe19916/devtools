@@ -1,0 +1,90 @@
+networks:
+  trustify:
+    name: "trustify"
+
+volumes:
+  trustify-postgres-data:
+  trustify-claude-config:
+
+services:
+  trustify:
+    image: localhost/devcontainer-trustify:latest
+    build:
+      dockerfile: ./Dockerfile
+    security_opt:
+      - "label=disable"
+    userns_mode: "keep-id"
+    environment:
+      TRUSTD_DB_HOST: trustify-db
+      HTTP_SERVER_BIND_ADDR: "::"
+      UI_ISSUER_URL: ${UI_ISSUER_URL:-http://localhost:9090/realms/trustify}
+      UI_CLIENT_ID: frontend
+      AUTHENTICATOR_OIDC_ISSUER_URL: http://trustify-keycloak:8080/realms/trustify
+      AUTHENTICATOR_OIDC_CLIENT_IDS: frontend,cli
+      GH_TOKEN: ${GH_TOKEN}
+      CLAUDE_CODE_USE_VERTEX: "1"
+      CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
+      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    volumes:
+      - ${TRUSTIFY_PATH:-~/git/guacsec/trustify}:/workspace:cached
+      - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
+      - trustify-claude-config:/home/vscode/.claude
+      - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
+    networks:
+      - trustify
+    depends_on:
+      trustify-db:
+        condition: service_started
+
+  trustify-db:
+    image: postgres:17
+    restart: unless-stopped
+    volumes:
+      - trustify-postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: trustify
+      POSTGRES_DB: trustify
+      POSTGRES_HOSTNAME: localhost
+      POSTGRES_PORT: 5432
+    networks:
+      - trustify
+
+  trustify-keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: true
+      KC_HOSTNAME: ${KC_HOSTNAME:-http://localhost:9090}
+      KC_PROXY_HEADERS: xforwarded
+    ports:
+      - "9090:8080"
+    command: [ "start-dev" ]
+    networks:
+      - trustify
+
+  trustify-keycloak-wait:
+    image: docker.io/alpine/curl:latest
+    volumes:
+      - ./keycloak/kc-wait.sh:/tmp/kc-wait.sh:Z
+    entrypoint: [ "/bin/sh" ]
+    command: /tmp/kc-wait.sh
+    depends_on:
+      trustify-keycloak:
+        condition: service_started
+    networks:
+      - trustify
+
+  trustify-keycloak-init:
+    image: quay.io/keycloak/keycloak:latest
+    volumes:
+      - ./keycloak/kc-init.sh:/tmp/kc-init.sh:Z
+    entrypoint: [ "/bin/sh" ]
+    command: /tmp/kc-init.sh
+    depends_on:
+      trustify-keycloak-wait:
+        condition: service_completed_successfully
+    networks:
+      - trustify

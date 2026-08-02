@@ -1,0 +1,51 @@
+{
+  "name": "trustify-e2e",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "trustify-playwright",
+  "workspaceFolder": "/workspace/e2e",
+  "remoteUser": "pwuser",
+  "forwardPorts": [
+    6080,
+    5901
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "username": "pwuser"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    },
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/desktop-lite:1": {
+      "VNC_RESOLUTION": "1920x1200x16"
+    }
+  },
+  "initializeCommand": "bash ${localEnv:DEVTOOLS_TSD_UI_PATH:~/git/devtools}/devcontainer/github.com/guacsec/trustify-ui/.devcontainer/playwright/initializeCommand.sh ${devcontainerId}",
+  "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
+  "portsAttributes": {
+    "6080": {
+      "label": "browser vnc"
+    },
+    "5901": {
+      "label": "real vnc"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens",
+        "ms-playwright.playwright",
+        "alexkrechik.cucumberautocomplete"
+      ],
+      "settings": {
+        "git.alwaysSignOff": true,
+        "cucumberautocomplete.steps": [
+          "tests/ui/features/@*/*.step.ts",
+          "tests/ui/steps/*.ts"
+        ],
+        "cucumberautocomplete.strictGherkinCompletion": true
+      }
+    }
+  }
+}

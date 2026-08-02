@@ -1,0 +1,29 @@
+{
+  "name": "rhtas-console",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "rhtas-console",
+  "workspaceFolder": "/workspace",
+  "initializeCommand": "bash ${localEnv:DEVTOOLS_TSD_UI_PATH:~/git/devtools}/devcontainer/github.com/securesign/rhtas-console/.devcontainer/initializeCommand.sh ${devcontainerId}",
+  "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
+  "forwardPorts": [
+    8080
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/go:1": {"version": "1.26"},
+    "ghcr.io/devcontainers/features/node:1": {"version": "22"},
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens",
+        "golang.Go"
+      ],
+      "settings": {
+        "git.alwaysSignOff": true
+      }
+    }
+  }
+}

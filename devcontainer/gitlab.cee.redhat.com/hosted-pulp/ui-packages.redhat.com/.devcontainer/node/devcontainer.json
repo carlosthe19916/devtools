@@ -1,0 +1,30 @@
+{
+  "name": "ui-packages.redhat.com",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "pulp-ui",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [
+    1337
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    },
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "initializeCommand": "bash ${localEnv:DEVTOOLS_TSD_UI_PATH:~/git/devtools}/devcontainer/gitlab.cee.redhat.com/hosted-pulp/ui-packages.redhat.com/.devcontainer/node/initializeCommand.sh ${devcontainerId}",
+  "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens",
+        "dsznajder.es7-react-js-snippets"
+      ],
+      "settings": {
+        "git.alwaysSignOff": true
+      }
+    }
+  }
+}

@@ -1,4 +1,13 @@
-# Podman
+# Devcontainers
+
+Use [Devcontainers](https://code.visualstudio.com/docs/devcontainers/containers) to prepare a fully automated working
+environment.
+
+## Docker
+
+Docker defaults should work fine therefore there is nothing to do.
+
+## Podman
 
 Start Podman service for a regular user (rootless) and make it listen to a socket:
 
@@ -12,7 +21,7 @@ Restart your OS if necessary and verify that podman listens:
 systemctl --user status podman.socket
 ```
 
-# VSCode
+## VSCode
 
 Install the Dev Container
 extension <https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers>
@@ -29,70 +38,7 @@ If you are using Podman then also:
 - `Dev › Containers: Docker Path` set `podman`
 - `Dev › Containers: Docker Socket Path` set `/run/podman/podman.sock`
 
-# JetBrains
+To open the repository with DevContainers do `Ctrl + Shift + P` and enter
+`Dev Containers: Rebuild and Reopen in Container` or `Dev Containers: Reopen in Container`.
 
-# DevPod
-
-- Trustify
-
-```shell
-podman network create trustify || true && \
-podman volume create cargo-cache || true && \
-podman volume create nvim-cache || true && \
-devpod up \
-~/git/devtools/devcontainer/github.com/carlosthe19916/trustify/.devcontainer/vscode \
---devcontainer-path devcontainer.json \
---dotfiles https://github.com/carlosthe19916/dotfiles.git \
---dotfiles-script devcontainer/install.sh \
---id trustify \
---provider docker \
---ide vscode
-```
-
-- Trustify -ui
-
-```shell
-podman network create trustify || true && \
-podman volume create npm-cache || true && \
-podman volume create nvim-cache || true && \
-devpod up \
-~/git/devtools/devcontainer/github.com/carlosthe19916/trustify-ui/.devcontainer/vscode \
---devcontainer-path devcontainer.json \
---dotfiles https://github.com/carlosthe19916/dotfiles.git \
---dotfiles-script devcontainer/install.sh \
---id trustify-ui \
---provider docker \
---ide vscode
-```
-
-- Rhtas
-
-```shell
-podman network create rhtas || true && \
-podman volume create go-cache || true && \
-podman volume create nvim-cache || true && \
-devpod up \
-~/git/devtools/devcontainer/github.com/carlosthe19916/rhtas-console/.devcontainer/vscode \
---devcontainer-path devcontainer.json \
---dotfiles https://github.com/carlosthe19916/dotfiles.git \
---dotfiles-script devcontainer/install.sh \
---id rhtas-console \
---provider docker 
---ide vscode
-```
-
-- Rhtas-ui
-
-```shell
-podman network create rhtas || true && \
-podman volume create npm-cache || true && \
-podman volume create nvim-cache || true && \
-devpod up \
-~/git/devtools/devcontainer/github.com/carlosthe19916/rhtas-console-ui/.devcontainer/vscode \
---devcontainer-path devcontainer.json \
---dotfiles https://github.com/carlosthe19916/dotfiles.git \
---dotfiles-script devcontainer/install.sh \
---id rhtas-console-ui \
---provider docker \
---ide vscode
-```
+## JetBrains

@@ -1,0 +1,46 @@
+{
+  "name": "trustify",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "trustify",
+  "workspaceFolder": "/workspace",
+  "initializeCommand": "bash ${localEnv:DEVTOOLS_TSD_UI_PATH:~/git/devtools}/devcontainer/github.com/guacsec/trustify/.devcontainer/initializeCommand.sh ${devcontainerId}",
+  "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
+  "forwardPorts": [
+    8080,
+    9010,
+    9090
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/rust:1": {},
+    "ghcr.io/devcontainers/features/node:1": {"version": "22"},
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens",
+        "vadimcn.vscode-lldb",
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg"
+      ],
+      "settings": {
+        "git.alwaysSignOff": true,
+        "sqltools.connections": [
+          {
+            "server": "trustify-db",
+            "database": "trustify",
+            "username": "postgres",
+            "password": "trustify",
+            "port": 5432,
+            "name": "db",
+            "driver": "PostgreSQL"
+          }
+        ]
+      }
+    }
+  }
+}
