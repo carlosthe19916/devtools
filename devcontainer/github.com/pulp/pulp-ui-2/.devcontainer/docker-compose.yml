@@ -29,6 +29,8 @@ services:
       - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
       - pulp-ui-2-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
+      - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
+      - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
     ports:
       - "3000:3000"
     networks:

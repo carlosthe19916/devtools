@@ -6,6 +6,13 @@ echo "devcontainerID ${1:-}"
 sudo chown -R "$(id -u):$(id -g)" ~/.claude 2>/dev/null || true
 
 ################################################################################
+# Claude Code: MCP servers and plugins
+################################################################################
+
+claude mcp add --transport http --scope user atlassian https://mcp.atlassian.com/v1/mcp 2>/dev/null || true
+claude plugin install superpowers@claude-plugins-official --scope user 2>/dev/null || true
+
+################################################################################
 # Wait for Pulp API (docker.io/pulp/pulp sibling service)
 ################################################################################
 

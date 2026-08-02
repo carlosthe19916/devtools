@@ -24,6 +24,9 @@ services:
       - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
       - pulp-ui-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
+      - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
+      - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
+      - ${HOME}/.gitconfig-gitlab:/home/vscode/.gitconfig-gitlab:cached
       - ${HOME}/.vite-plugin-mkcert:/home/vscode/.vite-plugin-mkcert:cached
     networks:
       - pulp
