@@ -1,8 +1,5 @@
 FROM mcr.microsoft.com/devcontainers/base:ubuntu
 
-# Build context: devcontainer/github.com/pulp (parent).
-# Compose: dockerfile: pulp-service/.devcontainer/Dockerfile
-
 RUN sudo apt update && \
     sudo apt install -y build-essential libpq-dev jq nginx postgresql-client redis-tools redis-server \
         libglib2.0-0 rpm
@@ -17,24 +14,28 @@ RUN mkdir -p /var/lib/pulp/assets\
              /var/lib/pulp/tmp \
              /etc/nginx/pulp \
              /etc/pki/sigstore && \
+    # Keep include /etc/nginx/pulp/*.conf valid when no plugin snippets exist yet.
     touch /etc/nginx/pulp/.keep.conf
 
 # Test attestation keypair for functional tests that sign locally.
+# Production / pulp-docs verify with vendored Sigstore PEM (installed at postCreate
+# from /workspace/images/assets/keys/). openssl avoids a Dockerfile parse hazard:
+# a line starting with Python "from ..." is treated as FROM.
 RUN sudo mkdir -p /etc/pki/attestation && \
     sudo openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 \
         -out /etc/pki/attestation/test-key-private.pem && \
     sudo openssl pkey -in /etc/pki/attestation/test-key-private.pem -pubout \
         -out /etc/pki/attestation/test-key.pem && \
+    # readable by vscode so functional attestation tests can sign locally
     sudo chmod 644 /etc/pki/attestation/test-key-private.pem \
         /etc/pki/attestation/test-key.pem
 
-COPY pulp-dev-common/settings.py /etc/pulp/settings.py
-COPY pulp-service/.devcontainer/config/nginx.conf /etc/nginx/nginx.conf
-COPY pulp-dev-common/config/nginx-proxy-params.conf /etc/nginx/pulp-proxy-params.conf
+COPY settings.py /etc/pulp/settings.py
+COPY config/nginx.conf /etc/nginx/nginx.conf
+COPY config/nginx-proxy-params.conf /etc/nginx/pulp-proxy-params.conf
 
 ENV DJANGO_SETTINGS_MODULE=pulpcore.app.settings
 ENV PULP_SETTINGS=/etc/pulp/settings.py
 ENV PULP_DEV_SCRIPTS=/opt/pulp-dev/scripts
 ENV PULP_DEV_CONFIG=/opt/pulp-dev/config
 ENV PULP_DEV_SKILLS=/opt/pulp-dev/skills
-ENV PULP_POPULATE_ROOT=/opt/pulp-dev/populate

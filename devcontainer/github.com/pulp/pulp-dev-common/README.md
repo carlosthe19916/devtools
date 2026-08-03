@@ -11,7 +11,7 @@ pulp-dev-common/
 ├── config/           # nginx.conf (upstream), smash.json (nginx :80), proxy-params
 ├── populate/         # setup_pulp.py (linear) + assets/{file,maven,pypi,npm,rpm}
 ├── skills/           # pulp-dev, pulp-openapi, pulp-populate
-├── Dockerfile        # shared image for pulpcore + plugins
+├── Dockerfile        # scaffolding template for per-project .devcontainer/Dockerfile
 ├── settings.py       # thin Django bootstrap (knobs via pulp-dev.env)
 └── README.md
 ```
@@ -20,7 +20,7 @@ pulp-dev-common/
 
 ```yaml
 volumes:
-  - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
+  - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
   - ${DEVTOOLS_…}/pulp-dev-common/config:/opt/pulp-dev/config:ro,Z
   - ${DEVTOOLS_…}/pulp-dev-common/skills:/opt/pulp-dev/skills:ro,Z
   - ${DEVTOOLS_…}/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
@@ -31,13 +31,14 @@ Overlays (examples):
 - pulpcore: `./config/smash.json` (API `:24817`), `./scripts/setup/20-python-deps.sh`, `./skills/pulp-profile`
 - pulp-service: `./config/nginx.conf` (ClowdApp), RH script overlays, `./skills/pulp-profile`
 
-Build (plugins + pulpcore):
+Build (each project’s `.devcontainer/docker-compose.yml`):
 
 ```yaml
 build:
-  context: ${DEVTOOLS_…}/devcontainer/github.com/pulp
-  dockerfile: pulp-dev-common/Dockerfile
+  dockerfile: ./Dockerfile
 ```
+
+This directory’s `Dockerfile` is a scaffolding template (copy into a new plugin’s `.devcontainer/` and adjust `COPY` paths for a local context). Compose builds the per-project `./Dockerfile`.
 
 ## Env knobs
 

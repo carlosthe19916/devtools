@@ -32,7 +32,7 @@ See `.claude/skills/pulp-plugin-devcontainer` and [`pulp-dev-common/README.md`](
 
 | Environment variable | default value           |
 |----------------------|-------------------------|
-| DEVTOOLS_CARLOSTHE19916_PATH | ~/git/devtools          |
+| DEVTOOLS_PATH | ~/git/devtools          |
 | PULPCORE_PATH        | ~/git/pulp/pulpcore     |
 | PULP_MAVEN_PATH      | ~/git/pulp/pulp_maven   |
 | PULP_PYTHON_PATH     | ~/git/pulp/pulp_python  |
@@ -40,13 +40,13 @@ See `.claude/skills/pulp-plugin-devcontainer` and [`pulp-dev-common/README.md`](
 | PULP_UI_PATH         | ~/git/pulp/pulp-ui     |
 | PULP_UI_2_PATH       | ~/git/pulp/pulp-ui-2   |
 
-`DEVTOOLS_CARLOSTHE19916_PATH` must resolve so compose can mount `pulp-dev-common/scripts` (backend stacks) and so pulp-ui / pulp-ui-2 `initializeCommand` can locate its scripts.
+`DEVTOOLS_PATH` must resolve so compose can mount `pulp-dev-common/scripts` (backend stacks) and so pulp-ui / pulp-ui-2 `initializeCommand` can locate its scripts.
 
 Make sure the environment variables are defined at `~/.bashrc` or equivalent:
 
 ```shell
-if [ -z "$DEVTOOLS_CARLOSTHE19916_PATH" ]; then
-  echo "export DEVTOOLS_CARLOSTHE19916_PATH=/cloned_repository_directory" >> ~/.bashrc;
+if [ -z "$DEVTOOLS_PATH" ]; then
+  echo "export DEVTOOLS_PATH=/cloned_repository_directory" >> ~/.bashrc;
 fi
 ```
 
@@ -86,7 +86,7 @@ fi
 
 Self-contained UI stack: Node workspace plus `docker.io/pulp/pulp` as the API backend.
 
-1. Set `PULP_UI_PATH` (and `DEVTOOLS_CARLOSTHE19916_PATH` for `initializeCommand`).
+1. Set `PULP_UI_PATH` (and `DEVTOOLS_PATH` for `initializeCommand`).
 2. Open [`pulp-ui/.devcontainer/`](pulp-ui/.devcontainer/) in the editor.
 3. After create: `npm install && npm run start` → http://localhost:8002/ (proxies to Pulp via `API_PROXY`).
 4. Login `admin` / `admin`. Host API also on http://localhost:8088/.
@@ -101,7 +101,7 @@ docker/podman exec -it pulp-ui-backend pulpcore-manager reset-admin-password --p
 
 Self-contained Vite/Express UI stack plus `docker.io/pulp/pulp` configured for `API_ROOT=/api/pulp/` and domains (matches the generated OpenAPI client).
 
-1. Set `PULP_UI_2_PATH` (and `DEVTOOLS_CARLOSTHE19916_PATH` for `initializeCommand`).
+1. Set `PULP_UI_2_PATH` (and `DEVTOOLS_PATH` for `initializeCommand`).
 2. Open [`pulp-ui-2/.devcontainer/`](pulp-ui-2/.devcontainer/) in the editor.
 3. After create: `npm ci && npm run start:dev` → http://localhost:3000/ (Vite proxies `/api` to compose service `pulp` via `PULP_API_URL=http://pulp`).
 4. Login `admin` / `password`. From the host, API is http://localhost:8089/; from inside the UI container use `http://pulp/` (compose service name, not localhost).

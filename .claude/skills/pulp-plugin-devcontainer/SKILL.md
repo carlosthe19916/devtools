@@ -26,13 +26,14 @@ Do **not**:
 
 ```
 .devcontainer/
+├── Dockerfile                 # local image build (scaffold from pulp-dev-common/Dockerfile)
 ├── devcontainer.json          # initializeCommand → pulp-dev-common/.../initialize.sh
 ├── docker-compose.yml         # mounts pulp-dev-common → /opt/pulp-dev/*
 ├── pulp-dev.env
 └── patches/                   # usually empty (.gitkeep) for CI parity
 ```
 
-Dockerfile, settings, config, populate, and skills come from `pulp-dev-common` (compose build context + mounts).
+Each tree has its own `Dockerfile` (`dockerfile: ./Dockerfile`). Shared scripts/config/skills/populate still come from `pulp-dev-common` via compose bind mounts.
 
 ## Compose mounts
 
@@ -46,7 +47,7 @@ Dockerfile, settings, config, populate, and skills come from `pulp-dev-common` (
 | plugin checkout | `/workspace` |
 | pulpcore checkout | `/repositories/pulpcore` |
 
-Build: `context: …/pulp`, `dockerfile: pulp-dev-common/Dockerfile`.
+Build: `dockerfile: ./Dockerfile` (no parent `context`).
 
 ## Required env (plugins)
 
@@ -95,7 +96,7 @@ Build: `context: …/pulp`, `dockerfile: pulp-dev-common/Dockerfile`.
 ## Checklist before finishing
 
 - [ ] Scripts/config/skills/populate come from `pulp-dev-common` (compose mounts)
-- [ ] Build uses `pulp-dev-common/Dockerfile` (parent context)
+- [ ] Build uses `dockerfile: ./Dockerfile` (local context; scaffold from pulp-dev-common if new)
 - [ ] No symlinks under `.devcontainer/`
 - [ ] Env knobs set (`PULP_DEV_KIND`, `PULP_PLUGIN`, `PULP_BINDINGS`, `PULP_POPULATE_TYPES`, …)
 - [ ] Smash via common config (api+content `:80` / nginx) unless intentionally overlaid

@@ -1,7 +1,8 @@
 FROM mcr.microsoft.com/devcontainers/base:ubuntu
 
-# Build context: devcontainer/github.com/pulp (parent of pulp-dev-common + projects).
-# Compose: dockerfile: pulp-dev-common/Dockerfile
+# Scaffolding template for new pulp_* /.devcontainer/Dockerfile trees.
+# Compose builds each project's local ./Dockerfile (not this file).
+# When copying into a project, use local COPY paths (settings.py, config/...).
 
 RUN sudo apt update && \
     sudo apt install -y build-essential libpq-dev jq nginx postgresql-client redis-tools redis-server

@@ -11,8 +11,7 @@ services:
   pulp-maven:
     image: localhost/devcontainer-pulp-maven:latest
     build:
-      context: ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp
-      dockerfile: pulp-dev-common/Dockerfile
+      dockerfile: ./Dockerfile
     security_opt:
       - "label=disable"
     userns_mode: "keep-id"
