@@ -11,7 +11,7 @@ services:
   pulpcore:
     image: localhost/devcontainer-pulpcore:latest
     build:
-      context: ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp
+      context: ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp
       dockerfile: pulp-dev-common/Dockerfile
     security_opt:
       - "label=disable"
@@ -51,13 +51,13 @@ services:
       - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/workspace:cached
       - ${PULP_MAVEN_PATH:-~/git/pulp/pulp_maven}:/repositories/pulp_maven:cached
       - ${PULP_PYTHON_PATH:-~/git/pulp/pulp_python}:/repositories/pulp_python:cached
-      - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
       - ./scripts/setup/20-python-deps.sh:/opt/pulp-dev/scripts/setup/20-python-deps.sh:ro,Z
-      - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/config:/opt/pulp-dev/config:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/config:/opt/pulp-dev/config:ro,Z
       - ./config/smash.json:/opt/pulp-dev/config/smash.json:ro,Z
-      - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/skills:/opt/pulp-dev/skills:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/skills:/opt/pulp-dev/skills:ro,Z
       - ./skills/pulp-profile:/opt/pulp-dev/skills/pulp-profile:ro,Z
-      - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
       - ./patches:/opt/pulp-dev/patches:ro,Z
       - pulpcore-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached

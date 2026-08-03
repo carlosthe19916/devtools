@@ -14,7 +14,7 @@
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "initializeCommand": "bash ${localEnv:DEVTOOLS_TSD_UI_PATH:~/git/devtools}/devcontainer/gitlab.cee.redhat.com/hosted-pulp/ui-packages.redhat.com/.devcontainer/node/initializeCommand.sh ${devcontainerId}",
+  "initializeCommand": "bash ${localEnv:DEVTOOLS_PATH:~/git/devtools}/devcontainer/gitlab.cee.redhat.com/hosted-pulp/ui-packages.redhat.com/.devcontainer/node/initializeCommand.sh ${devcontainerId}",
   "postCreateCommand": "bash /tmp/postCreateCommand.sh ${devcontainerId}",
   "customizations": {
     "vscode": {

@@ -11,7 +11,7 @@ services:
   pulp-python:
     image: localhost/devcontainer-pulp-python:latest
     build:
-      context: ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp
+      context: ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp
       dockerfile: pulp-dev-common/Dockerfile
     security_opt:
       - "label=disable"
@@ -50,10 +50,10 @@ services:
     volumes:
       - ${PULP_PYTHON_PATH:-~/git/pulp/pulp_python}:/workspace:cached
       - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/repositories/pulpcore:cached
-      - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
       - ./config:/opt/pulp-dev/config:ro,Z
-      - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/skills:/opt/pulp-dev/skills:ro,Z
-      - ${DEVTOOLS_CARLOSTHE19916_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/skills:/opt/pulp-dev/skills:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
       - ./patches:/opt/pulp-dev/patches:ro,Z
       - pulp-python-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
