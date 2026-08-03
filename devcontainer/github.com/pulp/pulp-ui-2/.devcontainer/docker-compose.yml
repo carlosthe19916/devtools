@@ -4,6 +4,7 @@ networks:
 
 volumes:
   pulp-ui-2-claude-config:
+  pulp-ui-2-certs:
   pulp-storage:
   pulp-pgsql:
   pulp-containers:
@@ -47,7 +48,8 @@ services:
     ports:
       - "8089:80"
     volumes:
-      - ./pulp/settings:/etc/pulp:Z
+      - ./pulp/settings/settings.py:/etc/pulp/settings.py:Z
+      - pulp-ui-2-certs:/etc/pulp/certs:Z
       - pulp-storage:/var/lib/pulp:Z
       - pulp-pgsql:/var/lib/pgsql:Z
       - pulp-containers:/var/lib/containers:Z
