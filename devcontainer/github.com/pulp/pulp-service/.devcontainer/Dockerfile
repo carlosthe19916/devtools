@@ -30,12 +30,13 @@ RUN sudo mkdir -p /etc/pki/attestation && \
     sudo chmod 644 /etc/pki/attestation/test-key-private.pem \
         /etc/pki/attestation/test-key.pem
 
+# Bake RH nginx; proxy-params remounted from pulp-dev-common at postStart.
 COPY settings.py /etc/pulp/settings.py
 COPY config/nginx.conf /etc/nginx/nginx.conf
-COPY config/nginx-proxy-params.conf /etc/nginx/pulp-proxy-params.conf
 
 ENV DJANGO_SETTINGS_MODULE=pulpcore.app.settings
 ENV PULP_SETTINGS=/etc/pulp/settings.py
 ENV PULP_DEV_SCRIPTS=/opt/pulp-dev/scripts
 ENV PULP_DEV_CONFIG=/opt/pulp-dev/config
 ENV PULP_DEV_SKILLS=/opt/pulp-dev/skills
+ENV PULP_POPULATE_ROOT=/opt/pulp-dev/populate

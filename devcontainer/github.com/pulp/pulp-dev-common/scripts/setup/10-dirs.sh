@@ -4,3 +4,5 @@ set -euo pipefail
 sudo chown -R "$(id -u):$(id -g)" ~/.claude 2>/dev/null || true
 sudo chown -R "$(id -u):$(id -g)" /var/lib/pulp /etc/pulp 2>/dev/null || true
 sudo mkdir -p /etc/nginx/pulp
+# pulp-service copies Sigstore PEMs here; harmless for core/plugins.
+sudo mkdir -p /etc/pki/sigstore

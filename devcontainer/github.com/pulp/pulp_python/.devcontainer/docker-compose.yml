@@ -44,13 +44,14 @@ services:
       PULP_BINDINGS_DOMAIN_ENABLED: "false"
       PULP_POPULATE_MODE: plugin
       PULP_POPULATE_TYPES: pypi
+      # Direct pulpcore-api (not nginx :80) — avoids 502 while API is down.
       PULP_POPULATE_BASE_URL: http://localhost:24817
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULP_PYTHON_PATH:-~/git/pulp/pulp_python}:/workspace:cached
       - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/repositories/pulpcore:cached
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
-      - ./config:/opt/pulp-dev/config:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/config:/opt/pulp-dev/config:ro,Z
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/skills:/opt/pulp-dev/skills:ro,Z
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
       - ./patches:/opt/pulp-dev/patches:ro,Z

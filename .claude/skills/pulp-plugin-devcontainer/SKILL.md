@@ -15,25 +15,34 @@ description: Use when creating, editing, reviewing, or scaffolding any pulp_<plu
 | Shared knobs docs | `pulp-dev-common/README.md` |
 | Thin plugin tree | `pulp_maven/.devcontainer/` (gold) / `pulp_python/.devcontainer/` |
 
-**Edit common first** for lifecycle/setup/runtime/shell behavior. Per-project only for deltas (compose names, env, nginx, smash, populate, optional file overlays).
+**Edit common first** for lifecycle/setup/runtime/shell behavior. Per-project only for deltas (compose names, env, optional file overlays).
 
 Do **not**:
 
 - Symlink under `.devcontainer/` (Podman mounts the link node; `:Z` / `COPY` break)
 - Fork the full `scripts/` tree into each plugin
+- Keep local `config/`, `populate/`, or skill copies identical to common
 
 ## Thin plugin tree
 
 ```
 .devcontainer/
-├── Dockerfile                 # local image build (scaffold from pulp-dev-common/Dockerfile)
+├── Dockerfile                 # COPY settings.py only; nginx via PULP_NGINX_REMOUNT
+├── settings.py                # thin Django bootstrap (≈ common)
 ├── devcontainer.json          # initializeCommand → pulp-dev-common/.../initialize.sh
 ├── docker-compose.yml         # mounts pulp-dev-common → /opt/pulp-dev/*
 ├── pulp-dev.env
 └── patches/                   # usually empty (.gitkeep) for CI parity
 ```
 
-Each tree has its own `Dockerfile` (`dockerfile: ./Dockerfile`). Shared scripts/config/skills/populate still come from `pulp-dev-common` via compose bind mounts.
+Each tree has its own `Dockerfile` (`dockerfile: ./Dockerfile`). Shared scripts/config/skills/populate come from `pulp-dev-common` via compose bind mounts.
+
+### Related thin trees (not plugins)
+
+| Group | Extra overlays |
+|-------|----------------|
+| **pulpcore** | `config/smash.json` (`:24817`), `scripts/setup/20-python-deps.sh`, `skills/pulp-profile/`, fatter `settings.py` |
+| **pulp-service** | `config/nginx.conf` + `config/certs/`, `scripts/setup/20-python-deps.sh`, `scripts/setup/30-keys-and-patches.sh` → `…/30-patches.sh` |
 
 ## Compose mounts
 
@@ -62,7 +71,7 @@ Build: `dockerfile: ./Dockerfile` (no parent `context`).
 | `PULP_BINDINGS_DOMAIN_ENABLED` | `false` |
 | `PULP_POPULATE_MODE` | `plugin` |
 | `PULP_POPULATE_TYPES` | e.g. `maven` / `pypi` |
-| `PULP_POPULATE_BASE_URL` | `http://localhost:80` |
+| `PULP_POPULATE_BASE_URL` | `http://localhost:24817` (direct API; smash/CLI use nginx `:80`) |
 
 ## Plugin deltas (vs pulpcore)
 
@@ -71,24 +80,24 @@ Build: `dockerfile: ./Dockerfile` (no parent `context`).
 | Workspace | `${PULP_<PLUGIN>_PATH}` → `/workspace` |
 | pulpcore | `${PULPCORE_PATH}` → `/repositories/pulpcore` |
 | Names | `pulp-<plugin>`, `pulp-<plugin>-db`, `pulp-<plugin>-redis` |
-| `20-python-deps` | editable pulpcore, then `pip install -e .`, then `pulp-cli-<plugin>` (overlay if ≠ common) |
+| `20-python-deps` | common script installs editable pulpcore + workspace plugin |
 | Patches | apply to `/repositories/pulpcore` |
 | Bindings | `PULP_BINDINGS=core <plugin>` |
-| Front door | `API_PORT=80`; smash/CLI/populate via nginx `:80` |
+| Front door | `API_PORT=80`; smash/CLI via nginx `:80`; populate via `:24817` |
 | Day-1 helpers | `pulp-services`, `pulp-reset`, `pulp-populate`, `pulp-bindings`, `pulp-check-versions` |
 
 ## New plugin (`pulp_rpm`)
 
 1. Copy thin `.devcontainer/` from `pulp_maven`
 2. Rename compose/service/network/volumes/`PULP_*` paths
-3. Set `PULP_PLUGIN=rpm`, `PULP_BINDINGS=core rpm`, shell marker
-4. Replace `populate/` with rpm assets + `setup_pulp.py`
-5. Shared scripts come from `pulp-dev-common` automatically
+3. Set `PULP_PLUGIN=rpm`, `PULP_BINDINGS=core rpm`, `PULP_POPULATE_TYPES=rpm`, shell marker
+4. Shared scripts/config/skills/populate come from `pulp-dev-common` automatically (add rpm assets under common `populate/assets/` if missing)
 
 ## Forbidden
 
 - Flat `.devcontainer/postCreateCommand.sh` mounted at `/tmp`
 - Full duplicated `scripts/{lifecycle,setup,runtime,shell}` trees
+- Local `config/` / `populate/` / skill copies that duplicate common
 - Symlinks into `pulp-dev-common`
 - Smash/CLI only on `:24817`/`:24816` (processes may bind those; **clients use `:80`**)
 - File-mount overlays onto a path that does **not** exist under the `pulp-dev-common` bind (Podman creates empty `nobody`-owned host stubs). Overlay an existing name, or commit a placeholder mount point.
@@ -96,7 +105,7 @@ Build: `dockerfile: ./Dockerfile` (no parent `context`).
 ## Checklist before finishing
 
 - [ ] Scripts/config/skills/populate come from `pulp-dev-common` (compose mounts)
-- [ ] Build uses `dockerfile: ./Dockerfile` (local context; scaffold from pulp-dev-common if new)
+- [ ] Build uses `dockerfile: ./Dockerfile` (local context; `COPY settings.py` only)
 - [ ] No symlinks under `.devcontainer/`
 - [ ] Env knobs set (`PULP_DEV_KIND`, `PULP_PLUGIN`, `PULP_BINDINGS`, `PULP_POPULATE_TYPES`, …)
 - [ ] Smash via common config (api+content `:80` / nginx) unless intentionally overlaid

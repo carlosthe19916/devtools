@@ -2,7 +2,9 @@ FROM mcr.microsoft.com/devcontainers/base:ubuntu
 
 # Scaffolding template for new pulp_* /.devcontainer/Dockerfile trees.
 # Compose builds each project's local ./Dockerfile (not this file).
-# When copying into a project, use local COPY paths (settings.py, config/...).
+# Plugins/core typically COPY settings.py only; nginx is remounted from
+# pulp-dev-common at postStart (PULP_NGINX_REMOUNT=1). pulp-service also
+# bakes its ClowdApp config/nginx.conf.
 
 RUN sudo apt update && \
     sudo apt install -y build-essential libpq-dev jq nginx postgresql-client redis-tools redis-server

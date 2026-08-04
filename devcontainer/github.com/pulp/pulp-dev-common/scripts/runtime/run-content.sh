@@ -10,6 +10,9 @@ if [ "${PULP_GUNICORN_RELOAD:-false}" = "true" ]; then
 fi
 
 access_logformat='%a %t "%r" %s %b "%{Referer}i" "%{User-Agent}i" cache:"%{X-PULP-CACHE}o" artifact_size:"%{X-PULP-ARTIFACT-SIZE}o"'
+if [ "${PULP_DEV_KIND:-}" = "service" ]; then
+  access_logformat="${access_logformat} rh_org_id:\"%{X-RH-ORG-ID}o\""
+fi
 
 exec pulpcore-content \
   --bind 127.0.0.1:24816 \

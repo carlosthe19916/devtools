@@ -15,6 +15,8 @@
 
 Shared logic lives in [`pulp-dev-common/`](pulp-dev-common/) (scripts, config, populate, skills, Dockerfile, settings) and is bind-mounted under `/opt/pulp-dev/*` (real directories, **no symlinks**). Edit common first; keep per-project only compose, `pulp-dev.env`, patches, and overlays (e.g. pulpcore smash, RH nginx/scripts).
 
+**Thin trees (backend):** plugins keep only `Dockerfile`, `settings.py`, compose, `devcontainer.json`, `pulp-dev.env`, `patches/`. pulpcore adds smash / `20-python-deps` / `pulp-profile` overlays. pulp-service adds ClowdApp nginx + certs + `20-python-deps` + `30-keys-and-patches` → `30-patches`.
+
 Do **not** symlink under `.devcontainer/` (Podman/`COPY`/`:Z` break).
 
 See `.claude/skills/pulp-plugin-devcontainer` and [`pulp-dev-common/README.md`](pulp-dev-common/README.md).
@@ -65,6 +67,12 @@ fi
 ```shell
 if [ -z "$PULP_PYTHON_PATH" ]; then
   echo "export PULP_PYTHON_PATH=/cloned_repository_directory" >> ~/.bashrc;
+fi
+```
+
+```shell
+if [ -z "$PULP_SERVICE_PATH" ]; then
+  echo "export PULP_SERVICE_PATH=/cloned_repository_directory" >> ~/.bashrc;
 fi
 ```
 

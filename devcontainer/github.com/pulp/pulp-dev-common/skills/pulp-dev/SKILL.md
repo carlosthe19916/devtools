@@ -38,7 +38,7 @@ pulp-services          # api :24817 + content :24816 + worker
 pulp-reset             # drop/recreate DB, migrate, reset admin password
 pulp-populate          # seed sample packages (see pulp-populate)
 pulp-patches apply     # overlays from $PULP_PATCH_DIR onto $PULP_PATCH_TREE
-pulp-check-versions    # installed pkgs vs pulpcore pyproject
+pulp-check-versions    # core/plugin: pulpcore pyproject; service: requirements.txt
 pulp-bindings <comp>…  # regenerate OpenAPI clients
 ```
 

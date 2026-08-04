@@ -12,9 +12,8 @@ RUN mkdir -p /var/lib/pulp/assets\
              /etc/nginx/pulp && \
     touch /etc/nginx/pulp/.keep.conf
 
+# settings.py is local; nginx.conf comes from pulp-dev-common via PULP_NGINX_REMOUNT at postStart.
 COPY settings.py /etc/pulp/settings.py
-COPY config/nginx.conf /etc/nginx/nginx.conf
-COPY config/nginx-proxy-params.conf /etc/nginx/pulp-proxy-params.conf
 
 ENV DJANGO_SETTINGS_MODULE=pulpcore.app.settings
 ENV PULP_SETTINGS=/etc/pulp/settings.py

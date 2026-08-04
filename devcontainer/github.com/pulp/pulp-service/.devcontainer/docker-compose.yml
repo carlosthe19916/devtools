@@ -36,16 +36,31 @@ services:
       PULP_DEV_CONFIG: /opt/pulp-dev/config
       PULP_DEV_SKILLS: /opt/pulp-dev/skills
       PULP_POPULATE_ROOT: /opt/pulp-dev/populate
+      PULP_DEV_KIND: service
+      PULP_BINDINGS: core python npm rpm maven file service container
+      PULP_PATCH_STRICT: "1"
+      PULP_NGINX_REMOUNT: "1"
+      PULP_SHELL_MARKER: "# pulp-service devcontainer helpers"
+      PULP_BINDINGS_DOMAIN_ENABLED: "true"
+      PULP_REQUIREMENTS: /workspace/pulp_service/requirements.txt
+      PULP_POPULATE_MODE: service
+      PULP_POPULATE_TYPES: file,pypi,maven,npm,rpm
+      PULP_POPULATE_DOMAIN: my-public-domain
+      # Direct pulpcore-api (not nginx :80) — avoids 502 while API is down.
+      PULP_POPULATE_BASE_URL: http://localhost:24817
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULP_SERVICE_PATH:-~/git/pulp/pulp-service}:/workspace:cached
       - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/repositories/pulpcore:cached
       - ${PULP_MAVEN_PATH:-~/git/pulp/pulp_maven}:/repositories/pulp_maven:cached
       - ${PULP_PYTHON_PATH:-~/git/pulp/pulp_python}:/repositories/pulp_python:cached
-      - ./scripts:/opt/pulp-dev/scripts:ro,Z
-      - ./config:/opt/pulp-dev/config:ro,Z
-      - ./skills:/opt/pulp-dev/skills:ro,Z
-      - ./populate:/opt/pulp-dev/populate:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
+      - ./scripts/setup/20-python-deps.sh:/opt/pulp-dev/scripts/setup/20-python-deps.sh:ro,Z
+      - ./scripts/setup/30-keys-and-patches.sh:/opt/pulp-dev/scripts/setup/30-patches.sh:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/config:/opt/pulp-dev/config:ro,Z
+      - ./config/nginx.conf:/opt/pulp-dev/config/nginx.conf:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/skills:/opt/pulp-dev/skills:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
       - pulp-service-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
       - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
