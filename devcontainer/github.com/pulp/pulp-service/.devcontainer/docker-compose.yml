@@ -6,6 +6,8 @@ volumes:
   pulp-service-claude-config:
   pulp-service-postgres-data:
   pulp-service-pulp-media:
+  pulp-service-grafana-data:
+  pulp-service-prometheus-data:
 
 services:
   pulp-service:
@@ -48,6 +50,9 @@ services:
       PULP_POPULATE_DOMAIN: my-public-domain
       # Direct pulpcore-api (not nginx :80) — avoids 502 while API is down.
       PULP_POPULATE_BASE_URL: http://localhost:24817
+      # OTLP → pulp-service-otel (localhost:4318 would miss the sibling collector).
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://pulp-service-otel:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULP_SERVICE_PATH:-~/git/pulp/pulp-service}:/workspace:cached
@@ -60,6 +65,7 @@ services:
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/config:/opt/pulp-dev/config:ro,Z
       - ./config/nginx.conf:/opt/pulp-dev/config/nginx.conf:ro,Z
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/skills:/opt/pulp-dev/skills:ro,Z
+      - ./skills/pulp-profile:/opt/pulp-dev/skills/pulp-profile:ro,Z
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
       - pulp-service-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
@@ -73,6 +79,8 @@ services:
       pulp-service-db:
         condition: service_healthy
       pulp-service-redis:
+        condition: service_started
+      pulp-service-otel:
         condition: service_started
 
   pulp-service-db:
@@ -97,3 +105,49 @@ services:
     restart: unless-stopped
     networks:
       - pulp-service
+
+  pulp-service-otel:
+    # contrib includes the prometheus exporter (core does not).
+    image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.115.1
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./config/otel-collector-config.yaml:/etc/otelcol/config.yaml:ro,Z
+    networks:
+      - pulp-service
+    restart: unless-stopped
+
+  pulp-service-prometheus:
+    image: prom/prometheus:v2.55.1
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro,Z
+      - pulp-service-prometheus-data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-lifecycle
+    ports:
+      - "9090:9090"
+    networks:
+      - pulp-service
+    depends_on:
+      - pulp-service-otel
+    restart: unless-stopped
+
+  pulp-service-grafana:
+    image: grafana/grafana:11.3.1
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+    volumes:
+      - ./config/grafana/provisioning:/etc/grafana/provisioning:ro,Z
+      - pulp-service-grafana-data:/var/lib/grafana
+    ports:
+      - "3200:3000"
+    networks:
+      - pulp-service
+    depends_on:
+      - pulp-service-prometheus
+    restart: unless-stopped

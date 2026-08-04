@@ -32,7 +32,7 @@ volumes:
 |-------|-------------------------------------|
 | **pulpcore** | `./config/smash.json` (API `:24817`), `./scripts/setup/20-python-deps.sh`, `./skills/pulp-profile` |
 | **plugins** | none (pure common mounts) |
-| **pulp-service** | `./config/nginx.conf` (ClowdApp), `./scripts/setup/20-python-deps.sh`, `./scripts/setup/30-keys-and-patches.sh` → `…/30-patches.sh`, certs |
+| **pulp-service** | `./config/nginx.conf` (ClowdApp), `./scripts/setup/20-python-deps.sh`, `./scripts/setup/30-keys-and-patches.sh` → `…/30-patches.sh`, certs, OTEL/Prometheus/Grafana, `./skills/pulp-profile` |
 
 Build (each project’s `.devcontainer/docker-compose.yml`):
 
