@@ -12,5 +12,18 @@ done
 
 # Used by pulpcore/pulp_service functional fixtures even though not in requirements.txt
 pip install pulp-file
-pip install httpie pulp-cli packaging setproctitle pytest-asyncio
+pip install httpie pulp-cli packaging setproctitle
+
+# Match pulp-service/dev-container/scripts/pulp-test install_test_deps exactly.
+# (Do not invent fixture bridges — pulp-test deselects the known-broken feature_service tests.)
+pip install "pytest<8" pytest-django gnupg
+if curl -sf -o /tmp/functest_requirements.txt \
+    https://raw.githubusercontent.com/pulp/pulp_rpm/main/functest_requirements.txt; then
+  pip install -r /tmp/functest_requirements.txt || true
+fi
+if curl -sf -o /tmp/unittest_requirements.txt \
+    https://raw.githubusercontent.com/pulp/pulp_rpm/main/unittest_requirements.txt; then
+  pip install -r /tmp/unittest_requirements.txt || true
+fi
+
 npm install -g concurrently
