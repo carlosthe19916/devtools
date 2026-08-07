@@ -1,0 +1,152 @@
+networks:
+  pulp-trustify:
+    name: "pulp-trustify"
+
+volumes:
+  pulp-trustify-claude-config:
+  pulp-trustify-postgres-data:
+  pulp-trustify-pulp-media:
+  pulp-trustify-trustd-postgres-data:
+
+services:
+  pulp-trustify:
+    image: localhost/devcontainer-pulp-trustify:latest
+    build:
+      dockerfile: ./Dockerfile
+    security_opt:
+      - "label=disable"
+    userns_mode: "keep-id"
+    env_file:
+      - ./pulp-dev.env
+    environment:
+      GH_TOKEN: ${GH_TOKEN}
+      PULP_SETTINGS: /etc/pulp/settings.py
+      DB_HOST: pulp-trustify-db
+      DB_PASSWORD: pulp
+      REDIS_URL: redis://pulp-trustify-redis:6379/0
+      API_PROTOCOL: http
+      API_HOST: localhost
+      API_PORT: "80"
+      PYTHONSAFEPATH: "1"
+      CLAUDE_CODE_USE_VERTEX: "1"
+      CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
+      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+      PULP_PATCH_DIR: /opt/pulp-dev/patches
+      PULP_DEV_SCRIPTS: /opt/pulp-dev/scripts
+      PULP_DEV_CONFIG: /opt/pulp-dev/config
+      PULP_DEV_SKILLS: /opt/pulp-dev/skills
+      PULP_POPULATE_ROOT: /opt/pulp-dev/populate
+      PULP_DEV_KIND: plugin
+      PULP_PLUGIN: trustify
+      PULP_BINDINGS: core python trustify
+      PULP_PATCH_TREE: /repositories/pulpcore
+      PULP_NGINX_REMOUNT: "1"
+      PULP_SHELL_MARKER: "# pulp-trustify devcontainer helpers"
+      PULP_BINDINGS_DOMAIN_ENABLED: "false"
+      PULP_POPULATE_MODE: plugin
+      PULP_POPULATE_TYPES: pypi
+      # Direct pulpcore-api (not nginx :80) — avoids 502 while API is down.
+      PULP_POPULATE_BASE_URL: http://localhost:24817
+      # Trustify connection — auth disabled for local development.
+      PULP_TRUSTIFY_URL: http://pulp-trustify-trustd:8080
+      PULP_TRUSTIFY_API_VERSION: v2
+      PULP_TRUSTIFY_ISSUER_URL: ""
+      PULP_TRUSTIFY_CLIENT_SECRET: ""
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    volumes:
+      - ${PULP_TRUSTIFY_PATH:-~/git/pulp/pulp_trustify}:/workspace:cached
+      - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/repositories/pulpcore:cached
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
+      - ./scripts/setup/20-python-deps.sh:/opt/pulp-dev/scripts/setup/20-python-deps.sh:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/config:/opt/pulp-dev/config:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/skills:/opt/pulp-dev/skills:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
+      - ./patches:/opt/pulp-dev/patches:ro,Z
+      - pulp-trustify-claude-config:/home/vscode/.claude
+      - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
+      - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
+      - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
+      - pulp-trustify-pulp-media:/var/lib/pulp
+    networks:
+      - pulp-trustify
+    depends_on:
+      pulp-trustify-db:
+        condition: service_healthy
+      pulp-trustify-redis:
+        condition: service_started
+      pulp-trustify-trustd:
+        condition: service_healthy
+
+  pulp-trustify-db:
+    image: postgres:17
+    restart: unless-stopped
+    volumes:
+      - pulp-trustify-postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: pulp
+      POSTGRES_PASSWORD: pulp
+      POSTGRES_DB: pulp
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pulp -d pulp"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pulp-trustify
+
+  pulp-trustify-redis:
+    image: redis:7
+    restart: unless-stopped
+    networks:
+      - pulp-trustify
+
+  pulp-trustify-trustd-db:
+    image: postgres:15
+    restart: unless-stopped
+    volumes:
+      - pulp-trustify-trustd-postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: trustify
+      POSTGRES_PASSWORD: trustify
+      POSTGRES_DB: trustify
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trustify -d trustify"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pulp-trustify
+
+  pulp-trustify-trustd:
+    image: ghcr.io/trustification/trustd:latest
+    restart: unless-stopped
+    ports:
+      - "9010:8080"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        trustd db
+        --db-host pulp-trustify-trustd-db
+        --db-name trustify
+        --db-user trustify
+        --db-password trustify
+        migrate &&
+        exec trustd api
+        --auth-disabled
+        --db-host pulp-trustify-trustd-db
+        --db-name trustify
+        --db-user trustify
+        --db-password trustify
+        --http-server-bind-address 0.0.0.0
+    depends_on:
+      pulp-trustify-trustd-db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - bash -c 'echo > /dev/tcp/localhost/8080'
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - pulp-trustify

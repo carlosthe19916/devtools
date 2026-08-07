@@ -1,0 +1,45 @@
+{
+  "name": "pulp-trustify",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "pulp-trustify",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [80, 24816, 24817, 9010],
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.11" },
+    "ghcr.io/devcontainers/features/node:1": { "version": "22" },
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "initializeCommand": "bash ${localEnv:DEVTOOLS_PATH:~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts/lifecycle/initialize.sh ${devcontainerId}",
+  "postCreateCommand": "bash /opt/pulp-dev/scripts/lifecycle/post-create.sh",
+  "postStartCommand": "bash /opt/pulp-dev/scripts/lifecycle/post-start.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens",
+        "tamasfe.even-better-toml",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "redhat.vscode-yaml",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg"
+      ],
+      "settings": {
+        "git.alwaysSignOff": true,
+        "sqltools.connections": [
+          {
+            "server": "pulp-trustify-db",
+            "database": "pulp",
+            "username": "pulp",
+            "password": "pulp",
+            "port": 5432,
+            "name": "db",
+            "driver": "PostgreSQL"
+          }
+        ]
+      }
+    }
+  }
+}
