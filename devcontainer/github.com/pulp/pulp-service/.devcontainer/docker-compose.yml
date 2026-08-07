@@ -20,6 +20,7 @@ services:
     env_file:
       - ./pulp-dev.env
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/uv.env
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/devcontainer.env
     environment:
       GH_TOKEN: ${GH_TOKEN}
       PULP_SETTINGS: /etc/pulp/settings.py
@@ -35,22 +36,15 @@ services:
       # Prevent cwd (/workspace) from shadowing the editable pulp_service package.
       PYTHONSAFEPATH: "1"
       DEVCONTAINER_PATCH_DIR: /workspace/images/assets/patches
-      DEVCONTAINER_DEV_SCRIPTS: /opt/pulp-dev/scripts
-      DEVCONTAINER_DEV_CONFIG: /opt/pulp-dev/config
-      DEVCONTAINER_DEV_SKILLS: /opt/pulp-dev/skills
-      DEVCONTAINER_POPULATE_ROOT: /opt/pulp-dev/populate
       DEVCONTAINER_DEV_KIND: service
       DEVCONTAINER_BINDINGS: core python npm rpm maven file service container
       DEVCONTAINER_PATCH_STRICT: "1"
-      DEVCONTAINER_NGINX_REMOUNT: "1"
       DEVCONTAINER_SHELL_MARKER: "# pulp-service devcontainer helpers"
       DEVCONTAINER_BINDINGS_DOMAIN_ENABLED: "true"
       DEVCONTAINER_REQUIREMENTS: /workspace/pulp_service/requirements.txt
       DEVCONTAINER_POPULATE_MODE: service
       DEVCONTAINER_POPULATE_TYPES: file,pypi,maven,npm,rpm
       DEVCONTAINER_POPULATE_DOMAIN: my-public-domain
-      # Direct pulpcore-api (not nginx :80) — avoids 502 while API is down.
-      DEVCONTAINER_POPULATE_BASE_URL: http://localhost:24817
       # OTLP → pulp-service-otel (localhost:4318 would miss the sibling collector).
       OTEL_EXPORTER_OTLP_ENDPOINT: http://pulp-service-otel:4318
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf

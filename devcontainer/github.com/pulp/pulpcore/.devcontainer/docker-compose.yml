@@ -18,6 +18,7 @@ services:
     env_file:
       - ./pulp-dev.env
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/uv.env
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/devcontainer.env
     environment:
       GH_TOKEN: ${GH_TOKEN}
       PULP_SETTINGS: /etc/pulp/settings.py
@@ -33,19 +34,13 @@ services:
       CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
       ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
       DEVCONTAINER_PATCH_DIR: /opt/pulp-dev/patches
-      DEVCONTAINER_DEV_SCRIPTS: /opt/pulp-dev/scripts
-      DEVCONTAINER_DEV_CONFIG: /opt/pulp-dev/config
-      DEVCONTAINER_DEV_SKILLS: /opt/pulp-dev/skills
-      DEVCONTAINER_POPULATE_ROOT: /opt/pulp-dev/populate
       DEVCONTAINER_DEV_KIND: core
       DEVCONTAINER_PATCH_TREE: /workspace
       DEVCONTAINER_PYPROJECT: /workspace/pyproject.toml
-      DEVCONTAINER_NGINX_REMOUNT: "1"
       DEVCONTAINER_SHELL_MARKER: "# pulpcore devcontainer helpers"
       DEVCONTAINER_BINDINGS_DOMAIN_ENABLED: "false"
       DEVCONTAINER_POPULATE_MODE: plugin
       DEVCONTAINER_POPULATE_TYPES: file
-      DEVCONTAINER_POPULATE_BASE_URL: http://localhost:24817
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/workspace:cached

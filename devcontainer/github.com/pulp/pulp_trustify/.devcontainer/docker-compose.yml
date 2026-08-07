@@ -19,6 +19,7 @@ services:
     env_file:
       - ./pulp-dev.env
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/uv.env
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/devcontainer.env
     environment:
       GH_TOKEN: ${GH_TOKEN}
       PULP_SETTINGS: /etc/pulp/settings.py
@@ -33,21 +34,14 @@ services:
       CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
       ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
       DEVCONTAINER_PATCH_DIR: /opt/pulp-dev/patches
-      DEVCONTAINER_DEV_SCRIPTS: /opt/pulp-dev/scripts
-      DEVCONTAINER_DEV_CONFIG: /opt/pulp-dev/config
-      DEVCONTAINER_DEV_SKILLS: /opt/pulp-dev/skills
-      DEVCONTAINER_POPULATE_ROOT: /opt/pulp-dev/populate
       DEVCONTAINER_DEV_KIND: plugin
       DEVCONTAINER_PLUGIN: trustify
       DEVCONTAINER_BINDINGS: core python trustify
       DEVCONTAINER_PATCH_TREE: /repositories/pulpcore
-      DEVCONTAINER_NGINX_REMOUNT: "1"
       DEVCONTAINER_SHELL_MARKER: "# pulp-trustify devcontainer helpers"
       DEVCONTAINER_BINDINGS_DOMAIN_ENABLED: "false"
       DEVCONTAINER_POPULATE_MODE: plugin
       DEVCONTAINER_POPULATE_TYPES: pypi
-      # Direct pulpcore-api (not nginx :80) — avoids 502 while API is down.
-      DEVCONTAINER_POPULATE_BASE_URL: http://localhost:24817
       # Trustify connection — auth disabled for local development.
       PULP_TRUSTIFY_URL: http://pulp-trustify-trustd:8080
       PULP_TRUSTIFY_API_VERSION: v2
