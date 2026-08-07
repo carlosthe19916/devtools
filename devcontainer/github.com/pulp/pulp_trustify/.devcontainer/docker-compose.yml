@@ -43,10 +43,10 @@ services:
       DEVCONTAINER_POPULATE_MODE: plugin
       DEVCONTAINER_POPULATE_TYPES: pypi
       # Trustify connection — auth disabled for local development.
-      PULP_TRUSTIFY_URL: http://pulp-trustify-trustd:8080
-      PULP_TRUSTIFY_API_VERSION: v2
-      PULP_TRUSTIFY_ISSUER_URL: ""
-      PULP_TRUSTIFY_CLIENT_SECRET: ""
+      TRUSTIFY_URL: http://pulp-trustify-trustd:8080
+      TRUSTIFY_API_VERSION: v2
+      TRUSTIFY_ISSUER_URL: ""
+      TRUSTIFY_CLIENT_SECRET: ""
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULP_TRUSTIFY_PATH:-~/git/pulp/pulp_trustify}:/workspace:cached

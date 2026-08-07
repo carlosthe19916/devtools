@@ -3,15 +3,7 @@ set -euo pipefail
 
 uv pip install setuptools wheel
 
-# Install pulpcore from mounted checkout (or PyPI), then the workspace plugin.
-if [ -f /repositories/pulpcore/pyproject.toml ] || [ -f /repositories/pulpcore/setup.cfg ] \
-   || [ -f /repositories/pulpcore/setup.py ]; then
-  echo "==> Editable install /repositories/pulpcore"
-  uv pip install -e /repositories/pulpcore --no-build-isolation
-else
-  echo "==> PyPI install pulpcore"
-  uv pip install pulpcore
-fi
+uv pip install pulpcore
 
 # pulp_trustify connects Django signals to PythonPackageContent — pulp-python must be present.
 uv pip install pulp-python
