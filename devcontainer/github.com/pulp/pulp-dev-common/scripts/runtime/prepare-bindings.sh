@@ -53,7 +53,7 @@ for comp in "${components[@]}"; do
     pkg_name="pulp_${comp}-client"
   fi
 
-  if [ "$force" = false ] && [ -f "${BINDINGS_DIR}/${comp}-client/setup.py" ] && pip show "${pkg_name}" &>/dev/null; then
+  if [ "$force" = false ] && [ -f "${BINDINGS_DIR}/${comp}-client/setup.py" ] && uv pip show "${pkg_name}" &>/dev/null; then
     echo "Bindings for ${comp} already installed (use --force to regenerate)"
     continue
   fi
@@ -76,7 +76,7 @@ for comp in "${components[@]}"; do
   cp "${TEMPLATES_DIR}/__init__.py" "${BINDINGS_DIR}/${comp}-client/pulpcore/__init__.py"
   cp "${TEMPLATES_DIR}/__init__.py" "${BINDINGS_DIR}/${comp}-client/pulpcore/client/__init__.py"
 
-  pip install "${BINDINGS_DIR}/${comp}-client"
+  uv pip install "${pkg_name} @ ${BINDINGS_DIR}/${comp}-client"
   rm -f "${tmpspec}"
   echo "Installed ${pkg_name}"
 done

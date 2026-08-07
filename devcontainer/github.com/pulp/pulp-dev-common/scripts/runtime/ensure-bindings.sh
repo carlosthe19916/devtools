@@ -59,7 +59,7 @@ else
   local_comp=
   for local_comp in "${BINDINGS_COMPONENTS[@]}"; do
     pkg="$(pkg_name_for "$local_comp")"
-    if [ ! -f "/opt/bindings/${local_comp}-client/setup.py" ] || ! pip show "${pkg}" &>/dev/null; then
+    if [ ! -f "/opt/bindings/${local_comp}-client/setup.py" ] || ! uv pip show "${pkg}" &>/dev/null; then
       need_bindings=true
       break
     fi

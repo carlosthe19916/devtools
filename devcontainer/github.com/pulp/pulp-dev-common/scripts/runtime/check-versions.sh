@@ -62,7 +62,7 @@ check_requirements() {
 
   echo "==> Checking installed versions against ${REQ_FILE}..."
   local installed mismatches missing line pkg version pip_pkg pip_pkg_hyphen installed_version
-  installed="$(pip list --format=freeze 2>/dev/null)"
+  installed="$(uv pip list --format=freeze 2>/dev/null)"
   mismatches=0
   missing=0
 

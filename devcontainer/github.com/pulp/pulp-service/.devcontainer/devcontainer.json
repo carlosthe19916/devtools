@@ -6,7 +6,11 @@
   "forwardPorts": [80, 24816, 24817],
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/devcontainers/features/python:1": { "version": "3.11" },
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.11", "installTools": false },
+    "ghcr.io/devcontainer-community/devcontainer-features/astral.sh-uv:1": {
+      "version": "0.12.2",
+      "shellautocompletion": true
+    },
     "ghcr.io/devcontainers/features/java:1": { "version": "17", "installMaven": "true" },
     "ghcr.io/devcontainers/features/node:1": { "version": "22" },
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
@@ -29,6 +33,7 @@
       ],
       "settings": {
         "git.alwaysSignOff": true,
+        "python.defaultInterpreterPath": "/workspace/.venv/bin/python",
         "sqltools.connections": [
           {
             "server": "pulp-service-db",

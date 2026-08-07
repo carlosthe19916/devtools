@@ -18,6 +18,7 @@ services:
     userns_mode: "keep-id"
     env_file:
       - ./pulp-dev.env
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/uv.env
     environment:
       GH_TOKEN: ${GH_TOKEN}
       PULP_SETTINGS: /etc/pulp/settings.py

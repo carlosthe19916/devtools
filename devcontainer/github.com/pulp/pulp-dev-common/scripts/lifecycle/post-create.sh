@@ -5,6 +5,10 @@ set -euo pipefail
 ROOT="${DEVCONTAINER_DEV_SCRIPTS:-/opt/pulp-dev/scripts}"
 SETUP_30="${DEVCONTAINER_SETUP_30:-30-patches.sh}"
 
+# shellcheck source=/dev/null
+source "${ROOT}/runtime/uv-env.sh"
+pulp_uv_env_ensure
+
 for step in \
   10-dirs.sh \
   20-python-deps.sh \

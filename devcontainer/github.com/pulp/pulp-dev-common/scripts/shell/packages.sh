@@ -18,7 +18,8 @@ _install_local_package() {
   local pkg="$2"
   local apply_patches="${3:-0}"
   if [ -f "${path}/pyproject.toml" ] || [ -f "${path}/setup.cfg" ] || [ -f "${path}/setup.py" ]; then
-    pip install -e "${path}" --no-build-isolation
+    uv pip install setuptools wheel
+    uv pip install -e "${path}" --no-build-isolation
     _remove_shadowed_package "${pkg}"
     if [ "${apply_patches}" = "1" ]; then
       echo "Applying patches onto editable checkout ${path} ..."
@@ -34,20 +35,20 @@ case "${DEVCONTAINER_DEV_KIND:-plugin}" in
     # Patches under /opt/pulp-dev/patches target pulpcore only — never overlay them
     # onto sibling plugin checkouts (unlike pulp-service RH multi-package patches).
     pulp-maven-local() { _install_local_package /repositories/pulp_maven pulp_maven 0; }
-    pulp-maven-pypi() { pip install "pulp-maven"; }
+    pulp-maven-pypi() { uv pip install "pulp-maven"; }
     pulp-python-local() { _install_local_package /repositories/pulp_python pulp_python 0; }
-    pulp-python-pypi() { pip install "pulp-python"; }
+    pulp-python-pypi() { uv pip install "pulp-python"; }
     ;;
   service)
     pulp-core-local() { _install_local_package /repositories/pulpcore pulpcore 1; }
-    pulp-core-pypi() { pip install "pulpcore"; bash "${DEVCONTAINER_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
+    pulp-core-pypi() { uv pip install "pulpcore"; bash "${DEVCONTAINER_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
     pulp-maven-local() { _install_local_package /repositories/pulp_maven pulp_maven 1; }
-    pulp-maven-pypi() { pip install "pulp-maven"; bash "${DEVCONTAINER_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
+    pulp-maven-pypi() { uv pip install "pulp-maven"; bash "${DEVCONTAINER_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
     pulp-python-local() { _install_local_package /repositories/pulp_python pulp_python 1; }
-    pulp-python-pypi() { pip install "pulp-python"; bash "${DEVCONTAINER_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
+    pulp-python-pypi() { uv pip install "pulp-python"; bash "${DEVCONTAINER_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
     ;;
   plugin|*)
     pulp-core-local() { _install_local_package /repositories/pulpcore pulpcore 1; }
-    pulp-core-pypi() { pip install "pulpcore"; bash "${DEVCONTAINER_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
+    pulp-core-pypi() { uv pip install "pulpcore"; bash "${DEVCONTAINER_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
     ;;
 esac
