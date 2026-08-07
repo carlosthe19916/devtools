@@ -21,11 +21,11 @@ Runs `/opt/pulp-dev/populate/setup_pulp.py` — a linear top-to-bottom script (d
 
 | Env | Meaning |
 |-----|---------|
-| `PULP_POPULATE_TYPES` | comma list: `file`, `pypi`, `maven`, `npm`, `rpm` |
-| `PULP_POPULATE_MODE` | `plugin` (default) or `service` (domains + ClowdApp API root) |
-| `PULP_POPULATE_BASE_URL` | default `http://localhost:24817` (direct API) |
-| `PULP_POPULATE_API_ROOT` | `/pulp/` (plugin/core) |
-| `PULP_POPULATE_DOMAIN` | domain name when `MODE=service` |
-| `PULP_POPULATE_USER` / `PASSWORD` | `admin` / `password` |
+| `DEVCONTAINER_POPULATE_TYPES` | comma list: `file`, `pypi`, `maven`, `npm`, `rpm` |
+| `DEVCONTAINER_POPULATE_MODE` | `plugin` (default) or `service` (domains + ClowdApp API root) |
+| `DEVCONTAINER_POPULATE_BASE_URL` | default `http://localhost:24817` (direct API) |
+| `DEVCONTAINER_POPULATE_API_ROOT` | `/pulp/` (plugin/core) |
+| `DEVCONTAINER_POPULATE_DOMAIN` | domain name when `MODE=service` |
+| `DEVCONTAINER_POPULATE_USER` / `PASSWORD` | `admin` / `password` |
 
 Assets live under `/opt/pulp-dev/populate/assets/<type>/`.

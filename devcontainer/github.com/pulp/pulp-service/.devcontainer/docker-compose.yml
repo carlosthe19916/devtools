@@ -33,23 +33,23 @@ services:
       ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
       # Prevent cwd (/workspace) from shadowing the editable pulp_service package.
       PYTHONSAFEPATH: "1"
-      PULP_PATCH_DIR: /workspace/images/assets/patches
-      PULP_DEV_SCRIPTS: /opt/pulp-dev/scripts
-      PULP_DEV_CONFIG: /opt/pulp-dev/config
-      PULP_DEV_SKILLS: /opt/pulp-dev/skills
-      PULP_POPULATE_ROOT: /opt/pulp-dev/populate
-      PULP_DEV_KIND: service
-      PULP_BINDINGS: core python npm rpm maven file service container
-      PULP_PATCH_STRICT: "1"
-      PULP_NGINX_REMOUNT: "1"
-      PULP_SHELL_MARKER: "# pulp-service devcontainer helpers"
-      PULP_BINDINGS_DOMAIN_ENABLED: "true"
-      PULP_REQUIREMENTS: /workspace/pulp_service/requirements.txt
-      PULP_POPULATE_MODE: service
-      PULP_POPULATE_TYPES: file,pypi,maven,npm,rpm
-      PULP_POPULATE_DOMAIN: my-public-domain
+      DEVCONTAINER_PATCH_DIR: /workspace/images/assets/patches
+      DEVCONTAINER_DEV_SCRIPTS: /opt/pulp-dev/scripts
+      DEVCONTAINER_DEV_CONFIG: /opt/pulp-dev/config
+      DEVCONTAINER_DEV_SKILLS: /opt/pulp-dev/skills
+      DEVCONTAINER_POPULATE_ROOT: /opt/pulp-dev/populate
+      DEVCONTAINER_DEV_KIND: service
+      DEVCONTAINER_BINDINGS: core python npm rpm maven file service container
+      DEVCONTAINER_PATCH_STRICT: "1"
+      DEVCONTAINER_NGINX_REMOUNT: "1"
+      DEVCONTAINER_SHELL_MARKER: "# pulp-service devcontainer helpers"
+      DEVCONTAINER_BINDINGS_DOMAIN_ENABLED: "true"
+      DEVCONTAINER_REQUIREMENTS: /workspace/pulp_service/requirements.txt
+      DEVCONTAINER_POPULATE_MODE: service
+      DEVCONTAINER_POPULATE_TYPES: file,pypi,maven,npm,rpm
+      DEVCONTAINER_POPULATE_DOMAIN: my-public-domain
       # Direct pulpcore-api (not nginx :80) — avoids 502 while API is down.
-      PULP_POPULATE_BASE_URL: http://localhost:24817
+      DEVCONTAINER_POPULATE_BASE_URL: http://localhost:24817
       # OTLP → pulp-service-otel (localhost:4318 would miss the sibling collector).
       OTEL_EXPORTER_OTLP_ENDPOINT: http://pulp-service-otel:4318
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf

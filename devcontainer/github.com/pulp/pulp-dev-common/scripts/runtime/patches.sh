@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Apply / reverse patches from PULP_PATCH_DIR (default: /opt/pulp-dev/patches).
+# Apply / reverse patches from DEVCONTAINER_PATCH_DIR (default: /opt/pulp-dev/patches).
 #
 # Usage:
 #   patches.sh apply [tree]
@@ -7,29 +7,29 @@
 #   patches.sh reapply
 #
 # Default tree:
-#   PULP_PATCH_TREE if set
-#   else site-packages when PULP_DEV_KIND=service
+#   DEVCONTAINER_PATCH_TREE if set
+#   else site-packages when DEVCONTAINER_DEV_KIND=service
 #   else /repositories/pulpcore
 #
 # STRICT mode (fail hard on apply errors / missing patch dir):
-#   PULP_PATCH_STRICT=1, or default on when PULP_DEV_KIND=service and applying
+#   DEVCONTAINER_PATCH_STRICT=1, or default on when DEVCONTAINER_DEV_KIND=service and applying
 #   to the default (site-packages) tree. Editable checkout trees stay best-effort.
 set -euo pipefail
 
-PATCH_DIR="${PULP_PATCH_DIR:-/opt/pulp-dev/patches}"
+PATCH_DIR="${DEVCONTAINER_PATCH_DIR:-/opt/pulp-dev/patches}"
 
-if [ -n "${PULP_PATCH_TREE:-}" ]; then
-  DEFAULT_TREE="${PULP_PATCH_TREE}"
-elif [ "${PULP_DEV_KIND:-}" = "service" ]; then
+if [ -n "${DEVCONTAINER_PATCH_TREE:-}" ]; then
+  DEFAULT_TREE="${DEVCONTAINER_PATCH_TREE}"
+elif [ "${DEVCONTAINER_DEV_KIND:-}" = "service" ]; then
   DEFAULT_TREE="$(python3 -c 'import site; print(site.getsitepackages()[0])')"
 else
   DEFAULT_TREE="/repositories/pulpcore"
 fi
 
 # Explicit env wins; otherwise service defaults to strict for the site-packages tree.
-if [ -n "${PULP_PATCH_STRICT:-}" ]; then
-  STRICT_DEFAULT="${PULP_PATCH_STRICT}"
-elif [ "${PULP_DEV_KIND:-}" = "service" ]; then
+if [ -n "${DEVCONTAINER_PATCH_STRICT:-}" ]; then
+  STRICT_DEFAULT="${DEVCONTAINER_PATCH_STRICT}"
+elif [ "${DEVCONTAINER_DEV_KIND:-}" = "service" ]; then
   STRICT_DEFAULT="1"
 else
   STRICT_DEFAULT="0"
@@ -94,7 +94,7 @@ do_apply() {
   local tree="${1:-$DEFAULT_TREE}"
   local strict="${STRICT_DEFAULT}"
   # Editable checkouts under service: only some patches target that package.
-  if [ "${PULP_DEV_KIND:-}" = "service" ] && [ "$tree" != "$DEFAULT_TREE" ]; then
+  if [ "${DEVCONTAINER_DEV_KIND:-}" = "service" ] && [ "$tree" != "$DEFAULT_TREE" ]; then
     strict="0"
   fi
 

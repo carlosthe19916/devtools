@@ -2,7 +2,7 @@
 # Upload sample packages (requires pulp-services).
 set -euo pipefail
 
-ROOT="${PULP_POPULATE_ROOT:-/opt/pulp-dev/populate}"
+ROOT="${DEVCONTAINER_POPULATE_ROOT:-/opt/pulp-dev/populate}"
 SCRIPT="${ROOT}/setup_pulp.py"
 
 if [[ ! -f "${SCRIPT}" ]]; then

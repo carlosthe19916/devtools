@@ -8,7 +8,7 @@ DB_HOST="${DB_HOST:?DB_HOST must be set (compose sets this per project)}"
 DB_USER="${DB_USER:-pulp}"
 DB_PASSWORD="${DB_PASSWORD:-pulp}"
 DB_NAME="${DB_NAME:-pulp}"
-ROOT="${PULP_DEV_SCRIPTS:-/opt/pulp-dev/scripts}"
+ROOT="${DEVCONTAINER_DEV_SCRIPTS:-/opt/pulp-dev/scripts}"
 
 echo "warning: stop pulp-services (api/content/worker) before reset for a clean migrate" >&2
 

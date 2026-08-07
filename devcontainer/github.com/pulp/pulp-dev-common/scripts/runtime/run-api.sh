@@ -5,6 +5,6 @@ set -euo pipefail
 cd /home/vscode
 exec pulpcore-api \
   --bind 127.0.0.1:24817 \
-  --timeout "${PULP_GUNICORN_TIMEOUT:-90}" \
-  --workers "${PULP_API_WORKERS:-2}" \
+  --timeout "${DEVCONTAINER_GUNICORN_TIMEOUT:-90}" \
+  --workers "${DEVCONTAINER_API_WORKERS:-2}" \
   --access-logfile -

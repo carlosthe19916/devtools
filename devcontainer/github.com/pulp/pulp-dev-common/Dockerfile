@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/devcontainers/base:ubuntu
 # Scaffolding template for new pulp_* /.devcontainer/Dockerfile trees.
 # Compose builds each project's local ./Dockerfile (not this file).
 # Plugins/core typically COPY settings.py only; nginx is remounted from
-# pulp-dev-common at postStart (PULP_NGINX_REMOUNT=1). pulp-service also
+# pulp-dev-common at postStart (DEVCONTAINER_NGINX_REMOUNT=1). pulp-service also
 # bakes its ClowdApp config/nginx.conf.
 
 RUN sudo apt update && \
@@ -24,8 +24,8 @@ COPY pulp-dev-common/config/nginx-proxy-params.conf /etc/nginx/pulp-proxy-params
 
 ENV DJANGO_SETTINGS_MODULE=pulpcore.app.settings
 ENV PULP_SETTINGS=/etc/pulp/settings.py
-ENV PULP_DEV_SCRIPTS=/opt/pulp-dev/scripts
-ENV PULP_DEV_CONFIG=/opt/pulp-dev/config
-ENV PULP_DEV_SKILLS=/opt/pulp-dev/skills
-ENV PULP_PATCH_DIR=/opt/pulp-dev/patches
-ENV PULP_POPULATE_ROOT=/opt/pulp-dev/populate
+ENV DEVCONTAINER_DEV_SCRIPTS=/opt/pulp-dev/scripts
+ENV DEVCONTAINER_DEV_CONFIG=/opt/pulp-dev/config
+ENV DEVCONTAINER_DEV_SKILLS=/opt/pulp-dev/skills
+ENV DEVCONTAINER_PATCH_DIR=/opt/pulp-dev/patches
+ENV DEVCONTAINER_POPULATE_ROOT=/opt/pulp-dev/populate

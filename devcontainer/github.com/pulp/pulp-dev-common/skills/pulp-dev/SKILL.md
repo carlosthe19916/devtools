@@ -8,7 +8,7 @@ description: Pulp .devcontainer day-1 — services, reset, populate, tests, CLI,
 Scripts mount from `pulp-dev-common` → `/opt/pulp-dev/scripts` (sourced via `shell/pulp-shell.sh`).  
 Config / skills / populate also come from `pulp-dev-common` unless a project overlays them.
 
-Kind is selected by compose env: `PULP_DEV_KIND` = `plugin` | `core` | `service`.
+Kind is selected by compose env: `DEVCONTAINER_DEV_KIND` = `plugin` | `core` | `service`.
 
 ## Layout
 
@@ -28,8 +28,8 @@ Kind is selected by compose env: `PULP_DEV_KIND` = `plugin` | `core` | `service`
 
 ### Every start (`lifecycle/post-start.sh`)
 
-- nginx (remount config when `PULP_NGINX_REMOUNT=1`)
-- `ensure-bindings` (from `PULP_BINDINGS` or discover when `PULP_DEV_KIND=core`)
+- nginx (remount config when `DEVCONTAINER_NGINX_REMOUNT=1`)
+- `ensure-bindings` (from `DEVCONTAINER_BINDINGS` or discover when `DEVCONTAINER_DEV_KIND=core`)
 
 ## Day-1 commands
 
@@ -37,7 +37,7 @@ Kind is selected by compose env: `PULP_DEV_KIND` = `plugin` | `core` | `service`
 pulp-services          # api :24817 + content :24816 + worker
 pulp-reset             # drop/recreate DB, migrate, reset admin password
 pulp-populate          # seed sample packages (see pulp-populate)
-pulp-patches apply     # overlays from $PULP_PATCH_DIR onto $PULP_PATCH_TREE
+pulp-patches apply     # overlays from $DEVCONTAINER_PATCH_DIR onto $DEVCONTAINER_PATCH_TREE
 pulp-check-versions    # core/plugin: pulpcore pyproject; service: requirements.txt
 pulp-bindings <comp>…  # regenerate OpenAPI clients
 ```

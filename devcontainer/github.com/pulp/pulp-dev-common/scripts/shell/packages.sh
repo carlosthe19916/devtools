@@ -1,4 +1,4 @@
-# Editable / PyPI package switches. Behavior depends on PULP_DEV_KIND.
+# Editable / PyPI package switches. Behavior depends on DEVCONTAINER_DEV_KIND.
 
 _remove_shadowed_package() {
   local pkg="$1"
@@ -22,14 +22,14 @@ _install_local_package() {
     _remove_shadowed_package "${pkg}"
     if [ "${apply_patches}" = "1" ]; then
       echo "Applying patches onto editable checkout ${path} ..."
-      bash "${PULP_DEV_SCRIPTS}/runtime/patches.sh" apply "${path}"
+      bash "${DEVCONTAINER_DEV_SCRIPTS}/runtime/patches.sh" apply "${path}"
     fi
   else
     echo "No checkout found at ${path} — using PyPI version of ${pkg}"
   fi
 }
 
-case "${PULP_DEV_KIND:-plugin}" in
+case "${DEVCONTAINER_DEV_KIND:-plugin}" in
   core)
     # Patches under /opt/pulp-dev/patches target pulpcore only — never overlay them
     # onto sibling plugin checkouts (unlike pulp-service RH multi-package patches).
@@ -40,14 +40,14 @@ case "${PULP_DEV_KIND:-plugin}" in
     ;;
   service)
     pulp-core-local() { _install_local_package /repositories/pulpcore pulpcore 1; }
-    pulp-core-pypi() { pip install "pulpcore"; bash "${PULP_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
+    pulp-core-pypi() { pip install "pulpcore"; bash "${DEVCONTAINER_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
     pulp-maven-local() { _install_local_package /repositories/pulp_maven pulp_maven 1; }
-    pulp-maven-pypi() { pip install "pulp-maven"; bash "${PULP_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
+    pulp-maven-pypi() { pip install "pulp-maven"; bash "${DEVCONTAINER_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
     pulp-python-local() { _install_local_package /repositories/pulp_python pulp_python 1; }
-    pulp-python-pypi() { pip install "pulp-python"; bash "${PULP_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
+    pulp-python-pypi() { pip install "pulp-python"; bash "${DEVCONTAINER_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
     ;;
   plugin|*)
     pulp-core-local() { _install_local_package /repositories/pulpcore pulpcore 1; }
-    pulp-core-pypi() { pip install "pulpcore"; bash "${PULP_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
+    pulp-core-pypi() { pip install "pulpcore"; bash "${DEVCONTAINER_DEV_SCRIPTS}/runtime/patches.sh" reapply; }
     ;;
 esac

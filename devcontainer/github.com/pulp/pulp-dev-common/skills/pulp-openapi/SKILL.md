@@ -22,4 +22,4 @@ With `pulp-services` running:
 - Schema: http://localhost:80/api/pulp/api/v3/docs/api.json
 - ReDoc: http://localhost:80/api/pulp/api/v3/docs/
 
-Auth: `admin` / `password`. Regenerate clients with `pulp-bindings` (components from `PULP_BINDINGS` / discovery).
+Auth: `admin` / `password`. Regenerate clients with `pulp-bindings` (components from `DEVCONTAINER_BINDINGS` / discovery).

@@ -4,9 +4,9 @@
 Readable top-to-bottom flow (same shape as the original pulp-service script).
 Compose selects behavior via:
 
-  PULP_POPULATE_MODE=plugin|service
-  PULP_POPULATE_TYPES=file,pypi,maven,...   (subset of CONTENT_TYPES)
-  PULP_POPULATE_BASE_URL / DOMAIN / USER / PASSWORD
+  DEVCONTAINER_POPULATE_MODE=plugin|service
+  DEVCONTAINER_POPULATE_TYPES=file,pypi,maven,...   (subset of CONTENT_TYPES)
+  DEVCONTAINER_POPULATE_BASE_URL / DOMAIN / USER / PASSWORD
 """
 from __future__ import annotations
 
@@ -18,16 +18,16 @@ from pathlib import Path
 
 import requests
 
-POPULATE_ROOT = Path(os.environ.get("PULP_POPULATE_ROOT", "/opt/pulp-dev/populate"))
-ASSETS_ROOT = Path(os.environ.get("PULP_POPULATE_ASSETS", str(POPULATE_ROOT / "assets")))
-MODE = os.environ.get("PULP_POPULATE_MODE", "plugin")  # plugin | service
-DOMAIN = os.environ.get("PULP_POPULATE_DOMAIN", "my-public-domain")
-API_ROOT = os.environ.get("PULP_POPULATE_API_ROOT", "/pulp/").rstrip("/") + "/"
+POPULATE_ROOT = Path(os.environ.get("DEVCONTAINER_POPULATE_ROOT", "/opt/pulp-dev/populate"))
+ASSETS_ROOT = Path(os.environ.get("DEVCONTAINER_POPULATE_ASSETS", str(POPULATE_ROOT / "assets")))
+MODE = os.environ.get("DEVCONTAINER_POPULATE_MODE", "plugin")  # plugin | service
+DOMAIN = os.environ.get("DEVCONTAINER_POPULATE_DOMAIN", "my-public-domain")
+API_ROOT = os.environ.get("DEVCONTAINER_POPULATE_API_ROOT", "/pulp/").rstrip("/") + "/"
 # Direct REST API (pulpcore-api), not nginx :80 — avoids 502 when API is down.
-BASE_URL = os.environ.get("PULP_POPULATE_BASE_URL", "http://localhost:24817").rstrip("/")
+BASE_URL = os.environ.get("DEVCONTAINER_POPULATE_BASE_URL", "http://localhost:24817").rstrip("/")
 AUTH = (
-    os.environ.get("PULP_POPULATE_USER", "admin"),
-    os.environ.get("PULP_POPULATE_PASSWORD", "password"),
+    os.environ.get("DEVCONTAINER_POPULATE_USER", "admin"),
+    os.environ.get("DEVCONTAINER_POPULATE_PASSWORD", "password"),
 )
 
 session = requests.Session()
@@ -114,12 +114,12 @@ else:
 
 _wanted = [
     t.strip()
-    for t in os.environ.get("PULP_POPULATE_TYPES", ",".join(ALL_TYPES)).split(",")
+    for t in os.environ.get("DEVCONTAINER_POPULATE_TYPES", ",".join(ALL_TYPES)).split(",")
     if t.strip()
 ]
 unknown = [t for t in _wanted if t not in ALL_TYPES]
 if unknown:
-    raise SystemExit(f"Unknown PULP_POPULATE_TYPES: {unknown}; known={sorted(ALL_TYPES)}")
+    raise SystemExit(f"Unknown DEVCONTAINER_POPULATE_TYPES: {unknown}; known={sorted(ALL_TYPES)}")
 CONTENT_TYPES = {k: ALL_TYPES[k] for k in _wanted}
 
 

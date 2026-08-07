@@ -2,8 +2,8 @@
 # First-boot orchestrator — runs setup steps in order.
 set -euo pipefail
 
-ROOT="${PULP_DEV_SCRIPTS:-/opt/pulp-dev/scripts}"
-SETUP_30="${PULP_SETUP_30:-30-patches.sh}"
+ROOT="${DEVCONTAINER_DEV_SCRIPTS:-/opt/pulp-dev/scripts}"
+SETUP_30="${DEVCONTAINER_SETUP_30:-30-patches.sh}"
 
 for step in \
   10-dirs.sh \

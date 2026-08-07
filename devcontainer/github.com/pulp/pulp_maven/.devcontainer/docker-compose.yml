@@ -30,22 +30,22 @@ services:
       CLAUDE_CODE_USE_VERTEX: "1"
       CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
       ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
-      PULP_PATCH_DIR: /opt/pulp-dev/patches
-      PULP_DEV_SCRIPTS: /opt/pulp-dev/scripts
-      PULP_DEV_CONFIG: /opt/pulp-dev/config
-      PULP_DEV_SKILLS: /opt/pulp-dev/skills
-      PULP_POPULATE_ROOT: /opt/pulp-dev/populate
-      PULP_DEV_KIND: plugin
-      PULP_PLUGIN: maven
-      PULP_BINDINGS: core maven
-      PULP_PATCH_TREE: /repositories/pulpcore
-      PULP_NGINX_REMOUNT: "1"
-      PULP_SHELL_MARKER: "# pulp-maven devcontainer helpers"
-      PULP_BINDINGS_DOMAIN_ENABLED: "false"
-      PULP_POPULATE_MODE: plugin
-      PULP_POPULATE_TYPES: maven
+      DEVCONTAINER_PATCH_DIR: /opt/pulp-dev/patches
+      DEVCONTAINER_DEV_SCRIPTS: /opt/pulp-dev/scripts
+      DEVCONTAINER_DEV_CONFIG: /opt/pulp-dev/config
+      DEVCONTAINER_DEV_SKILLS: /opt/pulp-dev/skills
+      DEVCONTAINER_POPULATE_ROOT: /opt/pulp-dev/populate
+      DEVCONTAINER_DEV_KIND: plugin
+      DEVCONTAINER_PLUGIN: maven
+      DEVCONTAINER_BINDINGS: core maven
+      DEVCONTAINER_PATCH_TREE: /repositories/pulpcore
+      DEVCONTAINER_NGINX_REMOUNT: "1"
+      DEVCONTAINER_SHELL_MARKER: "# pulp-maven devcontainer helpers"
+      DEVCONTAINER_BINDINGS_DOMAIN_ENABLED: "false"
+      DEVCONTAINER_POPULATE_MODE: plugin
+      DEVCONTAINER_POPULATE_TYPES: maven
       # Direct pulpcore-api (not nginx :80) — avoids 502 while API is down.
-      PULP_POPULATE_BASE_URL: http://localhost:24817
+      DEVCONTAINER_POPULATE_BASE_URL: http://localhost:24817
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULP_MAVEN_PATH:-~/git/pulp/pulp_maven}:/workspace:cached

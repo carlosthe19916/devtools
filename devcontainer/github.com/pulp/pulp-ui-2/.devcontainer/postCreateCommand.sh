@@ -68,5 +68,5 @@ fi
 echo "==> pulp-ui-2 postCreate complete"
 echo "    Then:  npm ci && npm run start:dev"
 echo "    From host browser:  UI http://localhost:3000/  API http://localhost:8089/"
-echo "    From this container: API ${PULP_API_URL:-http://pulp}/  (compose service name, not localhost)"
+echo "    From this container: API ${DEVCONTAINER_API_URL:-http://pulp}/  (compose service name, not localhost)"
 echo "    Login: admin / password"

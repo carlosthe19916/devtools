@@ -27,7 +27,7 @@ Do **not**:
 
 ```
 .devcontainer/
-├── Dockerfile                 # COPY settings.py only; nginx via PULP_NGINX_REMOUNT
+├── Dockerfile                 # COPY settings.py only; nginx via DEVCONTAINER_NGINX_REMOUNT
 ├── settings.py                # thin Django bootstrap (≈ common)
 ├── devcontainer.json          # initializeCommand → pulp-dev-common/.../initialize.sh
 ├── docker-compose.yml         # mounts pulp-dev-common → /opt/pulp-dev/*
@@ -62,16 +62,16 @@ Build: `dockerfile: ./Dockerfile` (no parent `context`).
 
 | Variable | Example |
 |----------|---------|
-| `PULP_DEV_KIND` | `plugin` |
-| `PULP_PLUGIN` | `maven` / `python` / `rpm` |
-| `PULP_BINDINGS` | `core maven` |
-| `PULP_PATCH_TREE` | `/repositories/pulpcore` |
-| `PULP_NGINX_REMOUNT` | `1` |
-| `PULP_SHELL_MARKER` | `# pulp-maven devcontainer helpers` |
-| `PULP_BINDINGS_DOMAIN_ENABLED` | `false` |
-| `PULP_POPULATE_MODE` | `plugin` |
-| `PULP_POPULATE_TYPES` | e.g. `maven` / `pypi` |
-| `PULP_POPULATE_BASE_URL` | `http://localhost:24817` (direct API; smash/CLI use nginx `:80`) |
+| `DEVCONTAINER_DEV_KIND` | `plugin` |
+| `DEVCONTAINER_PLUGIN` | `maven` / `python` / `rpm` |
+| `DEVCONTAINER_BINDINGS` | `core maven` |
+| `DEVCONTAINER_PATCH_TREE` | `/repositories/pulpcore` |
+| `DEVCONTAINER_NGINX_REMOUNT` | `1` |
+| `DEVCONTAINER_SHELL_MARKER` | `# pulp-maven devcontainer helpers` |
+| `DEVCONTAINER_BINDINGS_DOMAIN_ENABLED` | `false` |
+| `DEVCONTAINER_POPULATE_MODE` | `plugin` |
+| `DEVCONTAINER_POPULATE_TYPES` | e.g. `maven` / `pypi` |
+| `DEVCONTAINER_POPULATE_BASE_URL` | `http://localhost:24817` (direct API; smash/CLI use nginx `:80`) |
 
 ## Plugin deltas (vs pulpcore)
 
@@ -82,7 +82,7 @@ Build: `dockerfile: ./Dockerfile` (no parent `context`).
 | Names | `pulp-<plugin>`, `pulp-<plugin>-db`, `pulp-<plugin>-redis` |
 | `20-python-deps` | common script installs editable pulpcore + workspace plugin |
 | Patches | apply to `/repositories/pulpcore` |
-| Bindings | `PULP_BINDINGS=core <plugin>` |
+| Bindings | `DEVCONTAINER_BINDINGS=core <plugin>` |
 | Front door | `API_PORT=80`; smash/CLI via nginx `:80`; populate via `:24817` |
 | Day-1 helpers | `pulp-services`, `pulp-reset`, `pulp-populate`, `pulp-bindings`, `pulp-check-versions` |
 
@@ -90,7 +90,7 @@ Build: `dockerfile: ./Dockerfile` (no parent `context`).
 
 1. Copy thin `.devcontainer/` from `pulp_maven`
 2. Rename compose/service/network/volumes/`PULP_*` paths
-3. Set `PULP_PLUGIN=rpm`, `PULP_BINDINGS=core rpm`, `PULP_POPULATE_TYPES=rpm`, shell marker
+3. Set `DEVCONTAINER_PLUGIN=rpm`, `DEVCONTAINER_BINDINGS=core rpm`, `DEVCONTAINER_POPULATE_TYPES=rpm`, shell marker
 4. Shared scripts/config/skills/populate come from `pulp-dev-common` automatically (add rpm assets under common `populate/assets/` if missing)
 
 ## Forbidden
@@ -107,7 +107,7 @@ Build: `dockerfile: ./Dockerfile` (no parent `context`).
 - [ ] Scripts/config/skills/populate come from `pulp-dev-common` (compose mounts)
 - [ ] Build uses `dockerfile: ./Dockerfile` (local context; `COPY settings.py` only)
 - [ ] No symlinks under `.devcontainer/`
-- [ ] Env knobs set (`PULP_DEV_KIND`, `PULP_PLUGIN`, `PULP_BINDINGS`, `PULP_POPULATE_TYPES`, …)
+- [ ] Env knobs set (`DEVCONTAINER_DEV_KIND`, `DEVCONTAINER_PLUGIN`, `DEVCONTAINER_BINDINGS`, `DEVCONTAINER_POPULATE_TYPES`, …)
 - [ ] Smash via common config (api+content `:80` / nginx) unless intentionally overlaid
 - [ ] Overlays only where behavior truly diverges
 

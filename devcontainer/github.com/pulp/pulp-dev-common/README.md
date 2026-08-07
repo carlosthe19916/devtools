@@ -47,31 +47,31 @@ This directory’s `Dockerfile` is a scaffolding template (copy into a new plugi
 
 | Variable | Values / meaning |
 |----------|------------------|
-| `PULP_DEV_KIND` | `plugin` \| `core` \| `service` |
-| `PULP_PLUGIN` | e.g. `maven`, `python` (plugins) |
-| `PULP_BINDINGS` | space-separated OpenAPI components; if unset and `kind=core`, discover |
-| `PULP_PATCH_TREE` | default tree for `patches.sh` / `30-patches.sh` |
-| `PULP_PATCH_DIR` | directory of `.patch` files |
-| `PULP_PATCH_STRICT` | `1` fail-hard on apply errors / missing dir; default `1` when `kind=service` |
-| `PULP_SETUP_30` | setup step 30 script name (default `30-patches.sh`) |
-| `PULP_NGINX_REMOUNT` | `1` copy mounted nginx config then start; `0` start only |
-| `PULP_SHELL_MARKER` | bashrc marker line for helpers |
-| `PULP_PYPROJECT` | path for `pulp-check-versions` (core/plugin) |
-| `PULP_REQUIREMENTS` | path for `pulp-check-versions` pinned file (service) |
-| `PULP_BINDINGS_DOMAIN_ENABLED` | `true`/`false` for OpenAPI generator |
-| `PULP_POPULATE_MODE` | `plugin` \| `service` |
-| `PULP_POPULATE_TYPES` | comma list: `file`, `pypi`, `maven`, `npm`, `rpm` |
-| `PULP_POPULATE_BASE_URL` | populate API base URL |
-| `PULP_POPULATE_DOMAIN` | domain name when `MODE=service` |
+| `DEVCONTAINER_DEV_KIND` | `plugin` \| `core` \| `service` |
+| `DEVCONTAINER_PLUGIN` | e.g. `maven`, `python` (plugins) |
+| `DEVCONTAINER_BINDINGS` | space-separated OpenAPI components; if unset and `kind=core`, discover |
+| `DEVCONTAINER_PATCH_TREE` | default tree for `patches.sh` / `30-patches.sh` |
+| `DEVCONTAINER_PATCH_DIR` | directory of `.patch` files |
+| `DEVCONTAINER_PATCH_STRICT` | `1` fail-hard on apply errors / missing dir; default `1` when `kind=service` |
+| `DEVCONTAINER_SETUP_30` | setup step 30 script name (default `30-patches.sh`) |
+| `DEVCONTAINER_NGINX_REMOUNT` | `1` copy mounted nginx config then start; `0` start only |
+| `DEVCONTAINER_SHELL_MARKER` | bashrc marker line for helpers |
+| `DEVCONTAINER_PYPROJECT` | path for `pulp-check-versions` (core/plugin) |
+| `DEVCONTAINER_REQUIREMENTS` | path for `pulp-check-versions` pinned file (service) |
+| `DEVCONTAINER_BINDINGS_DOMAIN_ENABLED` | `true`/`false` for OpenAPI generator |
+| `DEVCONTAINER_POPULATE_MODE` | `plugin` \| `service` |
+| `DEVCONTAINER_POPULATE_TYPES` | comma list: `file`, `pypi`, `maven`, `npm`, `rpm` |
+| `DEVCONTAINER_POPULATE_BASE_URL` | populate API base URL |
+| `DEVCONTAINER_POPULATE_DOMAIN` | domain name when `MODE=service` |
 
 ### Group matrix (typical compose values)
 
 | Knob | core | plugin | service |
 |------|------|--------|---------|
-| `PULP_DEV_KIND` | `core` | `plugin` | `service` |
+| `DEVCONTAINER_DEV_KIND` | `core` | `plugin` | `service` |
 | Client front door | smash/CLI `:24817` | nginx `:80` | nginx `:80` (`/api/pulp/`) |
-| `PULP_BINDINGS_DOMAIN_ENABLED` | `false` | `false` | `true` |
-| `PULP_POPULATE_MODE` | `plugin` | `plugin` | `service` |
+| `DEVCONTAINER_BINDINGS_DOMAIN_ENABLED` | `false` | `false` | `true` |
+| `DEVCONTAINER_POPULATE_MODE` | `plugin` | `plugin` | `service` |
 | Patch tree default | `/workspace` (via env) | `/repositories/pulpcore` | site-packages |
 | Postgres | 17 | 17 | 16 (RH) |
 

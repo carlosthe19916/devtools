@@ -13,7 +13,7 @@ See also shared `pulp-dev` / `pulp-openapi` / `pulp-populate` skills from `pulp-
 - Patches: `/workspace/images/assets/patches` (production parity)
 - Status: `http://localhost:80/api/pulp/api/v3/status/`
 - Postgres **16** (delete `pulp-service-postgres-data` if migrating from 17)
-- Populate: `PULP_POPULATE_MODE=service`, multi-type + `PULP_POPULATE_DOMAIN`
+- Populate: `DEVCONTAINER_POPULATE_MODE=service`, multi-type + `DEVCONTAINER_POPULATE_DOMAIN`
 - Attestation: `/etc/pki/attestation/test-key.pem`; Sigstore PEM under `/etc/pki/sigstore/`
 
 ## Local telemetry (OTEL + Prometheus + Grafana)

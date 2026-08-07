@@ -36,7 +36,7 @@ COPY config/nginx.conf /etc/nginx/nginx.conf
 
 ENV DJANGO_SETTINGS_MODULE=pulpcore.app.settings
 ENV PULP_SETTINGS=/etc/pulp/settings.py
-ENV PULP_DEV_SCRIPTS=/opt/pulp-dev/scripts
-ENV PULP_DEV_CONFIG=/opt/pulp-dev/config
-ENV PULP_DEV_SKILLS=/opt/pulp-dev/skills
-ENV PULP_POPULATE_ROOT=/opt/pulp-dev/populate
+ENV DEVCONTAINER_DEV_SCRIPTS=/opt/pulp-dev/scripts
+ENV DEVCONTAINER_DEV_CONFIG=/opt/pulp-dev/config
+ENV DEVCONTAINER_DEV_SKILLS=/opt/pulp-dev/skills
+ENV DEVCONTAINER_POPULATE_ROOT=/opt/pulp-dev/populate

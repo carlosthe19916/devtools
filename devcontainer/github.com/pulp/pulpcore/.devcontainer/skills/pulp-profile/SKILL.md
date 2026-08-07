@@ -13,7 +13,7 @@ See also shared `pulp-dev` / `pulp-openapi` / `pulp-populate` skills from `pulp-
 - Smash/CLI on **`:24817`** (certguard); content via nginx `:80` + `/pulp/content/`
 - `patches/` empty by default (CI parity — do not ship RH heartbeat overlays)
 - Bindings: discover `core` + in-tree `pulp_*`
-- Populate: `PULP_POPULATE_TYPES=file`, base URL `:24817`
+- Populate: `DEVCONTAINER_POPULATE_TYPES=file`, base URL `:24817`
 - Optional: `pulp-maven-local` / `pulp-python-local` (no patch overlay onto siblings)
 
 ```bash

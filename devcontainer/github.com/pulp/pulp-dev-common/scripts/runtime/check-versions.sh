@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Check installed package versions.
-# - core/plugin: pulpcore pyproject.toml dependency ranges (PULP_PYPROJECT)
-# - service: pinned requirements.txt (PULP_REQUIREMENTS)
+# - core/plugin: pulpcore pyproject.toml dependency ranges (DEVCONTAINER_PYPROJECT)
+# - service: pinned requirements.txt (DEVCONTAINER_REQUIREMENTS)
 set -euo pipefail
 
 check_pyproject() {
@@ -106,13 +106,13 @@ if [ -n "${1:-}" ]; then
   else
     check_pyproject "$1"
   fi
-elif [ -n "${PULP_REQUIREMENTS:-}" ]; then
-  check_requirements "${PULP_REQUIREMENTS}"
-elif [ "${PULP_DEV_KIND:-}" = "service" ]; then
+elif [ -n "${DEVCONTAINER_REQUIREMENTS:-}" ]; then
+  check_requirements "${DEVCONTAINER_REQUIREMENTS}"
+elif [ "${DEVCONTAINER_DEV_KIND:-}" = "service" ]; then
   check_requirements "/workspace/pulp_service/requirements.txt"
-elif [ -n "${PULP_PYPROJECT:-}" ]; then
-  check_pyproject "${PULP_PYPROJECT}"
-elif [ "${PULP_DEV_KIND:-}" = "core" ]; then
+elif [ -n "${DEVCONTAINER_PYPROJECT:-}" ]; then
+  check_pyproject "${DEVCONTAINER_PYPROJECT}"
+elif [ "${DEVCONTAINER_DEV_KIND:-}" = "core" ]; then
   check_pyproject "/workspace/pyproject.toml"
 else
   check_pyproject "/repositories/pulpcore/pyproject.toml"

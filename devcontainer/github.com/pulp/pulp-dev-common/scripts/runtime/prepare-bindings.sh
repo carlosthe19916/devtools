@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Generate OpenAPI Python clients. domainEnabled from PULP_BINDINGS_DOMAIN_ENABLED.
+# Generate OpenAPI Python clients. domainEnabled from DEVCONTAINER_BINDINGS_DOMAIN_ENABLED.
 set -euo pipefail
 
 GENERATOR_VERSION="7.10.0"
@@ -71,7 +71,7 @@ for comp in "${components[@]}"; do
     -t "${TEMPLATES_DIR}" \
     --skip-validate-spec \
     --strict-spec=false \
-    --additional-properties=packageName=pulpcore.client.${python_pkg},projectName="${pkg_name}",packageVersion=0.0.0.dev,domainEnabled=${PULP_BINDINGS_DOMAIN_ENABLED:-false}
+    --additional-properties=packageName=pulpcore.client.${python_pkg},projectName="${pkg_name}",packageVersion=0.0.0.dev,domainEnabled=${DEVCONTAINER_BINDINGS_DOMAIN_ENABLED:-false}
 
   cp "${TEMPLATES_DIR}/__init__.py" "${BINDINGS_DIR}/${comp}-client/pulpcore/__init__.py"
   cp "${TEMPLATES_DIR}/__init__.py" "${BINDINGS_DIR}/${comp}-client/pulpcore/client/__init__.py"

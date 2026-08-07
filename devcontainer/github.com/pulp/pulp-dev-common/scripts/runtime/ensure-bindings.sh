@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Regenerate OpenAPI bindings only when missing, unless FORCE_BINDINGS=1.
-# Components from PULP_BINDINGS, or discover when PULP_DEV_KIND=core.
+# Components from DEVCONTAINER_BINDINGS, or discover when DEVCONTAINER_DEV_KIND=core.
 set -euo pipefail
 
-PULP_DEV_SCRIPTS="${PULP_DEV_SCRIPTS:-/opt/pulp-dev/scripts}"
-PULP_DEV_KIND="${PULP_DEV_KIND:-plugin}"
+DEVCONTAINER_DEV_SCRIPTS="${DEVCONTAINER_DEV_SCRIPTS:-/opt/pulp-dev/scripts}"
+DEVCONTAINER_DEV_KIND="${DEVCONTAINER_DEV_KIND:-plugin}"
 
 pkg_name_for() {
   local comp="$1"
@@ -40,15 +40,15 @@ discover_core_components() {
   printf '%s\n' "${components[@]}"
 }
 
-if [ -n "${PULP_BINDINGS:-}" ]; then
+if [ -n "${DEVCONTAINER_BINDINGS:-}" ]; then
   # shellcheck disable=SC2206
-  BINDINGS_COMPONENTS=(${PULP_BINDINGS})
-elif [ "${PULP_DEV_KIND}" = "core" ]; then
+  BINDINGS_COMPONENTS=(${DEVCONTAINER_BINDINGS})
+elif [ "${DEVCONTAINER_DEV_KIND}" = "core" ]; then
   mapfile -t BINDINGS_COMPONENTS < <(discover_core_components)
-elif [ -n "${PULP_PLUGIN:-}" ]; then
-  BINDINGS_COMPONENTS=(core "${PULP_PLUGIN}")
+elif [ -n "${DEVCONTAINER_PLUGIN:-}" ]; then
+  BINDINGS_COMPONENTS=(core "${DEVCONTAINER_PLUGIN}")
 else
-  echo "ERROR: set PULP_BINDINGS or PULP_PLUGIN (or PULP_DEV_KIND=core)" >&2
+  echo "ERROR: set DEVCONTAINER_BINDINGS or DEVCONTAINER_PLUGIN (or DEVCONTAINER_DEV_KIND=core)" >&2
   exit 1
 fi
 
@@ -68,7 +68,7 @@ fi
 
 if [ "$need_bindings" = true ]; then
   echo "==> Generating OpenAPI bindings: ${BINDINGS_COMPONENTS[*]}"
-  bash "${PULP_DEV_SCRIPTS}/runtime/prepare-bindings.sh" --force "${BINDINGS_COMPONENTS[@]}"
+  bash "${DEVCONTAINER_DEV_SCRIPTS}/runtime/prepare-bindings.sh" --force "${BINDINGS_COMPONENTS[@]}"
 else
   echo "==> OpenAPI bindings already present (set FORCE_BINDINGS=1 to regenerate)"
 fi
