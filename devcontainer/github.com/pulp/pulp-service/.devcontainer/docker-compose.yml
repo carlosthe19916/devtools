@@ -4,10 +4,10 @@ networks:
 
 volumes:
   pulp-service-claude-config:
-  pulp-service-postgres-data:
-  pulp-service-pulp-media:
   pulp-service-grafana-data:
+  pulp-service-postgres-data:
   pulp-service-prometheus-data:
+  pulp-service-pulp-media:
 
 services:
   pulp-service:
@@ -22,52 +22,61 @@ services:
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/uv.env
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/devcontainer.env
     environment:
-      GH_TOKEN: ${GH_TOKEN}
-      PULP_SETTINGS: /etc/pulp/settings.py
-      DB_HOST: pulp-service-db
-      DB_PASSWORD: pulp
-      REDIS_URL: redis://pulp-service-redis:6379/0
-      API_PROTOCOL: http
+      # --- Pulp runtime ---
       API_HOST: localhost
       API_PORT: "80"
-      CLAUDE_CODE_USE_VERTEX: "1"
-      CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
-      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+      API_PROTOCOL: http
+      DB_HOST: pulp-service-db
+      DB_PASSWORD: pulp
+      PULP_SETTINGS: /etc/pulp/settings.py
       # Prevent cwd (/workspace) from shadowing the editable pulp_service package.
       PYTHONSAFEPATH: "1"
-      DEVCONTAINER_PATCH_DIR: /workspace/images/assets/patches
-      DEVCONTAINER_DEV_KIND: service
+      REDIS_URL: redis://pulp-service-redis:6379/0
+      # --- Devcontainer config ---
       DEVCONTAINER_BINDINGS: core python npm rpm maven file service container
-      DEVCONTAINER_PATCH_STRICT: "1"
-      DEVCONTAINER_SHELL_MARKER: "# pulp-service devcontainer helpers"
       DEVCONTAINER_BINDINGS_DOMAIN_ENABLED: "true"
-      DEVCONTAINER_REQUIREMENTS: /workspace/pulp_service/requirements.txt
+      DEVCONTAINER_DEV_KIND: service
+      DEVCONTAINER_PATCH_DIR: /workspace/images/assets/patches
+      DEVCONTAINER_PATCH_STRICT: "1"
+      DEVCONTAINER_POPULATE_DOMAIN: my-public-domain
       DEVCONTAINER_POPULATE_MODE: service
       DEVCONTAINER_POPULATE_TYPES: file,pypi,maven,npm,rpm
-      DEVCONTAINER_POPULATE_DOMAIN: my-public-domain
+      DEVCONTAINER_REQUIREMENTS: /workspace/pulp_service/requirements.txt
+      DEVCONTAINER_SHELL_MARKER: "# pulp-service devcontainer helpers"
+      # --- External services ---
       # OTLP → pulp-service-otel (localhost:4318 would miss the sibling collector).
       OTEL_EXPORTER_OTLP_ENDPOINT: http://pulp-service-otel:4318
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      # --- AI tooling ---
+      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+      CLAUDE_CODE_USE_VERTEX: "1"
+      CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
+      GH_TOKEN: ${GH_TOKEN}
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
+      # --- Workspace ---
       - ${PULP_SERVICE_PATH:-~/git/pulp/pulp-service}:/workspace:cached
+      # --- Source repositories ---
       - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/repositories/pulpcore:cached
       - ${PULP_MAVEN_PATH:-~/git/pulp/pulp_maven}:/repositories/pulp_maven:cached
       - ${PULP_PYTHON_PATH:-~/git/pulp/pulp_python}:/repositories/pulp_python:cached
+      # --- Devtools (pulp-dev-common) ---
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/config:/opt/pulp-dev/config:ro,Z
+      - ./config/nginx.conf:/opt/pulp-dev/config/nginx.conf:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
       - ./scripts/setup/20-python-deps.sh:/opt/pulp-dev/scripts/setup/20-python-deps.sh:ro,Z
       - ./scripts/setup/30-keys-and-patches.sh:/opt/pulp-dev/scripts/setup/30-patches.sh:ro,Z
-      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/config:/opt/pulp-dev/config:ro,Z
-      - ./config/nginx.conf:/opt/pulp-dev/config/nginx.conf:ro,Z
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/skills:/opt/pulp-dev/skills:ro,Z
       - ./skills/pulp-profile:/opt/pulp-dev/skills/pulp-profile:ro,Z
-      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
+      # --- Application data ---
+      - ./config/certs/pulp-services-non-prod.pem:/etc/pulp/certs/pulp-services-non-prod.pem:ro,Z
+      - pulp-service-pulp-media:/var/lib/pulp
+      # --- User and AI config ---
       - pulp-service-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
-      - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
       - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
-      - pulp-service-pulp-media:/var/lib/pulp
-      - ./config/certs/pulp-services-non-prod.pem:/etc/pulp/certs/pulp-services-non-prod.pem:ro,Z
+      - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
     networks:
       - pulp-service
     depends_on:

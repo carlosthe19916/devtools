@@ -3,11 +3,11 @@ networks:
     name: "pulp-ui-2"
 
 volumes:
-  pulp-ui-2-claude-config:
-  pulp-ui-2-certs:
-  pulp-storage:
-  pulp-pgsql:
   pulp-containers:
+  pulp-pgsql:
+  pulp-storage:
+  pulp-ui-2-certs:
+  pulp-ui-2-claude-config:
 
 services:
   pulp-ui-2:
@@ -18,20 +18,25 @@ services:
       - "label=disable"
     userns_mode: "keep-id"
     environment:
+      # --- Application ---
       # In-compose DNS → service "pulp" (not localhost; host maps that as :8089).
       DEVCONTAINER_API_URL: http://pulp
-      GH_TOKEN: ${GH_TOKEN}
+      # --- AI tooling ---
+      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
       CLAUDE_CODE_USE_VERTEX: "1"
       CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
-      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+      GH_TOKEN: ${GH_TOKEN}
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
+      # --- Workspace ---
       - ${PULP_UI_2_PATH:-~/git/pulp/pulp-ui-2}:/workspace:cached
+      # --- Init scripts ---
       - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
+      # --- User and AI config ---
       - pulp-ui-2-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
-      - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
       - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
+      - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
     ports:
       - "3000:3000"
     networks:

@@ -3,11 +3,11 @@ networks:
     name: "pulp-ui"
 
 volumes:
-  pulp-ui-claude-config:
-  pulp-ui-certs:
-  pulp-storage:
-  pulp-pgsql:
   pulp-containers:
+  pulp-pgsql:
+  pulp-storage:
+  pulp-ui-certs:
+  pulp-ui-claude-config:
 
 services:
   pulp-ui:
@@ -18,11 +18,13 @@ services:
       - "label=disable"
     userns_mode: "keep-id"
     environment:
+      # --- Application ---
       API_PROXY: http://pulp:80
-      GH_TOKEN: ${GH_TOKEN}
+      # --- AI tooling ---
+      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
       CLAUDE_CODE_USE_VERTEX: "1"
       CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
-      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+      GH_TOKEN: ${GH_TOKEN}
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${PULP_UI_PATH:-~/git/pulp/pulp-ui}:/workspace:cached

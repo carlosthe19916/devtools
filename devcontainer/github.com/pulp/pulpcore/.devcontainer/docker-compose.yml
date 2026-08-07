@@ -20,45 +20,53 @@ services:
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/uv.env
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/devcontainer.env
     environment:
-      GH_TOKEN: ${GH_TOKEN}
-      PULP_SETTINGS: /etc/pulp/settings.py
-      DB_HOST: pulpcore-db
-      DB_PASSWORD: pulp
-      REDIS_URL: redis://pulpcore-redis:6379/0
-      API_PROTOCOL: http
+      # --- Pulp runtime ---
       API_HOST: localhost
       # Bindings/CLI default host port (API). Content uses nginx :80 via CONTENT_ORIGIN.
       API_PORT: "24817"
+      API_PROTOCOL: http
+      DB_HOST: pulpcore-db
+      DB_PASSWORD: pulp
+      PULP_SETTINGS: /etc/pulp/settings.py
       PYTHONSAFEPATH: "1"
-      CLAUDE_CODE_USE_VERTEX: "1"
-      CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
-      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
-      DEVCONTAINER_PATCH_DIR: /opt/pulp-dev/patches
-      DEVCONTAINER_DEV_KIND: core
-      DEVCONTAINER_PATCH_TREE: /workspace
-      DEVCONTAINER_PYPROJECT: /workspace/pyproject.toml
-      DEVCONTAINER_SHELL_MARKER: "# pulpcore devcontainer helpers"
+      REDIS_URL: redis://pulpcore-redis:6379/0
+      # --- Devcontainer config ---
       DEVCONTAINER_BINDINGS_DOMAIN_ENABLED: "false"
+      DEVCONTAINER_DEV_KIND: core
+      DEVCONTAINER_PATCH_DIR: /opt/pulp-dev/patches
+      DEVCONTAINER_PATCH_TREE: /workspace
       DEVCONTAINER_POPULATE_MODE: plugin
       DEVCONTAINER_POPULATE_TYPES: file
+      DEVCONTAINER_PYPROJECT: /workspace/pyproject.toml
+      DEVCONTAINER_SHELL_MARKER: "# pulpcore devcontainer helpers"
+      # --- AI tooling ---
+      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+      CLAUDE_CODE_USE_VERTEX: "1"
+      CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
+      GH_TOKEN: ${GH_TOKEN}
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
+      # --- Workspace ---
       - ${PULPCORE_PATH:-~/git/pulp/pulpcore}:/workspace:cached
+      # --- Source repositories ---
       - ${PULP_MAVEN_PATH:-~/git/pulp/pulp_maven}:/repositories/pulp_maven:cached
       - ${PULP_PYTHON_PATH:-~/git/pulp/pulp_python}:/repositories/pulp_python:cached
-      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
-      - ./scripts/setup/20-python-deps.sh:/opt/pulp-dev/scripts/setup/20-python-deps.sh:ro,Z
+      # --- Devtools (pulp-dev-common) ---
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/config:/opt/pulp-dev/config:ro,Z
       - ./config/smash.json:/opt/pulp-dev/config/smash.json:ro,Z
+      - ./patches:/opt/pulp-dev/patches:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
+      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts:/opt/pulp-dev/scripts:ro,Z
+      - ./scripts/setup/20-python-deps.sh:/opt/pulp-dev/scripts/setup/20-python-deps.sh:ro,Z
       - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/skills:/opt/pulp-dev/skills:ro,Z
       - ./skills/pulp-profile:/opt/pulp-dev/skills/pulp-profile:ro,Z
-      - ${DEVTOOLS_PATH:-~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/populate:/opt/pulp-dev/populate:ro,Z
-      - ./patches:/opt/pulp-dev/patches:ro,Z
+      # --- Application data ---
+      - pulpcore-pulp-media:/var/lib/pulp
+      # --- User and AI config ---
       - pulpcore-claude-config:/home/vscode/.claude
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
-      - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
       - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
-      - pulpcore-pulp-media:/var/lib/pulp
+      - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
     networks:
       - pulpcore
     depends_on:

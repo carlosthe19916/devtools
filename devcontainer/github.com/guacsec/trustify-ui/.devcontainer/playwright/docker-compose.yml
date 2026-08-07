@@ -11,10 +11,10 @@ services:
     userns_mode: "keep-id"
     network_mode: host
     environment:
-      GH_TOKEN: ${GH_TOKEN}
+      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
       CLAUDE_CODE_USE_VERTEX: "1"
       CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
-      ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
+      GH_TOKEN: ${GH_TOKEN}
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${TRUSTIFY_UI_PATH:-~/git/guacsec/trustify-ui}:/workspace:cached
