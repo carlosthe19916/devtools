@@ -31,14 +31,14 @@ services:
       PYTHONSAFEPATH: "1"
       REDIS_URL: redis://pulp-trustify-redis:6379/0
       # --- Devcontainer config ---
-      DEVCONTAINER_BINDINGS: core python trustify
+      DEVCONTAINER_BINDINGS: core file npm python trustify
       DEVCONTAINER_BINDINGS_DOMAIN_ENABLED: "false"
       DEVCONTAINER_DEV_KIND: plugin
       DEVCONTAINER_PATCH_DIR: /opt/pulp-dev/patches
       DEVCONTAINER_PATCH_TREE: /repositories/pulpcore
       DEVCONTAINER_PLUGIN: trustify
       DEVCONTAINER_POPULATE_MODE: plugin
-      DEVCONTAINER_POPULATE_TYPES: pypi
+      DEVCONTAINER_POPULATE_TYPES: file,npm,pypi
       DEVCONTAINER_SHELL_MARKER: "# pulp-trustify devcontainer helpers"
       # --- External services ---
       # Trustify connection — auth disabled for local development.

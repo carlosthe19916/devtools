@@ -223,6 +223,8 @@ def upload_form_fields(key: str, path: Path, repo_href: str) -> dict:
     data: dict = {}
     if key == "file":
         data["relative_path"] = path.name
+    elif key == "pypi":
+        data["relative_path"] = path.name
     elif key == "maven":
         data["relative_path"] = maven_relative_path(path)
         data["repository"] = repo_href

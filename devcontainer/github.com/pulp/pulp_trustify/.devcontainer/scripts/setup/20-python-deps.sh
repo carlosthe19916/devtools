@@ -6,6 +6,8 @@ uv pip install setuptools wheel
 uv pip install pulpcore
 
 # pulp_trustify connects Django signals to PythonPackageContent — pulp-python must be present.
+uv pip install pulp-file
+uv pip install pulp-npm
 uv pip install pulp-python
 
 uv pip install -e .
