@@ -13,7 +13,7 @@ done
 
 uv pip install pulp-maven pulp-python
 
-uv pip install httpie pulp-cli pulp-cli-maven pulp-cli-python packaging pytest
+uv pip install httpie pulp-cli pulp-cli-maven packaging pytest
 # Twine 7+ rejects Metadata-Version 2.0 (used by pulp_python fixtures).
 uv pip install "twine>=4,<7"
 
