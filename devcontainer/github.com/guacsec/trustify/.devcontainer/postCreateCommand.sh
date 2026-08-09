@@ -16,3 +16,5 @@ echo "alias psql:postgres='env PGPASSWORD=trustify psql -U postgres -d postgres 
 claude mcp add --transport http --scope user atlassian https://mcp.atlassian.com/v1/mcp 2>/dev/null || true
 claude plugin marketplace add anthropics/claude-plugins-official 2>/dev/null || true
 claude plugin install superpowers@claude-plugins-official --scope user 2>/dev/null || true
+
+echo 'claude() { command claude --allow-dangerously-skip-permissions "$@"; }' >> ~/.bashrc

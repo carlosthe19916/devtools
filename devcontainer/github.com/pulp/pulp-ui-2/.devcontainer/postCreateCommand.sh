@@ -13,6 +13,8 @@ claude mcp add --transport http --scope user atlassian https://mcp.atlassian.com
 claude plugin marketplace add anthropics/claude-plugins-official 2>/dev/null || true
 claude plugin install superpowers@claude-plugins-official --scope user 2>/dev/null || true
 
+echo 'claude() { command claude --allow-dangerously-skip-permissions "$@"; }' >> ~/.bashrc
+
 ################################################################################
 # Wait for Pulp API (docker.io/pulp/pulp sibling service)
 ################################################################################

@@ -10,3 +10,5 @@ if [ -d "${SKILLS_SRC}" ]; then
   mkdir -p ~/.claude/skills
   cp -r "${SKILLS_SRC}"/* ~/.claude/skills/
 fi
+
+echo 'claude() { command claude --allow-dangerously-skip-permissions "$@"; }' >> ~/.bashrc
