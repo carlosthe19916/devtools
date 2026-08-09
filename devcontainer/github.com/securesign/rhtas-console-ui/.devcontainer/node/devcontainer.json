@@ -14,6 +14,8 @@
       "version": "22"
     },
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/stu-bell/devcontainer-features/cursor-cli:0": {},
+    "ghcr.io/devcontainer-community/devcontainer-features/opencode.ai:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "customizations": {
@@ -22,7 +24,8 @@
         "eamodio.gitlens",
         "dsznajder.es7-react-js-snippets",
         "esbenp.prettier-vscode",
-        "vitest.explorer"
+        "vitest.explorer",
+        "redhat.vscode-yaml"
       ],
       "settings": {
         "git.alwaysSignOff": true

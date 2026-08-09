@@ -26,6 +26,8 @@
       "version": "22"
     },
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/stu-bell/devcontainer-features/cursor-cli:0": {},
+    "ghcr.io/devcontainer-community/devcontainer-features/opencode.ai:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "initializeCommand": "bash ${localEnv:DEVTOOLS_PATH:~/git/devtools}/devcontainer/github.com/pulp/pulp-dev-common/scripts/lifecycle/initialize.sh ${devcontainerId}",

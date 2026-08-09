@@ -16,6 +16,8 @@
       "version": "22"
     },
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/stu-bell/devcontainer-features/cursor-cli:0": {},
+    "ghcr.io/devcontainer-community/devcontainer-features/opencode.ai:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/desktop-lite:1": {
       "VNC_RESOLUTION": "1920x1200x16"
@@ -36,7 +38,8 @@
       "extensions": [
         "eamodio.gitlens",
         "ms-playwright.playwright",
-        "alexkrechik.cucumberautocomplete"
+        "alexkrechik.cucumberautocomplete",
+        "redhat.vscode-yaml"
       ],
       "settings": {
         "git.alwaysSignOff": true,

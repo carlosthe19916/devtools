@@ -4,6 +4,7 @@ networks:
 
 volumes:
   trustify-ui-claude-config:
+  trustify-ui-cursor-config:
 
 services:
   trustify-ui:
@@ -21,12 +22,14 @@ services:
       ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
       CLAUDE_CODE_USE_VERTEX: "1"
       CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
+      CURSOR_API_KEY: ${CURSOR_API_KEY:-}
       GH_TOKEN: ${GH_TOKEN}
     command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ${TRUSTIFY_UI_PATH:-~/git/guacsec/trustify}:/workspace:cached
       - ./postCreateCommand.sh:/tmp/postCreateCommand.sh:Z
       - trustify-ui-claude-config:/home/vscode/.claude
+      - trustify-ui-cursor-config:/home/vscode/.cursor
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
     networks:
       - trustify

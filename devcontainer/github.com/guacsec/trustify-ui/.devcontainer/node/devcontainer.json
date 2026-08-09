@@ -12,6 +12,8 @@
       "version": "22"
     },
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/stu-bell/devcontainer-features/cursor-cli:0": {},
+    "ghcr.io/devcontainer-community/devcontainer-features/opencode.ai:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "initializeCommand": "bash ${localEnv:DEVTOOLS_PATH:~/git/devtools}/devcontainer/github.com/guacsec/trustify-ui/.devcontainer/node/initializeCommand.sh ${devcontainerId}",
@@ -24,7 +26,8 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "ms-playwright.playwright",
-        "alexkrechik.cucumberautocomplete"
+        "alexkrechik.cucumberautocomplete",
+        "redhat.vscode-yaml"
       ],
       "settings": {
         "git.alwaysSignOff": true,
