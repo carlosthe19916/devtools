@@ -43,10 +43,10 @@ services:
       DEVCONTAINER_SHELL_MARKER: "# pulp-trustify devcontainer helpers"
       # --- External services ---
       # Trustify connection — auth disabled for local development.
-      TRUSTIFY_API_VERSION: v2
-      TRUSTIFY_CLIENT_SECRET: ""
-      TRUSTIFY_ISSUER_URL: ""
-      TRUSTIFY_URL: http://pulp-trustify-trustd:8080
+      PULP_TRUSTIFY_API_VERSION: v2
+      PULP_TRUSTIFY_CLIENT_SECRET: ""
+      PULP_TRUSTIFY_ISSUER_URL: ""
+      PULP_TRUSTIFY_URL: http://pulp-trustify-trustd:8080
       # --- AI tooling ---
       ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
       CLAUDE_CODE_USE_VERTEX: "1"

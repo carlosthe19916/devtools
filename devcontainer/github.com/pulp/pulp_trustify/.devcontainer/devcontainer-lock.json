@@ -10,6 +10,11 @@
       "resolved": "ghcr.io/devcontainer-community/devcontainer-features/astral.sh-uv@sha256:36f95b90080248a05aba7b1b3cecf8018bb6d7222f6274f03f050b502abd4fe7",
       "integrity": "sha256:36f95b90080248a05aba7b1b3cecf8018bb6d7222f6274f03f050b502abd4fe7"
     },
+    "ghcr.io/devcontainer-community/devcontainer-features/opencode.ai:1": {
+      "version": "1.0.7",
+      "resolved": "ghcr.io/devcontainer-community/devcontainer-features/opencode.ai@sha256:312520e651f8438c67d6823464fffaf42449e1e05e7020ef721748a4a95fa1fb",
+      "integrity": "sha256:312520e651f8438c67d6823464fffaf42449e1e05e7020ef721748a4a95fa1fb"
+    },
     "ghcr.io/devcontainers/features/common-utils:2": {
       "version": "2.5.9",
       "resolved": "ghcr.io/devcontainers/features/common-utils@sha256:cb0c4d3c276f157eed17935747e364178d75fee17f55c4e129966f64633deb3a",
@@ -34,6 +39,11 @@
       "version": "1.8.0",
       "resolved": "ghcr.io/devcontainers/features/python@sha256:fbcad6955caeecc5ad3f7886baf652e25cba5225a6c4c2287c536de2e5607511",
       "integrity": "sha256:fbcad6955caeecc5ad3f7886baf652e25cba5225a6c4c2287c536de2e5607511"
+    },
+    "ghcr.io/stu-bell/devcontainer-features/cursor-cli:0": {
+      "version": "0.1.0",
+      "resolved": "ghcr.io/stu-bell/devcontainer-features/cursor-cli@sha256:d524f4a32d6aaac920c5673968deeba1b2344b7dda28079cc5117cb470b09d84",
+      "integrity": "sha256:d524f4a32d6aaac920c5673968deeba1b2344b7dda28079cc5117cb470b09d84"
     }
   }
 }
