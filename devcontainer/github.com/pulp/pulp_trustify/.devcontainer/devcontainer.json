@@ -43,7 +43,8 @@
         "charliermarsh.ruff",
         "redhat.vscode-yaml",
         "mtxr.sqltools",
-        "mtxr.sqltools-driver-pg"
+        "mtxr.sqltools-driver-pg",
+        "cweijan.vscode-redis-client"
       ],
       "settings": {
         "git.alwaysSignOff": true,

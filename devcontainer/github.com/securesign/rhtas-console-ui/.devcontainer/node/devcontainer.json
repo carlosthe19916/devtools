@@ -24,11 +24,16 @@
         "eamodio.gitlens",
         "dsznajder.es7-react-js-snippets",
         "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
         "vitest.explorer",
         "redhat.vscode-yaml"
       ],
       "settings": {
-        "git.alwaysSignOff": true
+        "git.alwaysSignOff": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+        "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+        "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" }
       }
     }
   }
