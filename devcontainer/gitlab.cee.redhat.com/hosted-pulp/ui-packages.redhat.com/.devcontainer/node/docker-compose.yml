@@ -1,6 +1,8 @@
 networks:
   pulp:
     name: "pulp"
+  pulp-trustify:
+    name: "pulp-trustify"
 
 volumes:
   pulp-ui-claude-config:
@@ -30,9 +32,10 @@ services:
       - pulp-ui-claude-config:/home/vscode/.claude
       - pulp-ui-cursor-config:/home/vscode/.cursor
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
-      - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
-      - ${HOME}/.gitconfig-gitlab:/home/vscode/.gitconfig-gitlab:cached
+      - ${HOME}/.gitconfig:/home/vscode/.gitconfig:ro,Z
+      - ${HOME}/.gitconfig-gitlab:/home/vscode/.gitconfig-gitlab:ro,Z
       - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
       - ${HOME}/.vite-plugin-mkcert:/home/vscode/.vite-plugin-mkcert:cached
     networks:
       - pulp
+      - pulp-trustify

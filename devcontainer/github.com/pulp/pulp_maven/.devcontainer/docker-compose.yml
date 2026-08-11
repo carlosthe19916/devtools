@@ -64,7 +64,7 @@ services:
       - pulp-maven-claude-config:/home/vscode/.claude
       - pulp-maven-cursor-config:/home/vscode/.cursor
       - ${HOME}/.config/gcloud:/home/vscode/.config/gcloud:cached
-      - ${HOME}/.gitconfig:/home/vscode/.gitconfig:cached
+      - ${HOME}/.gitconfig:/home/vscode/.gitconfig:ro,Z
       - ${HOME}/.ssh:/home/vscode/.ssh:ro,cached
     networks:
       - pulp-maven
