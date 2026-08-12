@@ -17,7 +17,8 @@ services:
     environment:
       ANTHROPIC_VERTEX_PROJECT_ID: ${ANTHROPIC_VERTEX_PROJECT_ID}
       CLAUDE_CODE_USE_VERTEX: "1"
-      CLOUD_ML_REGION: ${CLOUD_ML_REGION:-us-east5}
+      CLOUD_ML_REGION: ${CLOUD_ML_REGION:-global}
+      ANTHROPIC_DEFAULT_OPUS_MODEL: ${ANTHROPIC_DEFAULT_OPUS_MODEL:-claude-opus-4-6[1m]}
       CURSOR_API_KEY: ${CURSOR_API_KEY:-}
       GH_TOKEN: ${GH_TOKEN}
     command: /bin/sh -c "while sleep 1000; do :; done"
