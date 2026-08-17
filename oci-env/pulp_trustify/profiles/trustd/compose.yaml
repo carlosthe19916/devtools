@@ -1,0 +1,44 @@
+services:
+  pulp-trustify-trustd-db:
+    image: postgres:15
+    restart: unless-stopped
+    volumes:
+      - trustd_pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: trustify
+      POSTGRES_PASSWORD: trustify
+      POSTGRES_DB: trustify
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trustify -d trustify"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pulp-trustify-trustd:
+    image: ghcr.io/trustification/trustd:latest
+    restart: unless-stopped
+    ports:
+      - "9010:8080"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        trustd db --db-host pulp-trustify-trustd-db --db-name trustify
+        --db-user trustify --db-password trustify migrate &&
+        exec trustd api --auth-disabled
+        --db-host pulp-trustify-trustd-db --db-name trustify
+        --db-user trustify --db-password trustify
+        --http-server-bind-address 0.0.0.0
+    depends_on:
+      pulp-trustify-trustd-db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - bash -c 'echo > /dev/tcp/localhost/8080'
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  trustd_pg_data:
+    name: "{COMPOSE_PROJECT_NAME}_trustd_pg_data"
