@@ -15,6 +15,17 @@ export OCI_ENV_PATH="$HOME/git/github/pulp/oci_env"
 export DEVTOOLS_PATH="$HOME/git/github/carlosthe19916/devtools"
 ```
 
+## Link config into the checkouts
+
+oci_env reads plugin profiles from `SRC_DIR/<repo>/profiles`. Run this once (and
+after a fresh clone / `git clean`) to symlink this repo's profiles and
+compose.env files into the Pulp checkouts:
+
+```bash
+./oci-env/setup-links.sh          # uses $OCI_ENV_PATH to locate checkouts
+# or: ./oci-env/setup-links.sh /path/to/pulp/checkouts
+```
+
 ## Start
 
 From this directory:
