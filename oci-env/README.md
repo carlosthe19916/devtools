@@ -38,7 +38,27 @@ oci-env -e pulpcore/compose.env compose up
 # pulp_trustify — API http://localhost:5002
 oci-env -e pulp_trustify/compose.env compose build
 oci-env -e pulp_trustify/compose.env compose up
+
+# pulp-service — API http://localhost:5003/api/pulp/api/v3/status/
+oci-env -e pulp-service/compose.env compose build
+oci-env -e pulp-service/compose.env compose up
 ```
+
+## pulp-service notes
+
+`pulp-service` is a nested, hyphenated checkout, so its config has two quirks:
+
+- **Source path.** The installable package lives at
+  `pulp-service/pulp_service`, so `DEV_SOURCE_PATH` uses that nested path. This
+  means the entry is not a bare plugin name — pass `-p pulp_service` explicitly
+  to `test` and `generate-client` (they can't auto-iterate the slashed entry).
+- **pulpcore pin.** `pulp_service` pins `pulpcore==3.115.2`. Since `compose.env`
+  also source-installs `pulpcore`, keep the `pulpcore` checkout on a
+  3.115.x-compatible ref, or drop `pulpcore` from `DEV_SOURCE_PATH` to install
+  it from PyPI at 3.115.2.
+
+The `service` profile generates an attestation keypair at startup so
+`test_attestation_verification` can run; see `pulp-service/profiles/service/`.
 
 From anywhere:
 
