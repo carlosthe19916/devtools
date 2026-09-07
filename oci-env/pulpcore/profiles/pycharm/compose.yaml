@@ -1,0 +1,20 @@
+services:
+  pydevd-unpack:
+    image: "ghcr.io/pulp/pulp-ci-centos10:latest"
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - "rm -rf /out/* && python3 -c \"import zipfile; zipfile.ZipFile('/egg/pydevd-pycharm.egg').extractall('/out')\" && echo 'pydevd unpacked'"
+    volumes:
+      - "/home/cferiavi/.local/share/JetBrains/Toolbox/apps/pycharm/debug-eggs/pydevd-pycharm.egg:/egg/pydevd-pycharm.egg:ro,z"
+      - "oci_pydevd:/out"
+
+  pulp:
+    volumes:
+      - "oci_pydevd:/opt/pydevd:ro"
+    depends_on:
+      pydevd-unpack:
+        condition: service_completed_successfully
+
+volumes:
+  oci_pydevd:
+    name: "{COMPOSE_PROJECT_NAME}_pydevd"
