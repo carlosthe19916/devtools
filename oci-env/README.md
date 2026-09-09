@@ -42,6 +42,10 @@ oci-env -e pulp_trustify/compose.env compose up
 # pulp-service — API http://localhost:5003/api/pulp/api/v3/status/
 oci-env -e pulp-service/compose.env compose build
 oci-env -e pulp-service/compose.env compose up
+
+# pulp_maven — API http://localhost:5004
+oci-env -e pulp_maven/compose.env compose build
+oci-env -e pulp_maven/compose.env compose up
 ```
 
 ## pulp-service notes
