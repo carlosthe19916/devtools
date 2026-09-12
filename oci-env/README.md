@@ -46,6 +46,10 @@ oci-env -e pulp-service/compose.env compose up
 # pulp_maven — API http://localhost:5004
 oci-env -e pulp_maven/compose.env compose build
 oci-env -e pulp_maven/compose.env compose up
+
+# pulp-ui-2 — API http://localhost:5003, Keycloak http://localhost:8090
+oci-env -e pulp-ui-2/compose.env compose build
+oci-env -e pulp-ui-2/compose.env compose up
 ```
 
 ## pulp-service notes
@@ -69,6 +73,7 @@ From anywhere:
 ```bash
 oci-env -e "$DEVTOOLS_PATH/oci-env/pulpcore/compose.env" compose up
 oci-env -e "$DEVTOOLS_PATH/oci-env/pulp_trustify/compose.env" compose up
+oci-env -e "$DEVTOOLS_PATH/oci-env/pulp-ui-2/compose.env" compose up
 ```
 
 ## Lifecycle
